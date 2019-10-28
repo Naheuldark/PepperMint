@@ -11,15 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\PepperMint\Log.cpp" />
     <ClCompile Include="src\PepperMint\Application.cpp" />
+    <ClCompile Include="src\PepperMint\Log.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\PepperMint\Log.h" />
     <ClInclude Include="src\PepperMint.h" />
     <ClInclude Include="src\PepperMint\Application.h" />
     <ClInclude Include="src\PepperMint\Core.h" />
     <ClInclude Include="src\PepperMint\EntryPoint.h" />
+    <ClInclude Include="src\PepperMint\Log.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
