@@ -4,15 +4,14 @@
 
 namespace PepperMint {
 
-	class PM_API Application {
-	public:
-		Application() = default;
-		virtual ~Application() = default;
+class PM_API Application {
+public:
+	Application() = default;
+	virtual ~Application() = default;
 
-		void Run();
-	};
+	void Run();
+};
 
-	// To be defined in CLIENT
-	Application* CreateApplication();
-
+// To be defined in CLIENT
+Application* CreateApplication();
 }

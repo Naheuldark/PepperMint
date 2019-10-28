@@ -11,9 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\PepperMint\Log.cpp" />
     <ClCompile Include="src\PepperMint\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\PepperMint\Log.h" />
     <ClInclude Include="src\PepperMint.h" />
     <ClInclude Include="src\PepperMint\Application.h" />
     <ClInclude Include="src\PepperMint\Core.h" />
@@ -66,6 +68,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>PM_PLATFORM_WINDOWS;PM_BUILD_DLL;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)PepperMint\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -80,6 +83,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>PM_PLATFORM_WINDOWS;PM_BUILD_DLL;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)PepperMint\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

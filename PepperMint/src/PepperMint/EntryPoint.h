@@ -8,8 +8,7 @@
 
 extern PepperMint::Application* PepperMint::CreateApplication();
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 	std::cout << "PepperMint Engine\n";
 	auto app = PepperMint::CreateApplication();
 	app->Run();
