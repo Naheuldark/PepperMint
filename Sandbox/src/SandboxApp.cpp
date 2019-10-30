@@ -9,6 +9,5 @@ public:
 };
 
 PepperMint::Application* PepperMint::CreateApplication() {
-	std::cout << "Sandbox Application\n";
 	return new Sandbox();
 }
