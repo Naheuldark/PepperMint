@@ -5,6 +5,7 @@
 #include "Core.h"
 
 #include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 
 namespace PepperMint {
 
@@ -15,8 +16,8 @@ public:
 
 	static void Init();
 	
-	inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return _coreLogger; }
-	inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return _clientLogger; }
+	inline static std::shared_ptr<spdlog::logger>& CoreLogger() { return _coreLogger; }
+	inline static std::shared_ptr<spdlog::logger>& ClientLogger() { return _clientLogger; }
 
 private:
 	static std::shared_ptr<spdlog::logger> _coreLogger;
@@ -25,15 +26,15 @@ private:
 }
 
 // Core Log Macros
-#define PM_CORE_FATAL(...) ::PepperMint::Log::GetCoreLogger()->critical(__VA_ARGS__);
-#define PM_CORE_ERROR(...) ::PepperMint::Log::GetCoreLogger()->error(__VA_ARGS__);
-#define PM_CORE_WARN(...)  ::PepperMint::Log::GetCoreLogger()->warn(__VA_ARGS__);
-#define PM_CORE_INFO(...)  ::PepperMint::Log::GetCoreLogger()->info(__VA_ARGS__);
-#define PM_CORE_TRACE(...) ::PepperMint::Log::GetCoreLogger()->trace(__VA_ARGS__);
+#define PM_CORE_FATAL(...) ::PepperMint::Log::CoreLogger()->critical(__VA_ARGS__);
+#define PM_CORE_ERROR(...) ::PepperMint::Log::CoreLogger()->error(__VA_ARGS__);
+#define PM_CORE_WARN(...)  ::PepperMint::Log::CoreLogger()->warn(__VA_ARGS__);
+#define PM_CORE_INFO(...)  ::PepperMint::Log::CoreLogger()->info(__VA_ARGS__);
+#define PM_CORE_TRACE(...) ::PepperMint::Log::CoreLogger()->trace(__VA_ARGS__);
 
 // Client Log Macros
-#define PM_FATAL(...) ::PepperMint::Log::GetClientLogger()->critical(__VA_ARGS__);
-#define PM_ERROR(...) ::PepperMint::Log::GetClientLogger()->error(__VA_ARGS__);
-#define PM_WARN(...)  ::PepperMint::Log::GetClientLogger()->warn(__VA_ARGS__);
-#define PM_INFO(...)  ::PepperMint::Log::GetClientLogger()->info(__VA_ARGS__);
-#define PM_TRACE(...) ::PepperMint::Log::GetClientLogger()->trace(__VA_ARGS__);
+#define PM_FATAL(...) ::PepperMint::Log::ClientLogger()->critical(__VA_ARGS__);
+#define PM_ERROR(...) ::PepperMint::Log::ClientLogger()->error(__VA_ARGS__);
+#define PM_WARN(...)  ::PepperMint::Log::ClientLogger()->warn(__VA_ARGS__);
+#define PM_INFO(...)  ::PepperMint::Log::ClientLogger()->info(__VA_ARGS__);
+#define PM_TRACE(...) ::PepperMint::Log::ClientLogger()->trace(__VA_ARGS__);

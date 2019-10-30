@@ -4,6 +4,9 @@
     <Filter Include="PepperMint">
       <UniqueIdentifier>{497D2F6C-3535-71B9-9E3C-4A158A130CAA}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PepperMint\Events">
+      <UniqueIdentifier>{0D3D7C50-7953-7AE6-C2CA-05082E204B6E}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\PepperMint.h" />
@@ -15,6 +18,18 @@
     </ClInclude>
     <ClInclude Include="src\PepperMint\EntryPoint.h">
       <Filter>PepperMint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PepperMint\Events\ApplicationEvent.h">
+      <Filter>PepperMint\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PepperMint\Events\Event.h">
+      <Filter>PepperMint\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PepperMint\Events\KeyEvent.h">
+      <Filter>PepperMint\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PepperMint\Events\MouseEvent.h">
+      <Filter>PepperMint\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\PepperMint\Log.h">
       <Filter>PepperMint</Filter>

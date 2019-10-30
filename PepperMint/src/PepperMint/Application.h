@@ -9,7 +9,7 @@ public:
 	Application() = default;
 	virtual ~Application() = default;
 
-	void Run();
+	void run();
 };
 
 // To be defined in CLIENT

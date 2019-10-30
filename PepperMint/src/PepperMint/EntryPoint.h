@@ -1,9 +1,5 @@
 #pragma once
 
-#include <iostream>
-
-#include "Application.h"
-
 #ifdef PM_PLATFORM_WINDOWS
 
 extern PepperMint::Application* PepperMint::CreateApplication();
@@ -15,7 +11,7 @@ int main(int argc, char** argv) {
 	PM_INFO("Hello World!! Var={0}", a);
 
 	auto app = PepperMint::CreateApplication();
-	app->Run();
+	app->run();
 	delete app;
 }
 
