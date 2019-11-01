@@ -1,3 +1,5 @@
+#include "pmpch.h"
+
 #include "Application.h"
 
 #include "PepperMint/Events/ApplicationEvent.h"

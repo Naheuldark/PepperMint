@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace PepperMint {
 
 class PM_API MouseMovedEvent : public Event {
@@ -22,7 +20,7 @@ public:
 	}
 
 	EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
-	EVENT_TYPE(MOUSE_MOVED)
+	EVENT_TYPE(MOUSE_MOVE)
 
 private:
 	float _mouseX, _mouseY;
@@ -44,7 +42,7 @@ public:
 	}
 
 	EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
-	EVENT_TYPE(MOUSE_SCROLLED)
+	EVENT_TYPE(MOUSE_SCROLL)
 
 private:
 	float _xOffset, _yOffset;

@@ -17,6 +17,9 @@ project "PepperMint"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")	
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "pmpch.h"
+	pchsource "PepperMint/src/pmpch.cpp"
+
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp"

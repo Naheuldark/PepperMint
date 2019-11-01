@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace PepperMint {
 
 class PM_API WindowCloseEvent : public Event {
@@ -20,7 +18,7 @@ public:
 	WindowResizeEvent(unsigned int iWidth, unsigned int iHeight) :
 		_width(iWidth), _height(iHeight) {}
 	~WindowResizeEvent() = default;
-
+	
 	std::string toString() const override {
 		std::ostringstream ss;
 		ss << "WindowResizeEvent: " << _width << ", " << _height;

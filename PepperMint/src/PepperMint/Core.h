@@ -5,9 +5,9 @@
 		#define PM_API __declspec(dllexport)
 	#else
 		#define PM_API __declspec(dllimport)
-	#endif
+	#endif // PM_BUILD_DLL
 #else
 	#error PepperMint only support Windows!
-#endif
+#endif // PM_PLATFORM_WINDOWS
 
 #define BIT(x) (1 << x)

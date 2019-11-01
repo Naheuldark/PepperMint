@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace PepperMint {
 
 class PM_API KeyEvent : public Event {
