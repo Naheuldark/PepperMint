@@ -35,6 +35,8 @@
       <Filter>PepperMint</Filter>
     </ClInclude>
     <ClInclude Include="src\pmpch.h" />
+    <ClInclude Include="src\PepperMint\Window.h" />
+    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp">
@@ -44,5 +46,6 @@
       <Filter>PepperMint</Filter>
     </ClCompile>
     <ClCompile Include="src\pmpch.cpp" />
+    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
 </Project>

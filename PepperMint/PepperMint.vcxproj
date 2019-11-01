@@ -158,11 +158,14 @@
     <ClInclude Include="src\PepperMint\Events\KeyEvent.h" />
     <ClInclude Include="src\PepperMint\Events\MouseEvent.h" />
     <ClInclude Include="src\PepperMint\Log.h" />
+    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h" />
+    <ClInclude Include="src\PepperMint\Window.h" />
     <ClInclude Include="src\pmpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp" />
     <ClCompile Include="src\PepperMint\Log.cpp" />
+    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\pmpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

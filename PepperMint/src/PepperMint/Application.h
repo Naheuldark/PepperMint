@@ -1,15 +1,20 @@
 #pragma once
 
-#include "Core.h"
+#include "PepperMint/Core.h"
+#include "PepperMint/Window.h"
 
 namespace PepperMint {
 
 class PM_API Application {
 public:
-	Application() = default;
+	Application();
 	virtual ~Application() = default;
 
 	void run();
+
+private:
+	std::unique_ptr<Window> _window;
+	bool _running = true;
 };
 
 // To be defined in CLIENT

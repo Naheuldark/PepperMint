@@ -2,15 +2,20 @@
 
 #include "Application.h"
 
-#include "PepperMint/Events/ApplicationEvent.h"
-#include "PepperMint/Log.h"
+#include "GLFW/glfw3.h"
 
 namespace PepperMint {
 
-void Application::run() {
-	WindowResizeEvent e(1280, 720);
-	PM_TRACE(e);
+Application::Application() {
+	_window = std::unique_ptr<Window>(Window::Create());
+}
 
-	while (true);
+void Application::run() {
+	while (_running) {
+		glClearColor(1, 0, 1, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		_window->onUpdate();
+	}
 }
 }

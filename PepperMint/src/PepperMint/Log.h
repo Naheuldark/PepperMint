@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "PepperMint/Core.h"
 
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
