@@ -7,6 +7,12 @@
     <Filter Include="PepperMint\Events">
       <UniqueIdentifier>{0D3D7C50-7953-7AE6-C2CA-05082E204B6E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PepperMint\Platform">
+      <UniqueIdentifier>{BDBB9D7C-291D-7B8A-B28A-C13C1EEBB149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PepperMint\Platform\Windows">
+      <UniqueIdentifier>{F7D21536-63E0-431C-ECC6-3F0758D30FD3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\PepperMint.h" />
@@ -31,21 +37,36 @@
     <ClInclude Include="src\PepperMint\Events\MouseEvent.h">
       <Filter>PepperMint\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\PepperMint\Layer.h">
+      <Filter>PepperMint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PepperMint\LayerStack.h">
+      <Filter>PepperMint</Filter>
+    </ClInclude>
     <ClInclude Include="src\PepperMint\Log.h">
       <Filter>PepperMint</Filter>
     </ClInclude>
+    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h">
+      <Filter>PepperMint\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PepperMint\Window.h">
+      <Filter>PepperMint</Filter>
+    </ClInclude>
     <ClInclude Include="src\pmpch.h" />
-    <ClInclude Include="src\PepperMint\Window.h" />
-    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp">
       <Filter>PepperMint</Filter>
     </ClCompile>
+    <ClCompile Include="src\PepperMint\LayerStack.cpp">
+      <Filter>PepperMint</Filter>
+    </ClCompile>
     <ClCompile Include="src\PepperMint\Log.cpp">
       <Filter>PepperMint</Filter>
     </ClCompile>
+    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp">
+      <Filter>PepperMint\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\pmpch.cpp" />
-    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
 </Project>

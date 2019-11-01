@@ -51,7 +51,11 @@ public:
 		return categoryFlags() & iCategory;
 	}
 
-	bool handled = false;
+	inline void setHandled(bool iHandled) { _handled = iHandled; }
+	inline bool handled() const { return _handled; }
+
+private:
+	bool _handled = false;
 };
 
 inline std::ostream& operator<<(std::ostream& out, const Event& iEvent) {
@@ -67,7 +71,7 @@ public:
 	template<typename T, typename F>
 	bool dispatch(const F& func) {
 		if (_event.eventType() == T::StaticType()) {
-			_event.handled = func(static_cast<T&>(_event));
+			_event.setHandled(func(static_cast<T&>(_event)));
 			return true;
 		}
 

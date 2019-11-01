@@ -84,6 +84,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -109,6 +110,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -135,6 +137,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -157,6 +160,8 @@
     <ClInclude Include="src\PepperMint\Events\Event.h" />
     <ClInclude Include="src\PepperMint\Events\KeyEvent.h" />
     <ClInclude Include="src\PepperMint\Events\MouseEvent.h" />
+    <ClInclude Include="src\PepperMint\Layer.h" />
+    <ClInclude Include="src\PepperMint\LayerStack.h" />
     <ClInclude Include="src\PepperMint\Log.h" />
     <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\PepperMint\Window.h" />
@@ -164,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp" />
+    <ClCompile Include="src\PepperMint\LayerStack.cpp" />
     <ClCompile Include="src\PepperMint\Log.cpp" />
     <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\pmpch.cpp">
