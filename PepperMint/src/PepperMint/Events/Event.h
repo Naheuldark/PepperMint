@@ -51,8 +51,7 @@ public:
 		return categoryFlags() & iCategory;
 	}
 
-protected:
-	bool _handled = false;
+	bool handled = false;
 };
 
 inline std::ostream& operator<<(std::ostream& out, const Event& iEvent) {
@@ -60,25 +59,22 @@ inline std::ostream& operator<<(std::ostream& out, const Event& iEvent) {
 }
 
 class EventDispatcher {
-	template<typename T>
-	using EventFn = std::function<bool(T&)>;
-
 public:
-	EventDispatcher(const Event& iEvent) :
+	EventDispatcher(Event& iEvent) :
 		_event(iEvent) {}
 	~EventDispatcher() = default;
 
-	template<typename T>
-	bool dispatch(EventFn<T> func) {
+	template<typename T, typename F>
+	bool dispatch(const F& func) {
 		if (_event.eventType() == T::StaticType()) {
-			_event._handled = func(*(T)&_event);
-			return true
+			_event.handled = func(static_cast<T&>(_event));
+			return true;
 		}
 
 		return false;
 	}
 
 private:
-	const Event& _event;
+	Event& _event;
 };
 }
