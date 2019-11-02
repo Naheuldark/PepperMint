@@ -19,6 +19,9 @@ public:
 
 	void run();
 
+	inline static Application& Get() { return *kInstance; }
+	inline Window& window() { return *_window; }
+
 private:
 	bool onWindowClose(WindowCloseEvent& iEvent);
 
@@ -26,6 +29,8 @@ private:
 	std::unique_ptr<Window> _window;
 	bool _running = true;
 	LayerStack _layerStack;
+
+	static Application* kInstance;
 };
 
 // To be defined in CLIENT

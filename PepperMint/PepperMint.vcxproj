@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>pmpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PM_PLATFORM_WINDOWS;PM_BUILD_DLL;PM_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\imgui;vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -102,7 +102,7 @@
       <PrecompiledHeaderFile>pmpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PM_PLATFORM_WINDOWS;PM_BUILD_DLL;PM_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\imgui;vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -128,7 +128,7 @@
       <PrecompiledHeaderFile>pmpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PM_PLATFORM_WINDOWS;PM_BUILD_DLL;PM_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\imgui;vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -157,17 +157,21 @@
     <ClInclude Include="src\PepperMint\Events\Event.h" />
     <ClInclude Include="src\PepperMint\Events\KeyEvent.h" />
     <ClInclude Include="src\PepperMint\Events\MouseEvent.h" />
+    <ClInclude Include="src\PepperMint\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\PepperMint\Layer.h" />
     <ClInclude Include="src\PepperMint\LayerStack.h" />
     <ClInclude Include="src\PepperMint\Log.h" />
+    <ClInclude Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\PepperMint\Window.h" />
     <ClInclude Include="src\pmpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp" />
+    <ClCompile Include="src\PepperMint\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\PepperMint\LayerStack.cpp" />
     <ClCompile Include="src\PepperMint\Log.cpp" />
+    <ClCompile Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
     <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\pmpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -176,6 +180,9 @@
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
     <ProjectReference Include="vendor\Glad\Glad.vcxproj">
       <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>

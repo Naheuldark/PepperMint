@@ -13,10 +13,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "PepperMint/vendor/GLFW/include"
 IncludeDir["Glad"] = "PepperMint/vendor/Glad/include"
+IncludeDir["ImGui"] = "PepperMint/vendor/imgui"
 
 -- Include external premake files
 include "PepperMint/vendor/GLFW"
 include "PepperMint/vendor/Glad"
+include "PepperMint/vendor/imgui"
 
 project "PepperMint"
 	location "PepperMint"
@@ -38,11 +40,13 @@ project "PepperMint"
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.Glad}"
 	}
 
 	links {
 		"GLFW",
+		"ImGui",
 		"Glad",
 		"opengl32.lib"
 	}

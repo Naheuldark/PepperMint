@@ -4,3 +4,6 @@
 [submodule "PepperMint/vendor/GLFW"]
 	path = PepperMint/vendor/GLFW
 	url = https://github.com/Naheuldark/glfw
+[submodule "PepperMint/vendor/imgui"]
+	path = PepperMint/vendor/imgui
+	url = https://github.com/Naheuldark/imgui

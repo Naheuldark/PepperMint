@@ -6,4 +6,6 @@
 #include "PepperMint/Layer.h"
 #include "PepperMint/Log.h"
 
+#include "PepperMint/ImGui/ImGuiLayer.h"
+
 #include "PepperMint/EntryPoint.h"

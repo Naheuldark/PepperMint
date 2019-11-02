@@ -53,6 +53,8 @@
       <Filter>PepperMint</Filter>
     </ClInclude>
     <ClInclude Include="src\pmpch.h" />
+    <ClInclude Include="src\PepperMint\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp">
@@ -68,5 +70,7 @@
       <Filter>PepperMint\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\pmpch.cpp" />
+    <ClCompile Include="src\PepperMint\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
   </ItemGroup>
 </Project>

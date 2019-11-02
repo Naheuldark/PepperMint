@@ -8,7 +8,12 @@ namespace PepperMint {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
+Application* Application::kInstance = nullptr;
+
 Application::Application() {
+	PM_CORE_ASSERT(!kInstance, "Application already exists!")
+	kInstance = this;
+
 	_window = std::unique_ptr<Window>(Window::Create());
 	_window->setEventCallback(BIND_EVENT_FN(onEvent));
 }
@@ -28,10 +33,12 @@ void Application::run() {
 
 void Application::pushLayer(Layer* iLayer) {
 	_layerStack.pushLayer(iLayer);
+	iLayer->onAttach();
 }
 
 void Application::pushOverlay(Layer* iOverlay) {
 	_layerStack.pushOverlay(iOverlay);
+	iOverlay->onAttach();
 }
 
 void Application::onEvent(Event& iEvent) {
