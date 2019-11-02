@@ -12,9 +12,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "PepperMint/vendor/GLFW/include"
+IncludeDir["Glad"] = "PepperMint/vendor/Glad/include"
 
 -- Include external premake files
 include "PepperMint/vendor/GLFW"
+include "PepperMint/vendor/Glad"
 
 project "PepperMint"
 	location "PepperMint"
@@ -35,11 +37,13 @@ project "PepperMint"
 	includedirs {
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links {
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 

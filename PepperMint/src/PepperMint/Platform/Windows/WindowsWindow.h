@@ -2,7 +2,8 @@
 
 #include "PepperMint/Window.h"
 
-#include"GLFW/glfw3.h"
+// Forward declaration of GLFWwindow to avoit multi OpenGL declaration
+struct GLFWwindow;
 
 namespace PepperMint {
 

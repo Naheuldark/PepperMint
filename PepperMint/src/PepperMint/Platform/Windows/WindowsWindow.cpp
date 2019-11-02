@@ -6,6 +6,9 @@
 #include "PepperMint/Events/KeyEvent.h"
 #include "PepperMint/Events/MouseEvent.h"
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 namespace PepperMint {
 
 static bool kGLFWInitialized = false;
@@ -31,7 +34,7 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 
 	if (!kGLFWInitialized) {
 		int success = glfwInit();
-		PM_CORE_ASSERT(success, "GLFW could not be initialized!");
+		PM_CORE_ASSERT(success, "Failed to initialize GLFW!");
 
 		glfwSetErrorCallback([](int error, const char* description) {
 								PM_CORE_ERROR("GLFW Error ({0}): {1}", error, description)
@@ -42,6 +45,10 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 
 	_window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
 	glfwMakeContextCurrent(_window);
+
+	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+	PM_CORE_ASSERT(success, "Failed to initialize Glad!");
+
 	glfwSetWindowUserPointer(_window, &_data);
 	setVSync(true);
 
