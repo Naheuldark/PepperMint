@@ -36,6 +36,9 @@ public:
 	virtual void setVSync(bool iEnabled) = 0;
 	virtual bool isVSync() const = 0;
 
+	// Get the native Window pointer
+	virtual void* nativeWindow() const = 0;
+
 	static Window* Create(const WindowProperties& iProperties = WindowProperties());
 };
 

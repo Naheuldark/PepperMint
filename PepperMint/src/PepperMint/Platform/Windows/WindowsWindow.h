@@ -22,6 +22,9 @@ public:
 	void setVSync(bool iEnabled) override;
 	bool isVSync() const override { return _data.vsync; }
 
+	// Get the native Window pointer
+	inline void* nativeWindow() const override { return _window; }
+
 private:
 	virtual void init(const WindowProperties& iProperties);
 	virtual void shutdown();

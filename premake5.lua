@@ -18,9 +18,12 @@ IncludeDir["Glad"] = "PepperMint/vendor/Glad/include"
 IncludeDir["ImGui"] = "PepperMint/vendor/imgui"
 
 -- Include external premake files
-include "PepperMint/vendor/GLFW"
-include "PepperMint/vendor/Glad"
-include "PepperMint/vendor/imgui"
+group "Dependencies"
+	include "PepperMint/vendor/GLFW"
+	include "PepperMint/vendor/Glad"
+	include "PepperMint/vendor/imgui"
+
+group ""
 
 project "PepperMint"
 	location "PepperMint"
@@ -64,7 +67,7 @@ project "PepperMint"
 		}
 
 		postbuildcommands {
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}
 
 	filter "configurations:Debug"

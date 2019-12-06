@@ -36,8 +36,8 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 		int success = glfwInit();
 		PM_CORE_ASSERT(success, "Failed to initialize GLFW!");
 
-		glfwSetErrorCallback([](int error, const char* description) {
-								PM_CORE_ERROR("GLFW Error ({0}): {1}", error, description)
+		glfwSetErrorCallback([](int iError, const char* iDescription) {
+								PM_CORE_ERROR("GLFW Error ({0}): {1}", iError, iDescription)
 							 });
 
 		kGLFWInitialized = true;
@@ -46,7 +46,7 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 	_window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
 	glfwMakeContextCurrent(_window);
 
-	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+	int success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	PM_CORE_ASSERT(success, "Failed to initialize Glad!");
 
 	glfwSetWindowUserPointer(_window, &_data);

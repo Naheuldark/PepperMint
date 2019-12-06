@@ -65,6 +65,8 @@
       <Filter>PepperMint</Filter>
     </ClInclude>
     <ClInclude Include="src\pmpch.h" />
+    <ClInclude Include="src\PepperMint\Input.h" />
+    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp">
@@ -86,5 +88,6 @@
       <Filter>PepperMint\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\pmpch.cpp" />
+    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>
