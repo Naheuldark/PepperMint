@@ -23,7 +23,7 @@ public:
 	inline Window& window() { return *_window; }
 
 private:
-	bool onWindowClose(WindowCloseEvent& iEvent);
+	bool onWindowCloseEvent(WindowCloseEvent& iEvent);
 
 private:
 	std::unique_ptr<Window> _window;

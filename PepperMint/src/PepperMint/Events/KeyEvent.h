@@ -53,4 +53,19 @@ public:
 
 	EVENT_TYPE(KEY_RELEASED)
 };
+
+class PM_API KeyTypedEvent : public KeyEvent {
+public:
+	KeyTypedEvent(int iKeyCode) :
+		KeyEvent(iKeyCode) {}
+	~KeyTypedEvent() = default;
+
+	std::string toString() const override {
+		std::ostringstream ss;
+		ss << "KeyTypedEvent: " << _keyCode;
+		return ss.str();
+	}
+
+	EVENT_TYPE(KEY_TYPED)
+};
 }

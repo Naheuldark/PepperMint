@@ -6,8 +6,6 @@
 
 namespace PepperMint {
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
-
 Application* Application::kInstance = nullptr;
 
 Application::Application() {
@@ -15,7 +13,7 @@ Application::Application() {
 	kInstance = this;
 
 	_window = std::unique_ptr<Window>(Window::Create());
-	_window->setEventCallback(BIND_EVENT_FN(onEvent));
+	_window->setEventCallback(PM_BIND_EVENT_FN(Application::onEvent));
 }
 
 void Application::run() {
@@ -43,7 +41,7 @@ void Application::pushOverlay(Layer* iOverlay) {
 
 void Application::onEvent(Event& iEvent) {
 	EventDispatcher dispatcher(iEvent);
-	dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
+	dispatcher.dispatch<WindowCloseEvent>(PM_BIND_EVENT_FN(Application::onWindowCloseEvent));
 
 	PM_CORE_TRACE("{0}", iEvent);
 
@@ -53,7 +51,7 @@ void Application::onEvent(Event& iEvent) {
 	}
 }
 
-bool Application::onWindowClose(WindowCloseEvent& iEvent) {
+bool Application::onWindowCloseEvent(WindowCloseEvent& iEvent) {
 	_running = false;
 	return true;
 }

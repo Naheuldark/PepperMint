@@ -1,6 +1,8 @@
 workspace "PepperMint"
 	architecture "x64"
 
+	startproject "Sandbox"
+
 	configurations {
 		"Debug",
 		"Release",
@@ -24,6 +26,7 @@ project "PepperMint"
 	location "PepperMint"
 	kind "SharedLib"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")	
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -53,7 +56,6 @@ project "PepperMint"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "Off"
 		systemversion "latest"
 
 		defines {
@@ -67,20 +69,24 @@ project "PepperMint"
 
 	filter "configurations:Debug"
 		defines "PM_DEBUG"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "PM_RELEASE"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "PM_DIST"
+		runtime "Release"
 		optimize "On"
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")	
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -101,7 +107,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "Off"
 		systemversion "latest"
 
 		defines {
@@ -110,12 +115,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "PM_DEBUG"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "PM_RELEASE"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "PM_DIST"
+		runtime "Release"
 		optimize "On"

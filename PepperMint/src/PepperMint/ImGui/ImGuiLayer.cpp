@@ -5,6 +5,7 @@
 #include "PepperMint/Platform/OpenGL/ImGuiOpenGLRenderer.h"
 #include "PepperMint/Application.h"
 
+// TODO remove
 #include <GLFW/glfw3.h>
 
 namespace PepperMint {
@@ -68,6 +69,82 @@ void ImGuiLayer::onUpdate() {
 }
 
 void ImGuiLayer::onEvent(Event& iEvent) {
+	EventDispatcher dispatcher(iEvent);
+	dispatcher.dispatch<MouseButtonPressedEvent>(PM_BIND_EVENT_FN(ImGuiLayer::onMouseButtonPressedEvent));
+	dispatcher.dispatch<MouseButtonReleasedEvent>(PM_BIND_EVENT_FN(ImGuiLayer::onMouseButtonReleasedEvent));
+	dispatcher.dispatch<MouseMovedEvent>(PM_BIND_EVENT_FN(ImGuiLayer::onMouseMovedEvent));
+	dispatcher.dispatch<MouseScrolledEvent>(PM_BIND_EVENT_FN(ImGuiLayer::onMouseScrolledEvent));
+	dispatcher.dispatch<KeyPressedEvent>(PM_BIND_EVENT_FN(ImGuiLayer::onKeyPressedEvent));
+	dispatcher.dispatch<KeyReleasedEvent>(PM_BIND_EVENT_FN(ImGuiLayer::onKeyReleasedEvent));
+	dispatcher.dispatch<KeyTypedEvent>(PM_BIND_EVENT_FN(ImGuiLayer::onKeyTypedEvent));
+	dispatcher.dispatch<WindowResizeEvent>(PM_BIND_EVENT_FN(ImGuiLayer::onWindowResizeEvent));
+}
 
+bool ImGuiLayer::onMouseButtonPressedEvent(MouseButtonPressedEvent& iEvent) {
+	ImGuiIO& io = ImGui::GetIO();
+	io.MouseDown[iEvent.mouseButton()] = true;
+
+	return false;
+}
+
+bool ImGuiLayer::onMouseButtonReleasedEvent(MouseButtonReleasedEvent& iEvent) {
+	ImGuiIO& io = ImGui::GetIO();
+	io.MouseDown[iEvent.mouseButton()] = false;
+
+	return false;
+}
+
+bool ImGuiLayer::onMouseMovedEvent(MouseMovedEvent& iEvent) {
+	ImGuiIO& io = ImGui::GetIO();
+	io.MousePos = ImVec2(iEvent.x(), iEvent.y());
+
+	return false;
+}
+
+bool ImGuiLayer::onMouseScrolledEvent(MouseScrolledEvent& iEvent) {
+	ImGuiIO& io = ImGui::GetIO();
+	io.MouseWheelH += iEvent.xOffset();
+	io.MouseWheel += iEvent.yOffset();
+
+	return false;
+}
+
+bool ImGuiLayer::onKeyPressedEvent(KeyPressedEvent& iEvent) {
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[iEvent.keyCode()] = true;
+
+	io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+	io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+
+	return false;
+}
+
+bool ImGuiLayer::onKeyReleasedEvent(KeyReleasedEvent& iEvent) {
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[iEvent.keyCode()] = false;
+
+	return false;
+}
+
+bool ImGuiLayer::onKeyTypedEvent(KeyTypedEvent& iEvent) {
+	ImGuiIO& io = ImGui::GetIO();
+	
+	int keyCode = iEvent.keyCode();
+	if (keyCode > 0 && keyCode < 0x10000) {
+		io.AddInputCharacter((unsigned short)keyCode);
+	}
+
+	return false;
+}
+
+bool ImGuiLayer::onWindowResizeEvent(WindowResizeEvent& iEvent) {
+	ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize = ImVec2(iEvent.width(), iEvent.height());
+	io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+	glViewport(0, 0, iEvent.width(), iEvent.height());
+
+	return false;
 }
 }

@@ -7,8 +7,14 @@
     <Filter Include="PepperMint\Events">
       <UniqueIdentifier>{0D3D7C50-7953-7AE6-C2CA-05082E204B6E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PepperMint\ImGui">
+      <UniqueIdentifier>{33057D29-1FFE-9B7B-4830-810034887B87}</UniqueIdentifier>
+    </Filter>
     <Filter Include="PepperMint\Platform">
       <UniqueIdentifier>{BDBB9D7C-291D-7B8A-B28A-C13C1EEBB149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PepperMint\Platform\OpenGL">
+      <UniqueIdentifier>{512E74EF-3D3E-20C0-A6F7-84DE92260F59}</UniqueIdentifier>
     </Filter>
     <Filter Include="PepperMint\Platform\Windows">
       <UniqueIdentifier>{F7D21536-63E0-431C-ECC6-3F0758D30FD3}</UniqueIdentifier>
@@ -37,6 +43,9 @@
     <ClInclude Include="src\PepperMint\Events\MouseEvent.h">
       <Filter>PepperMint\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\PepperMint\ImGui\ImGuiLayer.h">
+      <Filter>PepperMint\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\PepperMint\Layer.h">
       <Filter>PepperMint</Filter>
     </ClInclude>
@@ -46,6 +55,9 @@
     <ClInclude Include="src\PepperMint\Log.h">
       <Filter>PepperMint</Filter>
     </ClInclude>
+    <ClInclude Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.h">
+      <Filter>PepperMint\Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h">
       <Filter>PepperMint\Platform\Windows</Filter>
     </ClInclude>
@@ -53,12 +65,13 @@
       <Filter>PepperMint</Filter>
     </ClInclude>
     <ClInclude Include="src\pmpch.h" />
-    <ClInclude Include="src\PepperMint\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp">
       <Filter>PepperMint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PepperMint\ImGui\ImGuiLayer.cpp">
+      <Filter>PepperMint\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\PepperMint\LayerStack.cpp">
       <Filter>PepperMint</Filter>
@@ -66,11 +79,12 @@
     <ClCompile Include="src\PepperMint\Log.cpp">
       <Filter>PepperMint</Filter>
     </ClCompile>
+    <ClCompile Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
+      <Filter>PepperMint\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp">
       <Filter>PepperMint\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\pmpch.cpp" />
-    <ClCompile Include="src\PepperMint\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
   </ItemGroup>
 </Project>

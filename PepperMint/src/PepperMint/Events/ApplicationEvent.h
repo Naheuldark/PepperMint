@@ -25,6 +25,9 @@ public:
 		return ss.str();
 	}
 
+	inline unsigned int width() const { return _width; }
+	inline unsigned int height() const { return _height; }
+
 	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
 	EVENT_TYPE(WINDOW_RESIZE)
 
