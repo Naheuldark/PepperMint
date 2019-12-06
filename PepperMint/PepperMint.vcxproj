@@ -159,9 +159,11 @@
     <ClInclude Include="src\PepperMint\Events\MouseEvent.h" />
     <ClInclude Include="src\PepperMint\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\PepperMint\Input.h" />
+    <ClInclude Include="src\PepperMint\KeyCodes.h" />
     <ClInclude Include="src\PepperMint\Layer.h" />
     <ClInclude Include="src\PepperMint\LayerStack.h" />
     <ClInclude Include="src\PepperMint\Log.h" />
+    <ClInclude Include="src\PepperMint\MouseButtonCodes.h" />
     <ClInclude Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\PepperMint\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h" />

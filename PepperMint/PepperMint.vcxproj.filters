@@ -46,6 +46,12 @@
     <ClInclude Include="src\PepperMint\ImGui\ImGuiLayer.h">
       <Filter>PepperMint\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\PepperMint\Input.h">
+      <Filter>PepperMint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PepperMint\KeyCodes.h">
+      <Filter>PepperMint</Filter>
+    </ClInclude>
     <ClInclude Include="src\PepperMint\Layer.h">
       <Filter>PepperMint</Filter>
     </ClInclude>
@@ -55,8 +61,14 @@
     <ClInclude Include="src\PepperMint\Log.h">
       <Filter>PepperMint</Filter>
     </ClInclude>
+    <ClInclude Include="src\PepperMint\MouseButtonCodes.h">
+      <Filter>PepperMint</Filter>
+    </ClInclude>
     <ClInclude Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.h">
       <Filter>PepperMint\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsInput.h">
+      <Filter>PepperMint\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h">
       <Filter>PepperMint\Platform\Windows</Filter>
@@ -65,8 +77,6 @@
       <Filter>PepperMint</Filter>
     </ClInclude>
     <ClInclude Include="src\pmpch.h" />
-    <ClInclude Include="src\PepperMint\Input.h" />
-    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp">
@@ -84,10 +94,12 @@
     <ClCompile Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
       <Filter>PepperMint\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsInput.cpp">
+      <Filter>PepperMint\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp">
       <Filter>PepperMint\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\pmpch.cpp" />
-    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>
