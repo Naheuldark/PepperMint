@@ -8,7 +8,7 @@
 
 namespace PepperMint {
 
-class PM_API ImGuiLayer : public Layer {
+class ImGuiLayer : public Layer {
 public:
 	ImGuiLayer() : Layer("ImGuiLayer") {}
 	~ImGuiLayer() = default;

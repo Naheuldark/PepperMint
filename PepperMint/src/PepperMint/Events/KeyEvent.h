@@ -4,7 +4,7 @@
 
 namespace PepperMint {
 
-class PM_API KeyEvent : public Event {
+class KeyEvent : public Event {
 public:
 	~KeyEvent() = default;
 
@@ -19,7 +19,7 @@ protected:
 	int _keyCode;
 };
 
-class PM_API KeyPressedEvent : public KeyEvent {
+class KeyPressedEvent : public KeyEvent {
 public:
 	KeyPressedEvent(int iKeyCode, int iRepeatCount) : 
 		KeyEvent(iKeyCode), _repeatCount(iRepeatCount) {}
@@ -39,7 +39,7 @@ private:
 	int _repeatCount;
 };
 
-class PM_API KeyReleasedEvent : public KeyEvent {
+class KeyReleasedEvent : public KeyEvent {
 public:
 	KeyReleasedEvent(int iKeyCode) : 
 		KeyEvent(iKeyCode) {}
@@ -54,7 +54,7 @@ public:
 	EVENT_TYPE(KEY_RELEASED)
 };
 
-class PM_API KeyTypedEvent : public KeyEvent {
+class KeyTypedEvent : public KeyEvent {
 public:
 	KeyTypedEvent(int iKeyCode) :
 		KeyEvent(iKeyCode) {}

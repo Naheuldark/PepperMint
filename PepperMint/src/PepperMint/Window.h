@@ -20,7 +20,7 @@ struct WindowProperties {
 /*
  * Interface representing a desktop system based window
  */
-class PM_API Window {
+class Window {
 public:
 	using EventCallbackFn = std::function<void(Event&)>;
 

@@ -9,7 +9,7 @@
 
 namespace PepperMint {
 
-class PM_API Application {
+class Application {
 public:
 	Application();
 	virtual ~Application() = default;

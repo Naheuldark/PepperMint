@@ -36,7 +36,7 @@ enum EventCategory {
 
 #define EVENT_CATEGORY(category) virtual int categoryFlags() const override { return category; }
 
-class PM_API Event {
+class Event {
 public:
 	Event() = default;
 	~Event() = default;

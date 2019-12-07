@@ -7,7 +7,7 @@
 
 namespace PepperMint {
 
-class PM_API LayerStack {
+class LayerStack {
 public:
 	LayerStack() = default;
 	~LayerStack();

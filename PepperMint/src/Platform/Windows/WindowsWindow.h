@@ -7,7 +7,7 @@ struct GLFWwindow;
 
 namespace PepperMint {
 
-class PM_API WindowsWindow : public Window {
+class WindowsWindow : public Window {
 public:
 	WindowsWindow(const WindowProperties& iProperties);
 	~WindowsWindow() override;

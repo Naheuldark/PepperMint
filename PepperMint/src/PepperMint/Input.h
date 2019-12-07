@@ -6,7 +6,7 @@
 
 namespace PepperMint {
 
-class PM_API Input {
+class Input {
 public:
 	Input() = default;
 	~Input() = default;

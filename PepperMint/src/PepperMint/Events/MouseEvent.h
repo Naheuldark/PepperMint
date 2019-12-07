@@ -4,7 +4,7 @@
 
 namespace PepperMint {
 
-class PM_API MouseMovedEvent : public Event {
+class MouseMovedEvent : public Event {
 public:
 	MouseMovedEvent(float iMouseX, float iMouseY) :
 		_mouseX(iMouseX), _mouseY(iMouseY) {}
@@ -48,7 +48,7 @@ private:
 	float _xOffset, _yOffset;
 };
 
-class PM_API MouseButtonEvent : public Event {
+class MouseButtonEvent : public Event {
 public:
 	~MouseButtonEvent() = default;
 
@@ -63,7 +63,7 @@ protected:
 	int _button;
 };
 
-class PM_API MouseButtonPressedEvent : public MouseButtonEvent {
+class MouseButtonPressedEvent : public MouseButtonEvent {
 public:
 	MouseButtonPressedEvent(int iButton) : 
 		MouseButtonEvent(iButton) {}
@@ -78,7 +78,7 @@ public:
 	EVENT_TYPE(MOUSE_BUTTON_PRESSED)
 };
 
-class PM_API MouseButtonReleasedEvent : public MouseButtonEvent {
+class MouseButtonReleasedEvent : public MouseButtonEvent {
 public:
 	MouseButtonReleasedEvent(int iButton) :
 		MouseButtonEvent(iButton) {}

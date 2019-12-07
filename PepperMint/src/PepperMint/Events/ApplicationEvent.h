@@ -4,7 +4,7 @@
 
 namespace PepperMint {
 
-class PM_API WindowCloseEvent : public Event {
+class WindowCloseEvent : public Event {
 public:
 	WindowCloseEvent() = default;
 	~WindowCloseEvent() = default;
@@ -13,7 +13,7 @@ public:
 	EVENT_TYPE(WINDOW_CLOSE)
 };
 
-class PM_API WindowResizeEvent : public Event {
+class WindowResizeEvent : public Event {
 public:
 	WindowResizeEvent(unsigned int iWidth, unsigned int iHeight) :
 		_width(iWidth), _height(iHeight) {}
@@ -35,7 +35,7 @@ private:
 	unsigned int _width, _height;
 };
 
-class PM_API AppTickEvent : public Event {
+class AppTickEvent : public Event {
 public:
 	AppTickEvent() = default;
 	~AppTickEvent() = default;
@@ -44,7 +44,7 @@ public:
 	EVENT_TYPE(APP_TICK)
 };
 
-class PM_API AppUpdateEvent : public Event {
+class AppUpdateEvent : public Event {
 public:
 	AppUpdateEvent() = default;
 	~AppUpdateEvent() = default;
@@ -53,7 +53,7 @@ public:
 	EVENT_TYPE(APP_UPDATE)
 };
 
-class PM_API AppRenderEvent : public Event {
+class AppRenderEvent : public Event {
 public:
 	AppRenderEvent() = default;
 	~AppRenderEvent() = default;

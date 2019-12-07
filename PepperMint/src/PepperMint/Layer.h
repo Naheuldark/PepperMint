@@ -5,7 +5,7 @@
 
 namespace PepperMint {
 
-class PM_API Layer {
+class Layer {
 public:
 	Layer(const std::string& iDebugName = "Layer") :
 		_debugName(iDebugName) {}

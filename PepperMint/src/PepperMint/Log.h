@@ -7,7 +7,7 @@
 
 namespace PepperMint {
 
-class PM_API Log {
+class Log {
 public:
 	Log() = default;
 	~Log() = default;
