@@ -5,6 +5,7 @@
 #include "Input.h"
 
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace PepperMint {
 
@@ -16,6 +17,9 @@ Application::Application() {
 
 	_window = std::unique_ptr<Window>(Window::Create());
 	_window->setEventCallback(PM_BIND_EVENT_FN(Application::onEvent));
+
+	_imguiLayer = new ImGuiLayer();
+	pushOverlay(_imguiLayer);
 }
 
 void Application::run() {
@@ -26,6 +30,12 @@ void Application::run() {
 		for (auto&& layer : _layerStack) {
 			layer->onUpdate();
 		}
+
+		_imguiLayer->begin();
+		for (auto&& layer : _layerStack) {
+			layer->onImGuiRender();
+		}
+		_imguiLayer->end();
 
 		_window->onUpdate();
 	}

@@ -5,6 +5,8 @@
 #include "PepperMint/Events/ApplicationEvent.h"
 #include "PepperMint/LayerStack.h"
 
+#include "PepperMint/ImGui/ImGuiLayer.h"
+
 namespace PepperMint {
 
 class PM_API Application {
@@ -27,6 +29,7 @@ private:
 
 private:
 	std::unique_ptr<Window> _window;
+	ImGuiLayer* _imguiLayer;
 	bool _running = true;
 	LayerStack _layerStack;
 

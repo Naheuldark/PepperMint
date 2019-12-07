@@ -27,7 +27,6 @@ class Sandbox : public PepperMint::Application {
 public:
 	Sandbox() { 
 		pushLayer(new ExampleLayer());
-		pushOverlay(new PepperMint::ImGuiLayer());
 	}
 
 	~Sandbox() = default;

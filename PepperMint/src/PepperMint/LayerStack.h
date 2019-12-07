@@ -9,7 +9,7 @@ namespace PepperMint {
 
 class PM_API LayerStack {
 public:
-	LayerStack();
+	LayerStack() = default;
 	~LayerStack();
 
 	void pushLayer(Layer* iLayer);
@@ -22,7 +22,7 @@ public:
 
 private:
 	std::vector<Layer*> _layers;
-	std::vector<Layer*>::iterator _layerInsert;
+	size_t _layerInsertIndex = 0;
 };
 
 }

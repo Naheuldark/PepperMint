@@ -13,14 +13,11 @@
     <Filter Include="src\PepperMint\ImGui">
       <UniqueIdentifier>{2A0FEA90-169E-735A-BFBC-8755AB2A8400}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\PepperMint\Platform">
-      <UniqueIdentifier>{5496614E-C0CD-A9E5-C9D7-0D09358ED0DE}</UniqueIdentifier>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\PepperMint\Platform\OpenGL">
-      <UniqueIdentifier>{0859F331-F47E-BD98-DDC4-4264C989E264}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\PepperMint\Platform\Windows">
-      <UniqueIdentifier>{8E547AC8-FA37-8908-033B-B7446F9D4F59}</UniqueIdentifier>
+    <Filter Include="src\Platform\Windows">
+      <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -92,6 +89,12 @@
     </ClInclude>
     <ClInclude Include="src\PepperMint\Window.h">
       <Filter>src\PepperMint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
+      <Filter>src\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>src\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\pmpch.h">
       <Filter>src</Filter>
@@ -1200,19 +1203,13 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h">
-      <Filter>src\PepperMint\Platform\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
-      <Filter>src\PepperMint\Platform\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
-      <Filter>src\PepperMint\Platform\Windows</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp">
       <Filter>src\PepperMint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PepperMint\ImGui\ImGuiBuild.cpp">
+      <Filter>src\PepperMint\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\PepperMint\ImGui\ImGuiLayer.cpp">
       <Filter>src\PepperMint\ImGui</Filter>
@@ -1223,17 +1220,14 @@
     <ClCompile Include="src\PepperMint\Log.cpp">
       <Filter>src\PepperMint</Filter>
     </ClCompile>
-    <ClCompile Include="src\pmpch.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
-      <Filter>src\PepperMint\Platform\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
-      <Filter>src\PepperMint\Platform\Windows</Filter>
+      <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
-      <Filter>src\PepperMint\Platform\Windows</Filter>
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pmpch.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
