@@ -16,6 +16,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "PepperMint/vendor/GLFW/include"
 IncludeDir["Glad"] = "PepperMint/vendor/Glad/include"
 IncludeDir["ImGui"] = "PepperMint/vendor/imgui"
+IncludeDir["glm"] = "PepperMint/vendor/glm"
 
 -- Include external premake files
 group "Dependencies"
@@ -39,15 +40,18 @@ project "PepperMint"
 
 	files {
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	includedirs {
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.Glad}"
+		"%{IncludeDir.glm}"
 	}
 
 	links {
@@ -101,7 +105,8 @@ project "Sandbox"
 
 	includedirs {
 		"PepperMint/vendor/spdlog/include",
-		"PepperMint/src"
+		"PepperMint/src",
+		"%{IncludeDir.glm}"
 	}
 
 	links {
