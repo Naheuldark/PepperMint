@@ -6,7 +6,7 @@
 #include "PepperMint/Events/KeyEvent.h"
 #include "PepperMint/Events/MouseEvent.h"
 
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGLContext.h"
 #include <GLFW/glfw3.h>
 
 namespace PepperMint {
@@ -44,10 +44,9 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 	}
 
 	_window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
-	glfwMakeContextCurrent(_window);
 
-	int success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	PM_CORE_ASSERT(success, "Failed to initialize Glad!");
+	_context = new OpenGLContext(_window);
+	_context->init();
 
 	glfwSetWindowUserPointer(_window, &_data);
 	setVSync(true);
@@ -152,7 +151,7 @@ void WindowsWindow::shutdown() {
 
 void WindowsWindow::onUpdate() {
 	glfwPollEvents();
-	glfwSwapBuffers(_window);
+	_context->swapBuffers();
 }
 
 void WindowsWindow::setVSync(bool iEnabled) {

@@ -155,7 +155,9 @@
     <ClInclude Include="src\PepperMint\LayerStack.h" />
     <ClInclude Include="src\PepperMint\Log.h" />
     <ClInclude Include="src\PepperMint\MouseButtonCodes.h" />
+    <ClInclude Include="src\PepperMint\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\PepperMint\Window.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\pmpch.h" />
@@ -534,6 +536,7 @@
     <ClCompile Include="src\PepperMint\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\PepperMint\LayerStack.cpp" />
     <ClCompile Include="src\PepperMint\Log.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\pmpch.cpp">

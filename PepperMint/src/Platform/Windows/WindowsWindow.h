@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PepperMint/Window.h"
+#include "PepperMint/Renderer/GraphicsContext.h"
 
 // Forward declaration of GLFWwindow to avoit multi OpenGL declaration
 struct GLFWwindow;
@@ -31,6 +32,7 @@ private:
 
 private:
 	GLFWwindow* _window;
+	GraphicsContext* _context;
 
 	struct WindowData {
 		std::string title;
