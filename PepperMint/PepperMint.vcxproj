@@ -164,9 +164,9 @@
     <ClInclude Include="src\PepperMint\LayerStack.h" />
     <ClInclude Include="src\PepperMint\Log.h" />
     <ClInclude Include="src\PepperMint\MouseButtonCodes.h" />
-    <ClInclude Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
-    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsInput.h" />
-    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h" />
+    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\PepperMint\Window.h" />
     <ClInclude Include="src\pmpch.h" />
     <ClInclude Include="vendor\glm\glm\common.hpp" />
@@ -543,9 +543,9 @@
     <ClCompile Include="src\PepperMint\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\PepperMint\LayerStack.cpp" />
     <ClCompile Include="src\PepperMint\Log.cpp" />
-    <ClCompile Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
-    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsInput.cpp" />
-    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\pmpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

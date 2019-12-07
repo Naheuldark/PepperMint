@@ -2,7 +2,7 @@
 
 #include "ImGuiLayer.h"
 
-#include "PepperMint/Platform/OpenGL/ImGuiOpenGLRenderer.h"
+#include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
 #include "PepperMint/Application.h"
 
 // TODO remove

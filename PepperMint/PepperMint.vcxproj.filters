@@ -90,15 +90,6 @@
     <ClInclude Include="src\PepperMint\MouseButtonCodes.h">
       <Filter>src\PepperMint</Filter>
     </ClInclude>
-    <ClInclude Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.h">
-      <Filter>src\PepperMint\Platform\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsInput.h">
-      <Filter>src\PepperMint\Platform\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PepperMint\Platform\Windows\WindowsWindow.h">
-      <Filter>src\PepperMint\Platform\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="src\PepperMint\Window.h">
       <Filter>src\PepperMint</Filter>
     </ClInclude>
@@ -1209,6 +1200,15 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h">
+      <Filter>src\PepperMint\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
+      <Filter>src\PepperMint\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>src\PepperMint\Platform\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PepperMint\Application.cpp">
@@ -1223,17 +1223,17 @@
     <ClCompile Include="src\PepperMint\Log.cpp">
       <Filter>src\PepperMint</Filter>
     </ClCompile>
-    <ClCompile Include="src\PepperMint\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
-      <Filter>src\PepperMint\Platform\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsInput.cpp">
-      <Filter>src\PepperMint\Platform\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PepperMint\Platform\Windows\WindowsWindow.cpp">
-      <Filter>src\PepperMint\Platform\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="src\pmpch.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
+      <Filter>src\PepperMint\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
+      <Filter>src\PepperMint\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>src\PepperMint\Platform\Windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
