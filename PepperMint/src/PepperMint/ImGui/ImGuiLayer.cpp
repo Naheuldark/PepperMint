@@ -66,7 +66,7 @@ void ImGuiLayer::begin() {
 void ImGuiLayer::end() {
 	ImGuiIO& io = ImGui::GetIO();
 	Application& app = Application::Get();
-	io.DisplaySize = ImVec2(app.window().width(), app.window().height());
+	io.DisplaySize = ImVec2((float)app.window().width(), (float)app.window().height());
 
 	// Rendering
 	ImGui::Render();

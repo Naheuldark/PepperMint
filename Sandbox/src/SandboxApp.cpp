@@ -1,5 +1,7 @@
 #include <PepperMint.h>
 
+#include <imgui/imgui.h>
+
 class ExampleLayer : public PepperMint::Layer {
 public:
 	ExampleLayer() : Layer("Example") {}
@@ -19,6 +21,12 @@ public:
 			}
 			PM_TRACE("{0}", (char)e.keyCode())
 		}
+	}
+
+	void onImGuiRender() override {
+		ImGui::Begin("Test");
+		ImGui::Text("Hello World!");
+		ImGui::End();
 	}
 };
 
