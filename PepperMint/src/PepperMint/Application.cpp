@@ -9,11 +9,11 @@
 
 namespace PepperMint {
 
-Application* Application::kInstance = nullptr;
+Application* Application::sInstance = nullptr;
 
 Application::Application() {
-	PM_CORE_ASSERT(!kInstance, "Application already exists!")
-	kInstance = this;
+	PM_CORE_ASSERT(!sInstance, "Application already exists!")
+	sInstance = this;
 
 	_window = std::unique_ptr<Window>(Window::Create());
 	_window->setEventCallback(PM_BIND_EVENT_FN(Application::onEvent));
@@ -24,24 +24,18 @@ Application::Application() {
 	glGenVertexArrays(1, &_vertexArray);
 	glBindVertexArray(_vertexArray);
 
-	glGenBuffers(1, &_vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-
 	float vertices[3 * 3] = {
 		-0.5f, -0.5f, 0.0f,
 		 0.5f, -0.5f, 0.0f,
 		 0.0f,  0.5f, 0.0f
 	};
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	_vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-	glGenBuffers(1, &_indexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
-
-	unsigned int indices[3] = { 0, 1, 2 };
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	uint32_t indices[3] = { 0, 1, 2 };
+	_indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 
 	std::string vertexShader(R"(
 		#version 330 core
@@ -79,7 +73,7 @@ void Application::run() {
 		_shader->bind();
 
 		glBindVertexArray(_vertexArray);
-		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, _indexBuffer->count(), GL_UNSIGNED_INT, nullptr);
 
 		for (auto&& layer : _layerStack) {
 			layer->onUpdate();

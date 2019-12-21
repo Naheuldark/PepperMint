@@ -8,6 +8,7 @@
 #include "PepperMint/ImGui/ImGuiLayer.h"
 
 #include "PepperMint/Renderer/Shader.h"
+#include "PepperMint/Renderer/Buffer.h"
 
 namespace PepperMint {
 
@@ -23,7 +24,7 @@ public:
 
 	void run();
 
-	inline static Application& Get() { return *kInstance; }
+	inline static Application& Get() { return *sInstance; }
 	inline Window& window() { return *_window; }
 
 private:
@@ -35,11 +36,11 @@ private:
 	bool _running = true;
 	LayerStack _layerStack;
 
-	static Application* kInstance;
+	static Application* sInstance;
 
 	unsigned int _vertexArray;
-	unsigned int _vertexBuffer;
-	unsigned int _indexBuffer;
+	std::unique_ptr<VertexBuffer> _vertexBuffer;
+	std::unique_ptr<IndexBuffer> _indexBuffer;
 
 	std::unique_ptr<Shader> _shader;
 };

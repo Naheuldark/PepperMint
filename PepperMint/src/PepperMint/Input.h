@@ -11,12 +11,12 @@ public:
 	Input() = default;
 	~Input() = default;
 
-	inline static bool IsKeyPressed(int iKeyCode) { return kInstance->isKeyPressedImpl(iKeyCode); }
+	inline static bool IsKeyPressed(int iKeyCode) { return sInstance->isKeyPressedImpl(iKeyCode); }
 
-	inline static bool IsMouseButtonPressed(int iButton) { return kInstance->isMouseButtonPressedImpl(iButton); }
-	inline static std::pair<float, float> GetMousePosition() { return kInstance->getMousePositionImpl(); }
-	inline static float GetMouseX() { return kInstance->getMouseXImpl(); }
-	inline static float GetMouseY() { return kInstance->getMouseYImpl(); }
+	inline static bool IsMouseButtonPressed(int iButton) { return sInstance->isMouseButtonPressedImpl(iButton); }
+	inline static std::pair<float, float> GetMousePosition() { return sInstance->getMousePositionImpl(); }
+	inline static float GetMouseX() { return sInstance->getMouseXImpl(); }
+	inline static float GetMouseY() { return sInstance->getMouseYImpl(); }
 
 protected:
 	virtual bool isKeyPressedImpl(int iKeyCode) = 0;
@@ -27,6 +27,6 @@ protected:
 	virtual float getMouseYImpl() = 0;
 
 private:
-	static Input* kInstance;
+	static Input* sInstance;
 };
 }
