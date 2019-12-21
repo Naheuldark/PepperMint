@@ -1,6 +1,6 @@
 # Directories
 .vs/
-bin/
+/bin/
 bin-int/
 
 # Files
@@ -8,4 +8,6 @@ bin-int/
 **/*.ini
 **/*.vcxproj
 **/*.filters
+**/*.lib
+**/*.pdb
 *.sln
