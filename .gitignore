@@ -8,4 +8,4 @@ bin-int/
 **/*.ini
 **/*.vcxproj
 **/*.filters
-**/*.sln
+*.sln
