@@ -34,6 +34,10 @@ private:
 	LayerStack _layerStack;
 
 	static Application* kInstance;
+
+	unsigned int _vertexArray;
+	unsigned int _vertexBuffer;
+	unsigned int _indexBuffer;
 };
 
 // To be defined in CLIENT

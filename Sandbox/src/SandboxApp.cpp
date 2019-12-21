@@ -19,7 +19,7 @@ public:
 			if (e.keyCode() == PM_KEY_TAB) {
 				PM_TRACE("Tab key is pressed (event)")
 			}
-			PM_TRACE("{0}", (char)e.keyCode())
+			//PM_TRACE("{0}", (char)e.keyCode())
 		}
 	}
 
