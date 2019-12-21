@@ -7,6 +7,8 @@
 
 #include "PepperMint/ImGui/ImGuiLayer.h"
 
+#include "PepperMint/Renderer/Shader.h"
+
 namespace PepperMint {
 
 class Application {
@@ -38,6 +40,8 @@ private:
 	unsigned int _vertexArray;
 	unsigned int _vertexBuffer;
 	unsigned int _indexBuffer;
+
+	std::unique_ptr<Shader> _shader;
 };
 
 // To be defined in CLIENT

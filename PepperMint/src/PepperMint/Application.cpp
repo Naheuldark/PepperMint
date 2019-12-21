@@ -42,12 +42,41 @@ Application::Application() {
 
 	unsigned int indices[3] = { 0, 1, 2 };
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	std::string vertexShader(R"(
+		#version 330 core
+
+		layout(location = 0) in vec3 iPosition;
+
+		out vec3 vPosition;
+
+		void main() {
+			vPosition = iPosition;
+			gl_Position = vec4(iPosition, 1.0);
+		}
+	)");
+
+	std::string fragmentShader(R"(
+		#version 330 core
+
+		layout(location = 0) out vec4 oColor;
+
+		in vec3 vPosition;
+
+		void main() {
+			oColor = vec4(vPosition * 0.5 + 0.5, 1.0);
+		}
+	)");
+
+	_shader.reset(new Shader(vertexShader, fragmentShader));
 }
 
 void Application::run() {
 	while (_running) {
 		glClearColor(0.1f, 0.1f, 0.1f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		_shader->bind();
 
 		glBindVertexArray(_vertexArray);
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
