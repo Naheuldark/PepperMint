@@ -162,12 +162,10 @@ void Application::run() {
 
 void Application::pushLayer(Layer* iLayer) {
 	_layerStack.pushLayer(iLayer);
-	iLayer->onAttach();
 }
 
 void Application::pushOverlay(Layer* iOverlay) {
 	_layerStack.pushOverlay(iOverlay);
-	iOverlay->onAttach();
 }
 
 void Application::onEvent(Event& iEvent) {
