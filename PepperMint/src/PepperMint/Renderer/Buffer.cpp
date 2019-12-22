@@ -2,14 +2,14 @@
 
 #include "Buffer.h"
 
-#include "PepperMint/Renderer/Renderer.h"
+#include "Renderer.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace PepperMint {
 
 VertexBuffer* VertexBuffer::Create(float* iVertices, uint32_t iSize) {
 	switch (Renderer::API()) {
-		case RendererAPI::OPENGL:
+		case RendererAPI::API::OPENGL:
 			return new OpenGLVertexBuffer(iVertices, iSize);
 		default:
 			PM_CORE_ASSERT(false, "Specified RendererAPI is currently not supported!"); 
@@ -19,12 +19,11 @@ VertexBuffer* VertexBuffer::Create(float* iVertices, uint32_t iSize) {
 
 IndexBuffer* IndexBuffer::Create(uint32_t* iIndices, uint32_t iSize) {
 	switch (Renderer::API()) {
-		case RendererAPI::OPENGL:
+		case RendererAPI::API::OPENGL:
 			return new OpenGLIndexBuffer(iIndices, iSize);
 		default:
 			PM_CORE_ASSERT(false, "Specified RendererAPI is currently not supported!");
 			return nullptr;
 	}
 }
-
 }

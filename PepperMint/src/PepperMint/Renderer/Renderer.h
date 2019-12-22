@@ -1,21 +1,19 @@
 #pragma once
 
-namespace PepperMint {
+#include "RenderCommand.h"
 
-enum class RendererAPI {
-	NONE = 0,
-	OPENGL
-};
+namespace PepperMint {
 
 class Renderer {
 public:
 	Renderer() = default;
 	~Renderer() = default;
 
-	inline static RendererAPI API() { return sRendererAPI; }
+	static void BeginScene();
+	static void EndScene();
 
-private:
-	static RendererAPI sRendererAPI;
+	static void Submit(const std::shared_ptr<VertexArray>& iVertexArray);
+
+	inline static RendererAPI::API API() { return RendererAPI::GetAPI(); }
 };
-
 }

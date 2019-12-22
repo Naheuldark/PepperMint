@@ -1,9 +1,7 @@
 #pragma once
 
-#include "pmpch.h"
-
-#include "PepperMint/Core.h"
-#include "PepperMint/Layer.h"
+#include "Core.h"
+#include "Layer.h"
 
 namespace PepperMint {
 

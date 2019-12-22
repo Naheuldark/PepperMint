@@ -1,9 +1,7 @@
 #pragma once
 
-#include "pmpch.h"
-
-#include "PepperMint/Core.h"
-#include "PepperMint/Events/Event.h"
+#include "Core.h"
+#include "Events/Event.h"
 
 namespace PepperMint {
 

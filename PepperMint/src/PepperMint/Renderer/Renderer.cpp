@@ -4,5 +4,12 @@
 
 namespace PepperMint {
 
-RendererAPI Renderer::sRendererAPI = RendererAPI::OPENGL;
+void Renderer::BeginScene() {}
+
+void Renderer::EndScene() {}
+
+void Renderer::Submit(const std::shared_ptr<VertexArray>& iVertexArray) {
+	iVertexArray->bind();
+	RenderCommand::DrawIndexed(iVertexArray);
+}
 }

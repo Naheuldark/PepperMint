@@ -26,19 +26,20 @@ static uint32_t ShaderDataTypeSize(ShaderDataType iType) {
 		case PepperMint::ShaderDataType::MAT3:		return 4 * 3 * 3;
 		case PepperMint::ShaderDataType::MAT4:		return 4 * 4 * 4;
 		default:
-			PM_CORE_ASSERT(false, "Unknown ShaderDataType"); return 0;
+			PM_CORE_ASSERT(false, "Unknown ShaderDataType"); 
+			return 0;
 	}
 }
 
 struct BufferElement {
-	std::string name;
 	ShaderDataType type;
+	std::string name;
 	uint32_t size;
 	uint32_t offset;
 	bool normalized;
 
 	BufferElement(ShaderDataType iType, const std::string& iName, bool iNormalized = false) :
-		name(iName), type(iType), size(ShaderDataTypeSize(iType)), offset(0), normalized(iNormalized) {}
+		type(iType), name(iName), size(ShaderDataTypeSize(iType)), offset(0), normalized(iNormalized) {}
 
 	uint32_t componentCount() const {
 		switch (type) {
@@ -54,7 +55,8 @@ struct BufferElement {
 			case PepperMint::ShaderDataType::MAT3:		return 3 * 3;
 			case PepperMint::ShaderDataType::MAT4:		return 4 * 4;
 			default:
-				PM_CORE_ASSERT(false, "Unknown ShaderDataType"); return 0;
+				PM_CORE_ASSERT(false, "Unknown ShaderDataType"); 
+				return 0;
 		}
 	}
 };
@@ -64,7 +66,7 @@ public:
 	BufferLayout() = default;
 	BufferLayout(const std::initializer_list<BufferElement>& iElements) :
 		_elements(iElements) {
-		CalculateOffsetAndStride();
+		computeOffsetAndStride();
 	}
 
 	~BufferLayout() = default;
@@ -78,7 +80,7 @@ public:
 	std::vector<BufferElement>::const_iterator end() const { return _elements.end(); }
 
 private:
-	void CalculateOffsetAndStride() {
+	void computeOffsetAndStride() {
 		uint32_t offset = 0;
 		_stride = 0;
 

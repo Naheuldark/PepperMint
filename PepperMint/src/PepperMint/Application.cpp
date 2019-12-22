@@ -3,9 +3,7 @@
 #include "Application.h"
 
 #include "Input.h"
-
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include "Renderer/Renderer.h"
 
 namespace PepperMint {
 
@@ -133,18 +131,22 @@ Application::Application() {
 
 void Application::run() {
 	while (_running) {
-		glClearColor(0.1f, 0.1f, 0.1f, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::Clear();
+
+		Renderer::BeginScene();
 
 		// Draw square
 		_squareShader->bind();
 		_squareVA->bind();
-		glDrawElements(GL_TRIANGLES, _squareVA->indexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
+		Renderer::Submit(_squareVA);
 
 		// Draw triangle
 		_triangleShader->bind();
 		_triangleVA->bind();
-		glDrawElements(GL_TRIANGLES, _triangleVA->indexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
+		Renderer::Submit(_triangleVA);
+
+		Renderer::EndScene();
 
 		for (auto&& layer : _layerStack) {
 			layer->onUpdate();

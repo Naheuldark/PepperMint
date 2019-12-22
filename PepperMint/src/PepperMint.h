@@ -1,6 +1,6 @@
 #pragma once
 
-// For use by PepperMint applications
+// Include files
 
 #include "PepperMint/Application.h"
 #include "PepperMint/Layer.h"
@@ -12,4 +12,7 @@
 
 #include "PepperMint/ImGui/ImGuiLayer.h"
 
+/////////////////
+// Entry point //
+/////////////////
 #include "PepperMint/EntryPoint.h"

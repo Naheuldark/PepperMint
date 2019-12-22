@@ -9,7 +9,7 @@ namespace PepperMint {
 
 VertexArray* VertexArray::Create() {
 	switch (Renderer::API()) {
-		case RendererAPI::OPENGL:
+		case RendererAPI::API::OPENGL:
 			return new OpenGLVertexArray();
 		default:
 			PM_CORE_ASSERT(false, "Specified RendererAPI is currently not supported!");

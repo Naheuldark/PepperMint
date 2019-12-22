@@ -1,8 +1,8 @@
 #pragma once
 
-#include "PepperMint/Core.h"
-
 #include <utility>
+
+#include "Core.h"
 
 namespace PepperMint {
 

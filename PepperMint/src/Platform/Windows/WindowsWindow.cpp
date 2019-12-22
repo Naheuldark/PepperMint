@@ -7,6 +7,7 @@
 #include "PepperMint/Events/MouseEvent.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
+
 #include <GLFW/glfw3.h>
 
 namespace PepperMint {

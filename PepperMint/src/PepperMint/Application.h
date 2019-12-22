@@ -1,15 +1,16 @@
 #pragma once
 
-#include "PepperMint/Core.h"
-#include "PepperMint/Window.h"
-#include "PepperMint/Events/ApplicationEvent.h"
-#include "PepperMint/LayerStack.h"
+#include "Core.h"
+#include "Window.h"
+#include "LayerStack.h"
 
-#include "PepperMint/ImGui/ImGuiLayer.h"
+#include "Events/ApplicationEvent.h"
 
-#include "PepperMint/Renderer/Shader.h"
-#include "PepperMint/Renderer/Buffer.h"
-#include "PepperMint/Renderer/VertexArray.h"
+#include "ImGui/ImGuiLayer.h"
+
+#include "Renderer/Shader.h"
+#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
 
 namespace PepperMint {
 
