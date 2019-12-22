@@ -9,6 +9,7 @@
 
 #include "PepperMint/Renderer/Shader.h"
 #include "PepperMint/Renderer/Buffer.h"
+#include "PepperMint/Renderer/VertexArray.h"
 
 namespace PepperMint {
 
@@ -38,11 +39,11 @@ private:
 
 	static Application* sInstance;
 
-	unsigned int _vertexArray;
-	std::unique_ptr<VertexBuffer> _vertexBuffer;
-	std::unique_ptr<IndexBuffer> _indexBuffer;
+	std::shared_ptr<Shader> _triangleShader;
+	std::shared_ptr<VertexArray> _triangleVA;
 
-	std::unique_ptr<Shader> _shader;
+	std::shared_ptr<Shader> _squareShader;
+	std::shared_ptr<VertexArray> _squareVA;
 };
 
 // To be defined in CLIENT

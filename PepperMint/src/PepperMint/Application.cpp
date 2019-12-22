@@ -21,48 +21,114 @@ Application::Application() {
 	_imguiLayer = new ImGuiLayer();
 	pushOverlay(_imguiLayer);
 
-	glGenVertexArrays(1, &_vertexArray);
-	glBindVertexArray(_vertexArray);
+	//////////////
+	// Triangle //
+	//////////////
 
-	float vertices[3 * 3] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
+	_triangleVA.reset(VertexArray::Create());
+
+	// Vertex Buffer
+	float triangleVertices[3 * 7] = {
+		-0.5f, -0.5f, 0.0f,		0.8f, 0.2f, 0.8f, 1.0f,
+		 0.5f, -0.5f, 0.0f,		0.2f, 0.3f, 0.8f, 1.0f,
+		 0.0f,  0.5f, 0.0f,		0.8f, 0.8f, 0.2f, 1.0f
 	};
-	_vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+	std::shared_ptr<VertexBuffer> triangleVB;
+	triangleVB.reset(VertexBuffer::Create(triangleVertices, sizeof(triangleVertices)));
+	triangleVB->setLayout({
+		{ ShaderDataType::FLOAT3, "iPosition" },
+		{ ShaderDataType::FLOAT4, "iColor"}
+	});
+	_triangleVA->addVertexBuffer(triangleVB);
 
-	uint32_t indices[3] = { 0, 1, 2 };
-	_indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+	// Index Buffer
+	uint32_t triangleIndices[3] = { 0, 1, 2 };
 
-	std::string vertexShader(R"(
+	std::shared_ptr<IndexBuffer> triangleIB;
+	triangleIB.reset(IndexBuffer::Create(triangleIndices, sizeof(triangleIndices) / sizeof(uint32_t)));
+	_triangleVA->setIndexBuffer(triangleIB);
+
+	// Shader
+	std::string triangleVS(R"(
 		#version 330 core
 
 		layout(location = 0) in vec3 iPosition;
+		layout(location = 1) in vec4 iColor;
 
-		out vec3 vPosition;
+		out vec4 vColor;
 
 		void main() {
-			vPosition = iPosition;
+			vColor = iColor;
 			gl_Position = vec4(iPosition, 1.0);
 		}
 	)");
 
-	std::string fragmentShader(R"(
+	std::string triangleFS(R"(
 		#version 330 core
 
 		layout(location = 0) out vec4 oColor;
 
-		in vec3 vPosition;
+		in vec4 vColor;
 
 		void main() {
-			oColor = vec4(vPosition * 0.5 + 0.5, 1.0);
+			oColor = vColor;
 		}
 	)");
 
-	_shader.reset(new Shader(vertexShader, fragmentShader));
+	_triangleShader.reset(new Shader(triangleVS, triangleFS));
+
+
+	////////////
+	// Square //
+	////////////
+
+	_squareVA.reset(VertexArray::Create());
+
+	// Vertex Buffer
+	float squareVertices[3 * 4] = {
+		-0.75f, -0.75f, 0.0f,
+		 0.75f, -0.75f, 0.0f,
+		 0.75f,  0.75f, 0.0f,
+		-0.75f,  0.75f, 0.0f
+	};
+
+	std::shared_ptr<VertexBuffer> squareVB;
+	squareVB.reset(VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+	squareVB->setLayout({
+		{ ShaderDataType::FLOAT3, "iPosition" },
+	});
+	_squareVA->addVertexBuffer(squareVB);
+
+	// Index Buffer
+	uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
+
+	std::shared_ptr<IndexBuffer> squareIB;
+	squareIB.reset(IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+	_squareVA->setIndexBuffer(squareIB);
+
+	// Shader
+	std::string squareVS(R"(
+		#version 330 core
+			
+		layout(location = 0) in vec3 iPosition;
+
+		void main() {
+			gl_Position = vec4(iPosition, 1.0);	
+		}
+	)");
+
+	std::string squareFS(R"(
+		#version 330 core
+			
+		layout(location = 0) out vec4 oColor;
+
+		void main() {
+			oColor = vec4(0.2, 0.3, 0.8, 1.0);
+		}
+	)");
+
+	_squareShader.reset(new Shader(squareVS, squareFS));
 }
 
 void Application::run() {
@@ -70,10 +136,15 @@ void Application::run() {
 		glClearColor(0.1f, 0.1f, 0.1f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		_shader->bind();
+		// Draw square
+		_squareShader->bind();
+		_squareVA->bind();
+		glDrawElements(GL_TRIANGLES, _squareVA->indexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
 
-		glBindVertexArray(_vertexArray);
-		glDrawElements(GL_TRIANGLES, _indexBuffer->count(), GL_UNSIGNED_INT, nullptr);
+		// Draw triangle
+		_triangleShader->bind();
+		_triangleVA->bind();
+		glDrawElements(GL_TRIANGLES, _triangleVA->indexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
 
 		for (auto&& layer : _layerStack) {
 			layer->onUpdate();

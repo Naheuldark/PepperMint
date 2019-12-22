@@ -4,7 +4,7 @@ namespace PepperMint {
 
 enum class RendererAPI {
 	NONE = 0,
-	OPENGL = 1
+	OPENGL
 };
 
 class Renderer {
