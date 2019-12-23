@@ -4,7 +4,7 @@
 
 class ExampleLayer : public PepperMint::Layer {
 public:
-	ExampleLayer() : Layer("Example"), _camera(-1.6f, 1.6f, -0.9f, 0.9f) {
+	ExampleLayer() : Layer("Example"), _camera(-1.6f, 1.6f, -0.9f, 0.9f), _cameraPosition(0.0f) {
 		//////////////
 		// Triangle //
 		//////////////
@@ -122,11 +122,26 @@ public:
 	~ExampleLayer() = default;
 
 	void onUpdate() override {
+		if (PepperMint::Input::IsKeyPressed(PM_KEY_LEFT))
+			_cameraPosition.x -= _cameraMoveSpeed;
+		else if (PepperMint::Input::IsKeyPressed(PM_KEY_RIGHT))
+			_cameraPosition.x += _cameraMoveSpeed;
+
+		if (PepperMint::Input::IsKeyPressed(PM_KEY_UP))
+			_cameraPosition.y += _cameraMoveSpeed;
+		else if (PepperMint::Input::IsKeyPressed(PM_KEY_DOWN))
+			_cameraPosition.y -= _cameraMoveSpeed;
+
+		if (PepperMint::Input::IsKeyPressed(PM_KEY_A))
+			_cameraRotation += _cameraRotationSpeed;
+		if (PepperMint::Input::IsKeyPressed(PM_KEY_D))
+			_cameraRotation -= _cameraRotationSpeed;
+
 		PepperMint::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		PepperMint::RenderCommand::Clear();
 
-		_camera.setPosition({ 0.5f, 0.5f, 0.0f });
-		_camera.setRotation(45.0f);
+		_camera.setPosition(_cameraPosition);
+		_camera.setRotation(_cameraRotation);
 
 		PepperMint::Renderer::BeginScene(_camera);
 
@@ -153,6 +168,12 @@ private:
 	std::shared_ptr<PepperMint::VertexArray> _squareVA;
 
 	PepperMint::OrthographicCamera _camera;
+
+	glm::vec3 _cameraPosition;
+	float _cameraMoveSpeed = 0.1f;
+
+	float _cameraRotation = 0.0f;
+	float _cameraRotationSpeed = 2.0f;
 };
 
 

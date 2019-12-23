@@ -3,7 +3,6 @@
 #include "Application.h"
 
 #include "Input.h"
-#include "Renderer/Renderer.h"
 
 namespace PepperMint {
 
