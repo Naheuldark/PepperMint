@@ -10,10 +10,10 @@ public:
 	~OrthographicCamera() = default;
 
 	inline const glm::vec3& position() const { return _position; }
-	inline void setPosition(const glm::vec3& iPosition) { _position = iPosition; }
+	inline void setPosition(const glm::vec3& iPosition) { _position = iPosition; computeViewMatrix(); }
 
 	inline float rotation() const { return _rotation; }
-	inline void setRotation(float iRotation) { _rotation = iRotation; }
+	inline void setRotation(float iRotation) { _rotation = iRotation; computeViewMatrix(); }
 
 	inline const glm::mat4& projectionMatrix() const { return _projectionMatrix; }
 	inline const glm::mat4& viewMatrix() const { return _viewMatrix; }
