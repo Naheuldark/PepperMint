@@ -1,6 +1,7 @@
 #include <PepperMint.h>
 
 #include <imgui/imgui.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 class ExampleLayer : public PepperMint::Layer {
 public:
@@ -23,7 +24,7 @@ public:
 		triangleVB->setLayout({
 			{ PepperMint::ShaderDataType::FLOAT3, "iPosition" },
 			{ PepperMint::ShaderDataType::FLOAT4, "iColor"}
-							  });
+		});
 		_triangleVA->addVertexBuffer(triangleVB);
 
 		// Index Buffer
@@ -41,12 +42,13 @@ public:
 			layout(location = 1) in vec4 iColor;
 
 			uniform mat4 uViewProjection;
+			uniform mat4 uTransform;
 
 			out vec4 vColor;
 
 			void main() {
 				vColor = iColor;
-				gl_Position = uViewProjection * vec4(iPosition, 1.0);
+				gl_Position = uViewProjection * uTransform * vec4(iPosition, 1.0);
 			}
 		)");
 
@@ -73,10 +75,10 @@ public:
 
 		// Vertex Buffer
 		float squareVertices[3 * 4] = {
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			-0.75f,  0.75f, 0.0f
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f
 		};
 
 		std::shared_ptr<PepperMint::VertexBuffer> squareVB;
@@ -100,9 +102,10 @@ public:
 			layout(location = 0) in vec3 iPosition;
 
 			uniform mat4 uViewProjection;
+			uniform mat4 uTransform;
 
 			void main() {
-				gl_Position = uViewProjection * vec4(iPosition, 1.0);	
+				gl_Position = uViewProjection * uTransform * vec4(iPosition, 1.0);	
 			}
 		)");
 
@@ -145,7 +148,15 @@ public:
 
 		PepperMint::Renderer::BeginScene(_camera);
 
-		PepperMint::Renderer::Submit(_squareShader, _squareVA);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		for (int y = 0; y < 20; y++) {
+			for (int x = 0; x < 20; x++) {
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				PepperMint::Renderer::Submit(_squareShader, _squareVA, transform);
+			}
+		}
+
 		PepperMint::Renderer::Submit(_triangleShader, _triangleVA);
 
 		PepperMint::Renderer::EndScene();
