@@ -9,7 +9,8 @@ namespace PepperMint {
 
 Application* Application::sInstance = nullptr;
 
-Application::Application() {
+Application::Application() :
+	_camera(-1.6f, 1.6f, -0.9f, 0.9f) {
 	PM_CORE_ASSERT(!sInstance, "Application already exists!")
 	sInstance = this;
 
@@ -54,11 +55,13 @@ Application::Application() {
 		layout(location = 0) in vec3 iPosition;
 		layout(location = 1) in vec4 iColor;
 
+		uniform mat4 uViewProjection;
+
 		out vec4 vColor;
 
 		void main() {
 			vColor = iColor;
-			gl_Position = vec4(iPosition, 1.0);
+			gl_Position = uViewProjection * vec4(iPosition, 1.0);
 		}
 	)");
 
@@ -111,8 +114,10 @@ Application::Application() {
 			
 		layout(location = 0) in vec3 iPosition;
 
+		uniform mat4 uViewProjection;
+
 		void main() {
-			gl_Position = vec4(iPosition, 1.0);	
+			gl_Position = uViewProjection * vec4(iPosition, 1.0);	
 		}
 	)");
 
@@ -134,17 +139,13 @@ void Application::run() {
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 
-		Renderer::BeginScene();
+		_camera.setPosition({ 0.5f, 0.5f, 0.0f });
+		_camera.setRotation(45.0f);
 
-		// Draw square
-		_squareShader->bind();
-		_squareVA->bind();
-		Renderer::Submit(_squareVA);
+		Renderer::BeginScene(_camera);
 
-		// Draw triangle
-		_triangleShader->bind();
-		_triangleVA->bind();
-		Renderer::Submit(_triangleVA);
+		Renderer::Submit(_squareShader, _squareVA);
+		Renderer::Submit(_triangleShader, _triangleVA);
 
 		Renderer::EndScene();
 

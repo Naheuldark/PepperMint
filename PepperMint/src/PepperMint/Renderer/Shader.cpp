@@ -3,6 +3,7 @@
 #include "Shader.h"
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace PepperMint {
 
@@ -116,5 +117,10 @@ void Shader::bind() {
 
 void Shader::unbind() {
 	glUseProgram(0);
+}
+
+void Shader::uploadUniformMat4(const std::string& iName, const glm::mat4& iMatrix) {
+	GLint location = glGetUniformLocation(_rendererId, iName.c_str());
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(iMatrix));
 }
 }

@@ -11,6 +11,7 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Buffer.h"
 #include "Renderer/VertexArray.h"
+#include "Renderer/OrthographicCamera.h"
 
 namespace PepperMint {
 
@@ -45,6 +46,8 @@ private:
 
 	std::shared_ptr<Shader> _squareShader;
 	std::shared_ptr<VertexArray> _squareVA;
+
+	OrthographicCamera _camera;
 };
 
 // To be defined in CLIENT
