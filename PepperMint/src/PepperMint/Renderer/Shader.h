@@ -1,22 +1,17 @@
 #pragma once
 
 #include <string>
-#include <glm/glm.hpp>
 
 namespace PepperMint {
 
 class Shader {
 public:
-	Shader(const std::string& iVertexShader, const std::string& iFragmentShader);
-	~Shader();
+	virtual ~Shader() = default;
 
-	void bind();
-	void unbind();
-
-	void uploadUniformMat4(const std::string& iName, const glm::mat4& iMatrix);
-
-private:
-	uint32_t _rendererId;
+	virtual void bind() const = 0;
+	virtual void unbind() const = 0;
+	
+	static Shader* Create(const std::string& iVertexSrc, const std::string& iFragmentSrc);
 };
 
 }

@@ -2,6 +2,8 @@
 
 #include "Renderer.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 namespace PepperMint {
 
 Renderer::SceneData* Renderer::sSceneData = new Renderer::SceneData;
@@ -16,8 +18,8 @@ void Renderer::Submit(const std::shared_ptr<Shader>& iShader,
 					  const std::shared_ptr<VertexArray>& iVertexArray,
 					  const glm::mat4& iTransform) {
 	iShader->bind();
-	iShader->uploadUniformMat4("uViewProjection", sSceneData->viewProjectionMatrix);
-	iShader->uploadUniformMat4("uTransform", iTransform);
+	std::dynamic_pointer_cast<OpenGLShader>(iShader)->uploadUniformMat4("uViewProjection", sSceneData->viewProjectionMatrix);
+	std::dynamic_pointer_cast<OpenGLShader>(iShader)->uploadUniformMat4("uTransform", iTransform);
 
 	iVertexArray->bind();
 	RenderCommand::DrawIndexed(iVertexArray);

@@ -1,7 +1,10 @@
 #include <PepperMint.h>
 
+#include <Platform/OpenGL/OpenGLShader.h>
+
 #include <imgui/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer : public PepperMint::Layer {
 public:
@@ -64,7 +67,7 @@ public:
 			}
 		)");
 
-		_triangleShader.reset(new PepperMint::Shader(triangleVS, triangleFS));
+		_triangleShader.reset(PepperMint::Shader::Create(triangleVS, triangleFS));
 
 
 		////////////
@@ -114,12 +117,14 @@ public:
 			
 			layout(location = 0) out vec4 oColor;
 
+			uniform vec3 uColor;
+
 			void main() {
-				oColor = vec4(0.2, 0.3, 0.8, 1.0);
+				oColor = vec4(uColor, 1.0);
 			}
 		)");
 
-		_squareShader.reset(new PepperMint::Shader(squareVS, squareFS));
+		_squareShader.reset(PepperMint::Shader::Create(squareVS, squareFS));
 	}
 
 	~ExampleLayer() = default;
@@ -149,6 +154,10 @@ public:
 		PepperMint::Renderer::BeginScene(_camera);
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_squareShader)->bind();
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_squareShader)->uploadUniformFloat3("uColor", _squareColor);
+
 		for (int y = 0; y < 20; y++) {
 			for (int x = 0; x < 20; x++) {
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
@@ -167,7 +176,9 @@ public:
 	}
 
 	void onImGuiRender() override {
-
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(_squareColor));
+		ImGui::End();
 	}
 
 private:
@@ -185,6 +196,8 @@ private:
 
 	float _cameraRotation = 0.0f;
 	float _cameraRotationSpeed = 180.0f;
+
+	glm::vec3 _squareColor = { 0.2f, 0.3f, 0.8f };
 };
 
 
