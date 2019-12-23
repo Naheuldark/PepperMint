@@ -12,6 +12,15 @@
 
 #include "PepperMint/ImGui/ImGuiLayer.h"
 
+#include "PepperMint/Renderer/Renderer.h"
+#include "PepperMint/Renderer/RenderCommand.h"
+
+#include "PepperMint/Renderer/Buffer.h"
+#include "PepperMint/Renderer/Shader.h"
+#include "PepperMint/Renderer/VertexArray.h"
+
+#include "PepperMint/Renderer/OrthographicCamera.h"
+
 /////////////////
 // Entry point //
 /////////////////
