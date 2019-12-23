@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Events/Event.h"
+#include "Core/Timestep.h"
 
 namespace PepperMint {
 
@@ -13,7 +14,7 @@ public:
 
 	virtual void onAttach() {}
 	virtual void onDetach() {}
-	virtual void onUpdate() {}
+	virtual void onUpdate(Timestep iTimestep) {}
 	virtual void onImGuiRender() {}
 	virtual void onEvent(Event& iEvent) {}
 

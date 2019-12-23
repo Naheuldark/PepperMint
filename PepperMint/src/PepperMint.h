@@ -6,6 +6,8 @@
 #include "PepperMint/Layer.h"
 #include "PepperMint/Log.h"
 
+#include "PepperMint/Core/Timestep.h"
+
 #include "PepperMint/Input.h"
 #include "PepperMint/KeyCodes.h"
 #include "PepperMint/MouseButtonCodes.h"

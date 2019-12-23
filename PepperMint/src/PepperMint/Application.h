@@ -3,9 +3,8 @@
 #include "Core.h"
 #include "Window.h"
 #include "LayerStack.h"
-
 #include "Events/ApplicationEvent.h"
-
+#include "Core/Timestep.h"
 #include "ImGui/ImGuiLayer.h"
 
 namespace PepperMint {
@@ -33,6 +32,7 @@ private:
 	ImGuiLayer* _imguiLayer;
 	bool _running = true;
 	LayerStack _layerStack;
+	float _lastFrameTime = 0.0f;
 
 private:
 	static Application* sInstance;

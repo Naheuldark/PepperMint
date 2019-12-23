@@ -121,21 +121,21 @@ public:
 
 	~ExampleLayer() = default;
 
-	void onUpdate() override {
+	void onUpdate(PepperMint::Timestep iTimestep) override {
 		if (PepperMint::Input::IsKeyPressed(PM_KEY_LEFT))
-			_cameraPosition.x -= _cameraMoveSpeed;
+			_cameraPosition.x -= _cameraMoveSpeed * iTimestep;
 		else if (PepperMint::Input::IsKeyPressed(PM_KEY_RIGHT))
-			_cameraPosition.x += _cameraMoveSpeed;
+			_cameraPosition.x += _cameraMoveSpeed * iTimestep;
 
 		if (PepperMint::Input::IsKeyPressed(PM_KEY_UP))
-			_cameraPosition.y += _cameraMoveSpeed;
+			_cameraPosition.y += _cameraMoveSpeed * iTimestep;
 		else if (PepperMint::Input::IsKeyPressed(PM_KEY_DOWN))
-			_cameraPosition.y -= _cameraMoveSpeed;
+			_cameraPosition.y -= _cameraMoveSpeed * iTimestep;
 
 		if (PepperMint::Input::IsKeyPressed(PM_KEY_A))
-			_cameraRotation += _cameraRotationSpeed;
+			_cameraRotation += _cameraRotationSpeed * iTimestep;
 		if (PepperMint::Input::IsKeyPressed(PM_KEY_D))
-			_cameraRotation -= _cameraRotationSpeed;
+			_cameraRotation -= _cameraRotationSpeed * iTimestep;
 
 		PepperMint::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		PepperMint::RenderCommand::Clear();
@@ -170,10 +170,10 @@ private:
 	PepperMint::OrthographicCamera _camera;
 
 	glm::vec3 _cameraPosition;
-	float _cameraMoveSpeed = 0.1f;
+	float _cameraMoveSpeed = 5.0f;
 
 	float _cameraRotation = 0.0f;
-	float _cameraRotationSpeed = 2.0f;
+	float _cameraRotationSpeed = 180.0f;
 };
 
 

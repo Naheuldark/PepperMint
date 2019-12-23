@@ -4,6 +4,8 @@
 
 #include "Input.h"
 
+#include <GLFW/glfw3.h>
+
 namespace PepperMint {
 
 Application* Application::sInstance = nullptr;
@@ -21,8 +23,12 @@ Application::Application() {
 
 void Application::run() {
 	while (_running) {
+		float time = (float)glfwGetTime();
+		Timestep timestep = time - _lastFrameTime;
+		_lastFrameTime = time;
+
 		for (auto&& layer : _layerStack) {
-			layer->onUpdate();
+			layer->onUpdate(timestep);
 		}
 
 		_imguiLayer->begin();
