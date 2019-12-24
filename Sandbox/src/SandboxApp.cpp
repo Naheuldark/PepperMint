@@ -9,67 +9,6 @@
 class ExampleLayer : public PepperMint::Layer {
 public:
 	ExampleLayer() : Layer("Example"), _camera(-1.6f, 1.6f, -0.9f, 0.9f), _cameraPosition(0.0f) {
-		//////////////
-		// Triangle //
-		//////////////
-
-		_triangleVA.reset(PepperMint::VertexArray::Create());
-
-		// Vertex Buffer
-		float triangleVertices[3 * 7] = {
-			-0.5f, -0.5f, 0.0f,		0.8f, 0.2f, 0.8f, 1.0f,
-			 0.5f, -0.5f, 0.0f,		0.2f, 0.3f, 0.8f, 1.0f,
-			 0.0f,  0.5f, 0.0f,		0.8f, 0.8f, 0.2f, 1.0f
-		};
-
-		PepperMint::Ref<PepperMint::VertexBuffer> triangleVB;
-		triangleVB.reset(PepperMint::VertexBuffer::Create(triangleVertices, sizeof(triangleVertices)));
-		triangleVB->setLayout({
-			{ PepperMint::ShaderDataType::FLOAT3, "iPosition" },
-			{ PepperMint::ShaderDataType::FLOAT4, "iColor"}
-		});
-		_triangleVA->addVertexBuffer(triangleVB);
-
-		// Index Buffer
-		uint32_t triangleIndices[3] = { 0, 1, 2 };
-
-		PepperMint::Ref<PepperMint::IndexBuffer> triangleIB;
-		triangleIB.reset(PepperMint::IndexBuffer::Create(triangleIndices, sizeof(triangleIndices) / sizeof(uint32_t)));
-		_triangleVA->setIndexBuffer(triangleIB);
-
-		// Shader
-		std::string triangleVS(R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 iPosition;
-			layout(location = 1) in vec4 iColor;
-
-			uniform mat4 uViewProjection;
-			uniform mat4 uTransform;
-
-			out vec4 vColor;
-
-			void main() {
-				vColor = iColor;
-				gl_Position = uViewProjection * uTransform * vec4(iPosition, 1.0);
-			}
-		)");
-
-		std::string triangleFS(R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 oColor;
-
-			in vec4 vColor;
-
-			void main() {
-				oColor = vColor;
-			}
-		)");
-
-		_triangleShader.reset(PepperMint::Shader::Create(triangleVS, triangleFS));
-
-
 		////////////
 		// Square //
 		////////////
@@ -77,17 +16,18 @@ public:
 		_squareVA.reset(PepperMint::VertexArray::Create());
 
 		// Vertex Buffer
-		float squareVertices[3 * 4] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
+		float squareVertices[5 * 4] = {
+			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f,		0.0f, 1.0f
 		};
 
 		PepperMint::Ref<PepperMint::VertexBuffer> squareVB;
 		squareVB.reset(PepperMint::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 		squareVB->setLayout({
 			{ PepperMint::ShaderDataType::FLOAT3, "iPosition" },
+			{ PepperMint::ShaderDataType::FLOAT2, "iTexCoord" },
 		});
 		_squareVA->addVertexBuffer(squareVB);
 
@@ -98,24 +38,30 @@ public:
 		squareIB.reset(PepperMint::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		_squareVA->setIndexBuffer(squareIB);
 
-		// Shader
-		std::string squareVS(R"(
+		/////////////
+		// Shaders //
+		/////////////
+
+		// Flat Color Shader
+		std::string flatColorVertexShader(R"(
 			#version 330 core
-			
+
 			layout(location = 0) in vec3 iPosition;
 
 			uniform mat4 uViewProjection;
 			uniform mat4 uTransform;
 
 			void main() {
-				gl_Position = uViewProjection * uTransform * vec4(iPosition, 1.0);	
+				gl_Position = uViewProjection * uTransform * vec4(iPosition, 1.0);
 			}
 		)");
 
-		std::string squareFS(R"(
+		std::string flatColorFragmentShader(R"(
 			#version 330 core
-			
+
 			layout(location = 0) out vec4 oColor;
+
+			in vec4 vColor;
 
 			uniform vec3 uColor;
 
@@ -124,7 +70,42 @@ public:
 			}
 		)");
 
-		_squareShader.reset(PepperMint::Shader::Create(squareVS, squareFS));
+		_flatColorShader.reset(PepperMint::Shader::Create(flatColorVertexShader, flatColorFragmentShader));
+
+
+		// Texture Shader
+		std::string textureVertexShader(R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 iPosition;
+			layout(location = 1) in vec2 iTexCoord;
+
+			uniform mat4 uViewProjection;
+			uniform mat4 uTransform;
+
+			out vec2 vTexCoord;
+
+			void main() {
+				vTexCoord = iTexCoord;
+				gl_Position = uViewProjection * uTransform * vec4(iPosition, 1.0);	
+			}
+		)");
+
+		std::string textureFragmentShader(R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 oColor;
+
+			in vec2 vTexCoord;
+
+			uniform vec3 uColor;
+
+			void main() {
+				oColor = vec4(vTexCoord, 0.5, 1.0);
+			}
+		)");
+
+		_textureShader.reset(PepperMint::Shader::Create(textureVertexShader, textureFragmentShader));
 	}
 
 	~ExampleLayer() = default;
@@ -157,20 +138,19 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_squareShader)->bind();
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_squareShader)->uploadUniformFloat3("uColor", _squareColor);
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_flatColorShader)->bind();
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_flatColorShader)->uploadUniformFloat3("uColor", _squareColor);
 
 		// Draw squares
 		for (int y = 0; y < 20; y++) {
 			for (int x = 0; x < 20; x++) {
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				PepperMint::Renderer::Submit(_squareShader, _squareVA, transform);
+				PepperMint::Renderer::Submit(_flatColorShader, _squareVA, transform);
 			}
 		}
 
-		// Draw triangles
-		PepperMint::Renderer::Submit(_triangleShader, _triangleVA);
+		PepperMint::Renderer::Submit(_textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		PepperMint::Renderer::EndScene();
 	}
@@ -183,10 +163,9 @@ public:
 
 private:
 
-	PepperMint::Ref<PepperMint::Shader> _triangleShader;
-	PepperMint::Ref<PepperMint::VertexArray> _triangleVA;
+	PepperMint::Ref<PepperMint::Shader> _flatColorShader;
+	PepperMint::Ref<PepperMint::Shader> _textureShader;
 
-	PepperMint::Ref<PepperMint::Shader> _squareShader;
 	PepperMint::Ref<PepperMint::VertexArray> _squareVA;
 
 	PepperMint::OrthographicCamera _camera;
