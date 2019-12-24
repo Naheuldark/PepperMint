@@ -14,7 +14,7 @@ Application::Application() {
 	PM_CORE_ASSERT(!sInstance, "Application already exists!")
 	sInstance = this;
 
-	_window = std::unique_ptr<Window>(Window::Create());
+	_window = Scope<Window>(Window::Create());
 	_window->setEventCallback(PM_BIND_EVENT_FN(Application::onEvent));
 
 	_imguiLayer = new ImGuiLayer();

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifndef PM_PLATFORM_WINDOWS
 	#error PepperMint only support Windows!
 #endif // PM_PLATFORM_WINDOWS
@@ -20,3 +22,12 @@
 #define PM_BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
 
 #define BIT(x) (1 << x)
+
+namespace PepperMint {
+
+template<typename T>
+using Scope = std::unique_ptr<T>;
+
+template<typename T>
+using Ref = std::shared_ptr<T>;
+}

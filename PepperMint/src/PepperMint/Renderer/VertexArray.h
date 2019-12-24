@@ -15,11 +15,11 @@ public:
 	virtual void bind() const = 0;
 	virtual void unbind() const = 0;
 
-	virtual void addVertexBuffer(const std::shared_ptr<VertexBuffer>& iVertexBuffer) = 0;
-	virtual void setIndexBuffer(const std::shared_ptr<IndexBuffer>& iIndexBuffer) = 0;
+	virtual void addVertexBuffer(const Ref<VertexBuffer>& iVertexBuffer) = 0;
+	virtual void setIndexBuffer(const Ref<IndexBuffer>& iIndexBuffer) = 0;
 
-	virtual const std::vector<std::shared_ptr<VertexBuffer>>& vertexBuffers() const = 0;
-	virtual const std::shared_ptr<IndexBuffer>& indexBuffer() const = 0;
+	virtual const std::vector<Ref<VertexBuffer>>& vertexBuffers() const = 0;
+	virtual const Ref<IndexBuffer>& indexBuffer() const = 0;
 
 	static VertexArray* Create();
 };

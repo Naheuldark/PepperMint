@@ -28,7 +28,7 @@ private:
 	bool onWindowCloseEvent(WindowCloseEvent& iEvent);
 
 private:
-	std::unique_ptr<Window> _window;
+	Scope<Window> _window;
 	ImGuiLayer* _imguiLayer;
 	bool _running = true;
 	LayerStack _layerStack;

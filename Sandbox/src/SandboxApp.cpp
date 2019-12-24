@@ -22,7 +22,7 @@ public:
 			 0.0f,  0.5f, 0.0f,		0.8f, 0.8f, 0.2f, 1.0f
 		};
 
-		std::shared_ptr<PepperMint::VertexBuffer> triangleVB;
+		PepperMint::Ref<PepperMint::VertexBuffer> triangleVB;
 		triangleVB.reset(PepperMint::VertexBuffer::Create(triangleVertices, sizeof(triangleVertices)));
 		triangleVB->setLayout({
 			{ PepperMint::ShaderDataType::FLOAT3, "iPosition" },
@@ -33,7 +33,7 @@ public:
 		// Index Buffer
 		uint32_t triangleIndices[3] = { 0, 1, 2 };
 
-		std::shared_ptr<PepperMint::IndexBuffer> triangleIB;
+		PepperMint::Ref<PepperMint::IndexBuffer> triangleIB;
 		triangleIB.reset(PepperMint::IndexBuffer::Create(triangleIndices, sizeof(triangleIndices) / sizeof(uint32_t)));
 		_triangleVA->setIndexBuffer(triangleIB);
 
@@ -84,7 +84,7 @@ public:
 			-0.5f,  0.5f, 0.0f
 		};
 
-		std::shared_ptr<PepperMint::VertexBuffer> squareVB;
+		PepperMint::Ref<PepperMint::VertexBuffer> squareVB;
 		squareVB.reset(PepperMint::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 		squareVB->setLayout({
 			{ PepperMint::ShaderDataType::FLOAT3, "iPosition" },
@@ -94,7 +94,7 @@ public:
 		// Index Buffer
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
-		std::shared_ptr<PepperMint::IndexBuffer> squareIB;
+		PepperMint::Ref<PepperMint::IndexBuffer> squareIB;
 		squareIB.reset(PepperMint::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		_squareVA->setIndexBuffer(squareIB);
 
@@ -130,6 +130,7 @@ public:
 	~ExampleLayer() = default;
 
 	void onUpdate(PepperMint::Timestep iTimestep) override {
+		// Event polling
 		if (PepperMint::Input::IsKeyPressed(PM_KEY_LEFT))
 			_cameraPosition.x -= _cameraMoveSpeed * iTimestep;
 		else if (PepperMint::Input::IsKeyPressed(PM_KEY_RIGHT))
@@ -148,6 +149,7 @@ public:
 		PepperMint::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		PepperMint::RenderCommand::Clear();
 
+		// Setup Orthographic Camera
 		_camera.setPosition(_cameraPosition);
 		_camera.setRotation(_cameraRotation);
 
@@ -158,6 +160,7 @@ public:
 		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_squareShader)->bind();
 		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_squareShader)->uploadUniformFloat3("uColor", _squareColor);
 
+		// Draw squares
 		for (int y = 0; y < 20; y++) {
 			for (int x = 0; x < 20; x++) {
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
@@ -166,13 +169,10 @@ public:
 			}
 		}
 
+		// Draw triangles
 		PepperMint::Renderer::Submit(_triangleShader, _triangleVA);
 
 		PepperMint::Renderer::EndScene();
-	}
-
-	void onEvent(PepperMint::Event& iEvent) override {
-
 	}
 
 	void onImGuiRender() override {
@@ -183,11 +183,11 @@ public:
 
 private:
 
-	std::shared_ptr<PepperMint::Shader> _triangleShader;
-	std::shared_ptr<PepperMint::VertexArray> _triangleVA;
+	PepperMint::Ref<PepperMint::Shader> _triangleShader;
+	PepperMint::Ref<PepperMint::VertexArray> _triangleVA;
 
-	std::shared_ptr<PepperMint::Shader> _squareShader;
-	std::shared_ptr<PepperMint::VertexArray> _squareVA;
+	PepperMint::Ref<PepperMint::Shader> _squareShader;
+	PepperMint::Ref<PepperMint::VertexArray> _squareVA;
 
 	PepperMint::OrthographicCamera _camera;
 

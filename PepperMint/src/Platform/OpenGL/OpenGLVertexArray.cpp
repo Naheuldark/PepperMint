@@ -40,7 +40,7 @@ void OpenGLVertexArray::unbind() const {
 	glBindVertexArray(0);
 }
 
-void OpenGLVertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer>& iVertexBuffer) {
+void OpenGLVertexArray::addVertexBuffer(const Ref<VertexBuffer>& iVertexBuffer) {
 	PM_CORE_ASSERT(iVertexBuffer->layout().elements().size(), "VertexBuffer has no layout!");
 
 	glBindVertexArray(_rendererId);
@@ -62,7 +62,7 @@ void OpenGLVertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer>& iVe
 	_vertexBuffers.push_back(iVertexBuffer);
 }
 
-void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer>& iIndexBuffer) {
+void OpenGLVertexArray::setIndexBuffer(const Ref<IndexBuffer>& iIndexBuffer) {
 	glBindVertexArray(_rendererId);
 	iIndexBuffer->bind();
 
