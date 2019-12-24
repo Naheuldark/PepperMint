@@ -46,17 +46,16 @@ void OpenGLVertexArray::addVertexBuffer(const Ref<VertexBuffer>& iVertexBuffer) 
 	glBindVertexArray(_rendererId);
 	iVertexBuffer->bind();
 
-	uint32_t index = 0;
 	const auto& layout = iVertexBuffer->layout();
 	for (auto&& element : layout) {
-		glEnableVertexAttribArray(index);
-		glVertexAttribPointer(index,
+		glEnableVertexAttribArray(_vertexBufferIndex);
+		glVertexAttribPointer(_vertexBufferIndex,
 							  element.componentCount(),
 							  ShaderDataType2OpenGLBaseType(element.type),
 							  element.normalized ? GL_TRUE : GL_FALSE,
 							  layout.stride(),
-							  (const void*)element.offset);
-		index++;
+							  (const void*)(intptr_t)element.offset);
+		_vertexBufferIndex++;
 	}
 
 	_vertexBuffers.push_back(iVertexBuffer);
