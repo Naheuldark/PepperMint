@@ -8,7 +8,9 @@ namespace PepperMint {
 
 class Input {
 public:
-	Input() = default;
+	Input(const Input&) = delete;
+	Input& operator=(const Input&) = delete;
+
 	~Input() = default;
 
 	inline static bool IsKeyPressed(int iKeyCode) { return sInstance->isKeyPressedImpl(iKeyCode); }
@@ -19,6 +21,8 @@ public:
 	inline static float GetMouseY() { return sInstance->getMouseYImpl(); }
 
 protected:
+	Input() = default;
+
 	virtual bool isKeyPressedImpl(int iKeyCode) = 0;
 
 	virtual bool isMouseButtonPressedImpl(int iButton) = 0;
