@@ -98,14 +98,24 @@ public:
 
 			in vec2 vTexCoord;
 
-			uniform vec3 uColor;
+			uniform sampler2D uTexture;
 
 			void main() {
-				oColor = vec4(vTexCoord, 0.5, 1.0);
+				oColor = texture(uTexture, vTexCoord);
 			}
 		)");
 
 		_textureShader.reset(PepperMint::Shader::Create(textureVertexShader, textureFragmentShader));
+
+		//////////////
+		// Textures //
+		//////////////
+
+		// Checkerboard
+		_texture = PepperMint::Texture2D::Create("assets/textures/Checkerboard.png");
+
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_textureShader)->bind();
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_textureShader)->uploadUniformInt("uTexture", 0);
 	}
 
 	~ExampleLayer() = default;
@@ -150,6 +160,7 @@ public:
 			}
 		}
 
+		_texture->bind();
 		PepperMint::Renderer::Submit(_textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		PepperMint::Renderer::EndScene();
@@ -167,6 +178,8 @@ private:
 	PepperMint::Ref<PepperMint::Shader> _textureShader;
 
 	PepperMint::Ref<PepperMint::VertexArray> _squareVA;
+
+	PepperMint::Ref<PepperMint::Texture2D> _texture;
 
 	PepperMint::OrthographicCamera _camera;
 

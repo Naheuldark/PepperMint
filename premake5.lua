@@ -17,6 +17,7 @@ IncludeDir["GLFW"] = "PepperMint/vendor/GLFW/include"
 IncludeDir["Glad"] = "PepperMint/vendor/Glad/include"
 IncludeDir["ImGui"] = "PepperMint/vendor/imgui"
 IncludeDir["glm"] = "PepperMint/vendor/glm"
+IncludeDir["stb_image"] = "PepperMint/vendor/stb_image"
 
 -- Include external premake files
 group "Dependencies"
@@ -42,6 +43,8 @@ project "PepperMint"
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
@@ -56,7 +59,8 @@ project "PepperMint"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 	}
 
 	links {
