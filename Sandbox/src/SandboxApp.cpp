@@ -111,8 +111,8 @@ public:
 		// Textures //
 		//////////////
 
-		// Checkerboard
 		_texture = PepperMint::Texture2D::Create("assets/textures/Checkerboard.png");
+		_chernoTexture = PepperMint::Texture2D::Create("assets/textures/ChernoLogo.png");
 
 		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_textureShader)->bind();
 		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_textureShader)->uploadUniformInt("uTexture", 0);
@@ -162,6 +162,8 @@ public:
 
 		_texture->bind();
 		PepperMint::Renderer::Submit(_textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		_chernoTexture->bind();
+		PepperMint::Renderer::Submit(_textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		PepperMint::Renderer::EndScene();
 	}
@@ -179,7 +181,7 @@ private:
 
 	PepperMint::Ref<PepperMint::VertexArray> _squareVA;
 
-	PepperMint::Ref<PepperMint::Texture2D> _texture;
+	PepperMint::Ref<PepperMint::Texture2D> _texture, _chernoTexture;
 
 	PepperMint::OrthographicCamera _camera;
 

@@ -9,6 +9,10 @@ public:
 	RenderCommand() = default;
 	~RenderCommand() = default;
 
+	inline static void Init() {
+		sRendererAPI->init();
+	}
+
 	inline static void SetClearColor(const glm::vec4& iColor) {
 		sRendererAPI->setClearColor(iColor);
 	}

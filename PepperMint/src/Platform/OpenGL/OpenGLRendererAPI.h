@@ -9,6 +9,8 @@ public:
 	OpenGLRendererAPI() = default;
 	~OpenGLRendererAPI() = default;
 
+	virtual void init() override;
+
 	void setClearColor(const glm::vec4& iColor) override;
 	void clear() override;
 

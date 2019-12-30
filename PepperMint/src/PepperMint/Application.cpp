@@ -3,6 +3,7 @@
 #include "Application.h"
 
 #include "Input.h"
+#include "Renderer/Renderer.h"
 
 #include <GLFW/glfw3.h>
 
@@ -16,6 +17,8 @@ Application::Application() {
 
 	_window = Scope<Window>(Window::Create());
 	_window->setEventCallback(PM_BIND_EVENT_FN(Application::onEvent));
+
+	Renderer::Init();
 
 	_imguiLayer = new ImGuiLayer();
 	pushOverlay(_imguiLayer);

@@ -11,6 +11,8 @@ public:
 	Renderer() = default;
 	~Renderer() = default;
 
+	static void Init();
+
 	static void BeginScene(OrthographicCamera& ioCamera);
 	static void EndScene();
 

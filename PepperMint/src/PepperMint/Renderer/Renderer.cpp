@@ -8,6 +8,10 @@ namespace PepperMint {
 
 Renderer::SceneData* Renderer::sSceneData = new Renderer::SceneData;
 
+void Renderer::Init() {
+	RenderCommand::Init();
+}
+
 void Renderer::BeginScene(OrthographicCamera& ioCamera) {
 	sSceneData->viewProjectionMatrix = ioCamera.viewProjectionMatrix();
 }

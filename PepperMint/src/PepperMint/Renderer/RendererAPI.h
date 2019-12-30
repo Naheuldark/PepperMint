@@ -17,6 +17,8 @@ public:
 	RendererAPI() = default;
 	~RendererAPI() = default;
 
+	virtual void init() = 0;
+
 	virtual void setClearColor(const glm::vec4& iColor) = 0;
 	virtual void clear() = 0;
 
