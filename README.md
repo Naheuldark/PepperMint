@@ -1,5 +1,4 @@
 # PepperMint
-PepperMint Engine
 
 ![PepperMint](/Resources/Branding/PepperMintLogo.png?raw=true "PepperMint")
 
