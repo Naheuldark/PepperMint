@@ -42,70 +42,8 @@ public:
 		// Shaders //
 		/////////////
 
-		// Flat Color Shader
-		std::string flatColorVertexShader(R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 iPosition;
-
-			uniform mat4 uViewProjection;
-			uniform mat4 uTransform;
-
-			void main() {
-				gl_Position = uViewProjection * uTransform * vec4(iPosition, 1.0);
-			}
-		)");
-
-		std::string flatColorFragmentShader(R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 oColor;
-
-			in vec4 vColor;
-
-			uniform vec3 uColor;
-
-			void main() {
-				oColor = vec4(uColor, 1.0);
-			}
-		)");
-
-		_flatColorShader.reset(PepperMint::Shader::Create(flatColorVertexShader, flatColorFragmentShader));
-
-
-		// Texture Shader
-		std::string textureVertexShader(R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 iPosition;
-			layout(location = 1) in vec2 iTexCoord;
-
-			uniform mat4 uViewProjection;
-			uniform mat4 uTransform;
-
-			out vec2 vTexCoord;
-
-			void main() {
-				vTexCoord = iTexCoord;
-				gl_Position = uViewProjection * uTransform * vec4(iPosition, 1.0);	
-			}
-		)");
-
-		std::string textureFragmentShader(R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 oColor;
-
-			in vec2 vTexCoord;
-
-			uniform sampler2D uTexture;
-
-			void main() {
-				oColor = texture(uTexture, vTexCoord);
-			}
-		)");
-
-		_textureShader.reset(PepperMint::Shader::Create(textureVertexShader, textureFragmentShader));
+		_flatColorShader.reset(PepperMint::Shader::Create("assets/shaders/Flat.glsl"));
+		_textureShader.reset(PepperMint::Shader::Create("assets/shaders/Texture.glsl"));
 
 		//////////////
 		// Textures //

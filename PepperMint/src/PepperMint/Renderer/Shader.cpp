@@ -7,10 +7,10 @@
 
 namespace PepperMint {
 
-Shader* Shader::Create(const std::string& iVertexSrc, const std::string& iFragmentSrc) {
+Shader* Shader::Create(const std::string& iShaderFile) {
 	switch (Renderer::API()) {
 		case RendererAPI::API::OPENGL:
-			return new OpenGLShader(iVertexSrc, iFragmentSrc);
+			return new OpenGLShader(iShaderFile);
 		default:
 			PM_CORE_ASSERT(false, "Specified RendererAPI is currently not supported!");
 			return nullptr;

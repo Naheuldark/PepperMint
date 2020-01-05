@@ -4,11 +4,14 @@
 
 #include <glm/glm.hpp>
 
+// TODO: Remove!!
+using GLenum = unsigned int;
+
 namespace PepperMint {
 
 class OpenGLShader : public Shader {
 public:
-	OpenGLShader(const std::string& iVertexShader, const std::string& iFragmentShader);
+	OpenGLShader(const std::string& iShaderFile);
 	~OpenGLShader() override;
 
 	void bind() const override;
@@ -23,6 +26,11 @@ public:
 
 	void uploadUniformMat3(const std::string& iName, const glm::mat3& iValue);
 	void uploadUniformMat4(const std::string& iName, const glm::mat4& iValue);
+
+private:
+	std::string readFile(const std::string& iShaderFile);
+	std::unordered_map<GLenum, std::string> preProcess(const std::string& iSource);
+	void compile(const std::unordered_map<GLenum, std::string>& iShaderSources);
 
 private:
 	uint32_t _rendererId;
