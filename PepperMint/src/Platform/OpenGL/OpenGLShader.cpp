@@ -26,6 +26,12 @@ OpenGLShader::OpenGLShader(const std::string& iShaderFile) {
 	const std::string& source = readFile(iShaderFile);
 	const auto& shaderSources = preProcess(source);
 	compile(shaderSources);
+
+	auto lastSlash = iShaderFile.find_last_of("/\\");
+	lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+	auto lastDot = iShaderFile.rfind('.');
+	auto count = lastDot == std::string::npos ? iShaderFile.size() - lastSlash : lastDot - lastSlash;
+	_name = iShaderFile.substr(lastSlash, count);
 }
 
 OpenGLShader::~OpenGLShader() {
@@ -78,7 +84,7 @@ void OpenGLShader::uploadUniformMat4(const std::string& iName, const glm::mat4& 
 std::string OpenGLShader::readFile(const std::string& iShaderFile) {
 	std::string result;
 
-	std::ifstream in(iShaderFile, std::ios::in, std::ios::binary);
+	std::ifstream in(iShaderFile, std::ios::in | std::ios::binary);
 	if (in) {
 		in.seekg(0, std::ios::end);
 		result.resize(in.tellg());
@@ -118,7 +124,10 @@ std::unordered_map<GLenum, std::string> OpenGLShader::preProcess(const std::stri
 
 void OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& iShaderSources) {
 	GLuint program = glCreateProgram();
-	std::vector<GLenum> glShaderIds(iShaderSources.size());
+
+	PM_CORE_ASSERT(iShaderSources.size() <= 2, "We only support 2 shaders for now");
+	std::array<GLenum, 2> glShaderIds;
+	int glShaderIdsIdx = 0;
 
 	for (auto&& shaderSource : iShaderSources) {
 		GLenum type = shaderSource.first;
@@ -148,7 +157,7 @@ void OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& iShade
 		}
 
 		glAttachShader(program, shader);
-		glShaderIds.push_back(shader);
+		glShaderIds[glShaderIdsIdx++] = shader;
 	}
 
 	_rendererId = program;

@@ -17,6 +17,8 @@ public:
 	void bind() const override;
 	void unbind() const override;
 
+	inline std::string name() const override { return _name; }
+
 	void uploadUniformInt(const std::string& iName, int iValue);
 
 	void uploadUniformFloat(const std::string& iName, float iValue);
@@ -34,6 +36,7 @@ private:
 
 private:
 	uint32_t _rendererId;
+	std::string _name;
 };
 
 }

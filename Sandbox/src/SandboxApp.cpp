@@ -42,8 +42,8 @@ public:
 		// Shaders //
 		/////////////
 
-		_flatColorShader.reset(PepperMint::Shader::Create("assets/shaders/Flat.glsl"));
-		_textureShader.reset(PepperMint::Shader::Create("assets/shaders/Texture.glsl"));
+		auto flatColorShader = _shaderLibrary.load("assets/shaders/Flat.glsl");
+		auto textureShader = _shaderLibrary.load("assets/shaders/Texture.glsl");
 
 		//////////////
 		// Textures //
@@ -52,8 +52,8 @@ public:
 		_texture = PepperMint::Texture2D::Create("assets/textures/Checkerboard.png");
 		_chernoTexture = PepperMint::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_textureShader)->bind();
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_textureShader)->uploadUniformInt("uTexture", 0);
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(textureShader)->bind();
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(textureShader)->uploadUniformInt("uTexture", 0);
 	}
 
 	~ExampleLayer() = default;
@@ -86,22 +86,25 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_flatColorShader)->bind();
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(_flatColorShader)->uploadUniformFloat3("uColor", _squareColor);
+		auto flatColorShader = _shaderLibrary.get("Flat");
+		auto textureShader = _shaderLibrary.get("Texture");
+
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(flatColorShader)->bind();
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(flatColorShader)->uploadUniformFloat3("uColor", _squareColor);
 
 		// Draw squares
 		for (int y = 0; y < 20; y++) {
 			for (int x = 0; x < 20; x++) {
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				PepperMint::Renderer::Submit(_flatColorShader, _squareVA, transform);
+				PepperMint::Renderer::Submit(flatColorShader, _squareVA, transform);
 			}
 		}
 
 		_texture->bind();
-		PepperMint::Renderer::Submit(_textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		PepperMint::Renderer::Submit(textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		_chernoTexture->bind();
-		PepperMint::Renderer::Submit(_textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		PepperMint::Renderer::Submit(textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		PepperMint::Renderer::EndScene();
 	}
@@ -113,9 +116,7 @@ public:
 	}
 
 private:
-
-	PepperMint::Ref<PepperMint::Shader> _flatColorShader;
-	PepperMint::Ref<PepperMint::Shader> _textureShader;
+	PepperMint::ShaderLibrary _shaderLibrary;
 
 	PepperMint::Ref<PepperMint::VertexArray> _squareVA;
 
