@@ -19,6 +19,7 @@ public:
 
 	virtual void init() = 0;
 
+	virtual void setViewport(uint32_t iX, uint32_t iY, uint32_t iWidth, uint32_t iHeight) = 0;
 	virtual void setClearColor(const glm::vec4& iColor) = 0;
 	virtual void clear() = 0;
 

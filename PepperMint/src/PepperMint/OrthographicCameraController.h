@@ -20,6 +20,9 @@ public:
 	inline OrthographicCamera& camera() { return _camera; }
 	inline const OrthographicCamera& camera() const { return _camera; }
 
+	inline float zoomLevel() const { return _zoomLevel; }
+	inline void setZoomLevel(float iZoomLevel) { _zoomLevel = iZoomLevel; }
+
 private:
 	bool onMouseScrolled(MouseScrolledEvent& iEvent);
 	bool onWindowResize(WindowResizeEvent& iEvent);

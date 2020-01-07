@@ -30,8 +30,10 @@ void Application::run() {
 		Timestep timestep = time - _lastFrameTime;
 		_lastFrameTime = time;
 
-		for (auto&& layer : _layerStack) {
-			layer->onUpdate(timestep);
+		if (!_minimized) {
+			for (auto&& layer : _layerStack) {
+				layer->onUpdate(timestep);
+			}
 		}
 
 		_imguiLayer->begin();
@@ -54,7 +56,8 @@ void Application::pushOverlay(Layer* iOverlay) {
 
 void Application::onEvent(Event& iEvent) {
 	EventDispatcher dispatcher(iEvent);
-	dispatcher.dispatch<WindowCloseEvent>(PM_BIND_EVENT_FN(Application::onWindowCloseEvent));
+	dispatcher.dispatch<WindowCloseEvent>(PM_BIND_EVENT_FN(Application::onWindowClose));
+	dispatcher.dispatch<WindowResizeEvent>(PM_BIND_EVENT_FN(Application::onWindowResize));
 
 	//PM_CORE_TRACE("{0}", iEvent);
 
@@ -64,9 +67,20 @@ void Application::onEvent(Event& iEvent) {
 	}
 }
 
-bool Application::onWindowCloseEvent(WindowCloseEvent& iEvent) {
+bool Application::onWindowClose(WindowCloseEvent& iEvent) {
 	_running = false;
 	return true;
 }
 
+bool Application::onWindowResize(WindowResizeEvent& iEvent) {
+	if (iEvent.width() == 0 || iEvent.height() == 0) {
+		_minimized = true;
+		return false;
+	}
+
+	_minimized = false;
+	Renderer::OnWindowResize(iEvent.width(), iEvent.height());
+
+	return false;
+}
 }

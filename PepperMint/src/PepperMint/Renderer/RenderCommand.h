@@ -13,6 +13,10 @@ public:
 		sRendererAPI->init();
 	}
 
+	inline static void SetViewport(uint32_t iX, uint32_t iY, uint32_t iWidth, uint32_t iHeight) {
+		sRendererAPI->setViewport(iX, iY, iWidth, iHeight);
+	}
+
 	inline static void SetClearColor(const glm::vec4& iColor) {
 		sRendererAPI->setClearColor(iColor);
 	}

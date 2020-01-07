@@ -12,6 +12,7 @@ public:
 	~Renderer() = default;
 
 	static void Init();
+	static void OnWindowResize(uint32_t iWidth, uint32_t iHeight);
 
 	static void BeginScene(OrthographicCamera& ioCamera);
 	static void EndScene();

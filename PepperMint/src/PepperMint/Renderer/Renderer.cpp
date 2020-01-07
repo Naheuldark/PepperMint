@@ -12,6 +12,10 @@ void Renderer::Init() {
 	RenderCommand::Init();
 }
 
+void Renderer::OnWindowResize(uint32_t iWidth, uint32_t iHeight) {
+	RenderCommand::SetViewport(0, 0, iWidth, iHeight);
+}
+
 void Renderer::BeginScene(OrthographicCamera& ioCamera) {
 	sSceneData->viewProjectionMatrix = ioCamera.viewProjectionMatrix();
 }

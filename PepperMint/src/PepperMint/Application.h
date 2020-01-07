@@ -25,12 +25,14 @@ public:
 	inline Window& window() { return *_window; }
 
 private:
-	bool onWindowCloseEvent(WindowCloseEvent& iEvent);
+	bool onWindowClose(WindowCloseEvent& iEvent);
+	bool onWindowResize(WindowResizeEvent& iEvent);
 
 private:
 	Scope<Window> _window;
 	ImGuiLayer* _imguiLayer;
 	bool _running = true;
+	bool _minimized = false;
 	LayerStack _layerStack;
 	float _lastFrameTime = 0.0f;
 

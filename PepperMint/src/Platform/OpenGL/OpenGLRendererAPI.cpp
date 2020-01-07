@@ -11,6 +11,10 @@ void OpenGLRendererAPI::init() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+void OpenGLRendererAPI::setViewport(uint32_t iX, uint32_t iY, uint32_t iWidth, uint32_t iHeight) {
+	glViewport(iX, iY, iWidth, iHeight);
+}
+
 void OpenGLRendererAPI::setClearColor(const glm::vec4& iColor) {
 	glClearColor(iColor.r, iColor.g, iColor.b, iColor.a);
 }
