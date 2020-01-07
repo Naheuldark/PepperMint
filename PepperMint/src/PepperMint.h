@@ -23,6 +23,7 @@
 #include "PepperMint/Renderer/VertexArray.h"
 
 #include "PepperMint/Renderer/OrthographicCamera.h"
+#include "PepperMint/OrthographicCameraController.h"
 
 /////////////////
 // Entry point //

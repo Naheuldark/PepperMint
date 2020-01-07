@@ -8,7 +8,7 @@
 
 class ExampleLayer : public PepperMint::Layer {
 public:
-	ExampleLayer() : Layer("Example"), _camera(-1.6f, 1.6f, -0.9f, 0.9f), _cameraPosition(0.0f) {
+	ExampleLayer() : Layer("Example"), _cameraController(1280.0f / 720.0f, true) {
 		////////////
 		// Square //
 		////////////
@@ -59,40 +59,23 @@ public:
 	~ExampleLayer() = default;
 
 	void onUpdate(PepperMint::Timestep iTimestep) override {
-		// Event polling
-		if (PepperMint::Input::IsKeyPressed(PM_KEY_LEFT))
-			_cameraPosition.x -= _cameraMoveSpeed * iTimestep;
-		else if (PepperMint::Input::IsKeyPressed(PM_KEY_RIGHT))
-			_cameraPosition.x += _cameraMoveSpeed * iTimestep;
+		// Update
+		_cameraController.onUpdate(iTimestep);
 
-		if (PepperMint::Input::IsKeyPressed(PM_KEY_UP))
-			_cameraPosition.y += _cameraMoveSpeed * iTimestep;
-		else if (PepperMint::Input::IsKeyPressed(PM_KEY_DOWN))
-			_cameraPosition.y -= _cameraMoveSpeed * iTimestep;
-
-		if (PepperMint::Input::IsKeyPressed(PM_KEY_A))
-			_cameraRotation += _cameraRotationSpeed * iTimestep;
-		if (PepperMint::Input::IsKeyPressed(PM_KEY_D))
-			_cameraRotation -= _cameraRotationSpeed * iTimestep;
-
+		// Render
 		PepperMint::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		PepperMint::RenderCommand::Clear();
 
-		// Setup Orthographic Camera
-		_camera.setPosition(_cameraPosition);
-		_camera.setRotation(_cameraRotation);
+		PepperMint::Renderer::BeginScene(_cameraController.camera());
 
-		PepperMint::Renderer::BeginScene(_camera);
-
-		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-
-		auto flatColorShader = _shaderLibrary.get("Flat");
 		auto textureShader = _shaderLibrary.get("Texture");
 
+		auto flatColorShader = _shaderLibrary.get("Flat");
 		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(flatColorShader)->bind();
 		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(flatColorShader)->uploadUniformFloat3("uColor", _squareColor);
 
 		// Draw squares
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		for (int y = 0; y < 20; y++) {
 			for (int x = 0; x < 20; x++) {
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
@@ -115,22 +98,19 @@ public:
 		ImGui::End();
 	}
 
+	void onEvent(PepperMint::Event& iEvent) override {
+		_cameraController.onEvent(iEvent);
+	}
+
 private:
 	PepperMint::ShaderLibrary _shaderLibrary;
 
 	PepperMint::Ref<PepperMint::VertexArray> _squareVA;
+	glm::vec3 _squareColor = { 0.2f, 0.3f, 0.8f };
 
 	PepperMint::Ref<PepperMint::Texture2D> _texture, _chernoTexture;
 
-	PepperMint::OrthographicCamera _camera;
-
-	glm::vec3 _cameraPosition;
-	float _cameraMoveSpeed = 5.0f;
-
-	float _cameraRotation = 0.0f;
-	float _cameraRotationSpeed = 180.0f;
-
-	glm::vec3 _squareColor = { 0.2f, 0.3f, 0.8f };
+	PepperMint::OrthographicCameraController _cameraController;
 };
 
 

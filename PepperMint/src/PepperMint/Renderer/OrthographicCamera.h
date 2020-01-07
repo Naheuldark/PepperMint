@@ -19,6 +19,8 @@ public:
 	inline const glm::mat4& viewMatrix() const { return _viewMatrix; }
 	inline const glm::mat4& viewProjectionMatrix() const { return _viewProjectionMatrix; }
 
+	void setProjection(float iLeft, float iRight, float iBottom, float iTop);
+
 private:
 	void computeViewMatrix();
 
