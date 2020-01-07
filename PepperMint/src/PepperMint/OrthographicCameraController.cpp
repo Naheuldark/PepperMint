@@ -7,6 +7,12 @@
 
 namespace PepperMint {
 
+OrthographicCameraController::OrthographicCameraController(float iAspectRatio, bool iRotation) :
+	_aspectRatio(iAspectRatio),
+	_rotation(iRotation) {
+	_camera.setProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
+}
+
 void OrthographicCameraController::onUpdate(Timestep iTimestep) {
 	if (Input::IsKeyPressed(PM_KEY_A)) {
 		_cameraPosition.x -= _cameraTranslationSpeed * iTimestep;

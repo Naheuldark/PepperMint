@@ -10,10 +10,7 @@ namespace PepperMint {
 
 class OrthographicCameraController {
 public:
-	OrthographicCameraController(float iAspectRatio, bool iRotation = false) :
-		_aspectRatio(iAspectRatio),
-		_camera(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel),
-		_rotation(iRotation) {}
+	OrthographicCameraController(float iAspectRatio, bool iRotation = false);
 
 	~OrthographicCameraController() = default;
 
