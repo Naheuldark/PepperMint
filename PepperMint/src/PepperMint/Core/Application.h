@@ -3,9 +3,10 @@
 #include "Core.h"
 #include "Window.h"
 #include "LayerStack.h"
-#include "Events/ApplicationEvent.h"
-#include "Core/Timestep.h"
-#include "ImGui/ImGuiLayer.h"
+#include "Timestep.h"
+
+#include "PepperMint/Events/ApplicationEvent.h"
+#include "PepperMint/ImGui/ImGuiLayer.h"
 
 namespace PepperMint {
 

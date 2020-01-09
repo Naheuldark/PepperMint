@@ -2,7 +2,7 @@
 
 #include "WindowsInput.h"
 
-#include "PepperMint/Application.h"
+#include "PepperMint/Core/Application.h"
 
 #include <GLFW/glfw3.h>
 

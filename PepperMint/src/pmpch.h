@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "PepperMint/Log.h"
+#include "PepperMint/Core/Log.h"
 
 #ifdef PM_PLATFORM_WINDOWS
 	#include <Windows.h>

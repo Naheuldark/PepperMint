@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PepperMint/Window.h"
+#include "PepperMint/Core/Window.h"
 #include "PepperMint/Renderer/GraphicsContext.h"
 
 // Forward declaration of GLFWwindow to avoit multi OpenGL declaration

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PepperMint/Input.h"
+#include "PepperMint/Core/Input.h"
 
 namespace PepperMint {
 

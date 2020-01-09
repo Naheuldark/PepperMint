@@ -2,7 +2,7 @@
 
 #include "pmpch.h"
 
-#include "PepperMint/Core.h"
+#include "PepperMint/Core/Core.h"
 
 namespace PepperMint {
 

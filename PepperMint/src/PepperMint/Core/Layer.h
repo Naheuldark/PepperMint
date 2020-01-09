@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Core.h"
-#include "Events/Event.h"
-#include "Core/Timestep.h"
+
+#include "PepperMint/Events/Event.h"
+#include "PepperMint/Core/Timestep.h"
 
 namespace PepperMint {
 

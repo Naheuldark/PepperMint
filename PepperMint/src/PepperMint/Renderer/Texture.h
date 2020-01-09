@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PepperMint/Core.h"
+#include "PepperMint/Core/Core.h"
 
 #include <string>
 

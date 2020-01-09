@@ -2,8 +2,8 @@
 
 #include "OrthographicCameraController.h"
 
-#include "Input.h"
-#include "KeyCodes.h"
+#include "PepperMint/Core/Input.h"
+#include "PepperMint/Core/KeyCodes.h"
 
 namespace PepperMint {
 

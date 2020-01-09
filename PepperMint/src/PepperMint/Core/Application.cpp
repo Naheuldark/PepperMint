@@ -3,7 +3,7 @@
 #include "Application.h"
 
 #include "Input.h"
-#include "Renderer/Renderer.h"
+#include "PepperMint/Renderer/Renderer.h"
 
 #include <GLFW/glfw3.h>
 

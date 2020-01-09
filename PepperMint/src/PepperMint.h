@@ -2,15 +2,15 @@
 
 // Include files
 
-#include "PepperMint/Application.h"
-#include "PepperMint/Layer.h"
-#include "PepperMint/Log.h"
+#include "PepperMint/Core/Application.h"
+#include "PepperMint/Core/Layer.h"
+#include "PepperMint/Core/Log.h"
 
 #include "PepperMint/Core/Timestep.h"
 
-#include "PepperMint/Input.h"
-#include "PepperMint/KeyCodes.h"
-#include "PepperMint/MouseButtonCodes.h"
+#include "PepperMint/Core/Input.h"
+#include "PepperMint/Core/KeyCodes.h"
+#include "PepperMint/Core/MouseButtonCodes.h"
 
 #include "PepperMint/ImGui/ImGuiLayer.h"
 
@@ -23,9 +23,9 @@
 #include "PepperMint/Renderer/VertexArray.h"
 
 #include "PepperMint/Renderer/OrthographicCamera.h"
-#include "PepperMint/OrthographicCameraController.h"
+#include "PepperMint/Renderer/OrthographicCameraController.h"
 
 /////////////////
 // Entry point //
 /////////////////
-#include "PepperMint/EntryPoint.h"
+#include "PepperMint/Core/EntryPoint.h"

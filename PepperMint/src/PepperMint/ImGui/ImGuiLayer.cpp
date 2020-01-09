@@ -6,7 +6,7 @@
 #include "examples/imgui_impl_opengl3.h"
 #include "examples/imgui_impl_glfw.h"
 
-#include "PepperMint/Application.h"
+#include "PepperMint/Core/Application.h"
 
 // TODO remove
 #include <GLFW/glfw3.h>

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Renderer/OrthographicCamera.h"
-#include "Core/Timestep.h"
+#include "OrthographicCamera.h"
 
-#include "Events/ApplicationEvent.h"
-#include "Events/MouseEvent.h"
+#include "PepperMint/Core/Timestep.h"
+#include "PepperMint/Events/ApplicationEvent.h"
+#include "PepperMint/Events/MouseEvent.h"
 
 namespace PepperMint {
 
