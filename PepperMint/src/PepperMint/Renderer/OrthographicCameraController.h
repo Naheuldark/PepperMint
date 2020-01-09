@@ -35,7 +35,7 @@ private:
 	bool _rotation;
 
 	glm::vec3 _cameraPosition = { 0.0f, 0.0f, 0.0f };
-	float _cameraRotation = 0.0f;
+	float _cameraRotation = 0.0f;  // In degrees, in the anti-clockwise direction
 	float _cameraTranslationSpeed = 5.0f;
 	float _cameraRotationSpeed = 180.0f;
 };
