@@ -21,7 +21,7 @@ enum class EventType {
 	MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_MOVE, MOUSE_SCROLL
 };
 
-#define EVENT_TYPE(type) static EventType StaticType() { return EventType::##type; }\
+#define EVENT_TYPE(type) static EventType StaticType() { return EventType::type; }\
 						 virtual EventType eventType() const override { return StaticType(); }\
 						 virtual const char* name() const override { return #type; }
 

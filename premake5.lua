@@ -78,7 +78,6 @@ project "PepperMint"
 		systemversion "latest"
 
 		defines {
-			"PM_PLATFORM_WINDOWS",
 			"PM_BUILD_DLL",
 			"GLFW_INCLUDE_NONE"
 		}
@@ -126,10 +125,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		systemversion "latest"
-
-		defines {
-			"PM_PLATFORM_WINDOWS",
-		}
 
 	filter "configurations:Debug"
 		defines "PM_DEBUG"

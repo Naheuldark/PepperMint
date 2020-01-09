@@ -6,6 +6,7 @@ namespace PepperMint {
 
 LayerStack::~LayerStack() {
 	for (auto&& layer : _layers) {
+		layer->onDetach();
 		delete layer;
 	}
 }

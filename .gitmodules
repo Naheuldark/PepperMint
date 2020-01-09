@@ -1,12 +1,16 @@
 [submodule "PepperMint/vendor/spdlog"]
 	path = PepperMint/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+	branch = v1.x
 [submodule "PepperMint/vendor/GLFW"]
 	path = PepperMint/vendor/GLFW
 	url = https://github.com/Naheuldark/glfw
+	branch = master
 [submodule "PepperMint/vendor/imgui"]
 	path = PepperMint/vendor/imgui
 	url = https://github.com/Naheuldark/imgui
-[submodule "PepperMint\\vendor\\glm"]
-	path = PepperMint\\vendor\\glm
+	branch = docking
+[submodule "PepperMint/vendor/glm"]
+	path = PepperMint/vendor/glm
 	url = https://github.com/g-truc/glm
+	branch = master
