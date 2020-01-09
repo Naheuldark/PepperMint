@@ -22,6 +22,15 @@ void OpenGLContext::init() {
 	PM_CORE_INFO("  Vendor: {0}", glGetString(GL_VENDOR));
 	PM_CORE_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
 	PM_CORE_INFO("  Version: {0}", glGetString(GL_VERSION));
+
+	#ifdef PM_ENABLE_ASSERTS
+		int versionMaj, versionMin;
+		glGetIntegerv(GL_MAJOR_VERSION, &versionMaj);
+		glGetIntegerv(GL_MINOR_VERSION, &versionMin);
+
+		PM_CORE_ASSERT(versionMaj > 4 || (versionMaj == 4 && versionMin >= 5), "PepperMint requires at least OpenGL v4.5");
+	#endif // PM_ENABLE_ASSERTS
+
 }
 
 void OpenGLContext::swapBuffers() {

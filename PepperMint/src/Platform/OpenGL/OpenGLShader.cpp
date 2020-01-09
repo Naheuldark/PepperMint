@@ -103,20 +103,22 @@ std::unordered_map<GLenum, std::string> OpenGLShader::preProcess(const std::stri
 
 	const char* typeToken = "#type";
 	size_t typeTokenLength = strlen(typeToken);
-	size_t pos = iSource.find(typeToken, 0);
+	size_t pos = iSource.find(typeToken, 0); // Start of shader type declaration line
 
 	while (pos != std::string::npos) {
-		size_t eol = iSource.find_first_of("\r\n", pos);
+		size_t eol = iSource.find_first_of("\r\n", pos); // End of shader type declaration line
 		PM_CORE_ASSERT(eol != std::string::npos, "Syntax error");
 
-		size_t begin = pos + typeTokenLength + 1;
+		size_t begin = pos + typeTokenLength + 1; // Start of shader type name (after "#type " keyword)
 		const std::string& type = iSource.substr(begin, eol - begin);
 		PM_CORE_ASSERT(shaderTypeFromString(type), "Invalid shader type specified");
 
-		size_t nextLinePos = iSource.find_first_not_of("\r\n", eol);
-		pos = iSource.find(typeToken, nextLinePos);
-		shaderSources[shaderTypeFromString(type)] = iSource.substr(nextLinePos, 
-																   pos - (nextLinePos == std::string::npos ? iSource.size() - 1 : nextLinePos));
+		size_t nextLinePos = iSource.find_first_not_of("\r\n", eol);  // Start of shader code after shader type declaration line
+		PM_CORE_ASSERT(nextLinePos != std::string::npos, "Syntax error");
+		pos = iSource.find(typeToken, nextLinePos); // Start of next shader type declaration line
+
+		shaderSources[shaderTypeFromString(type)] = (pos == std::string::npos) ? iSource.substr(nextLinePos) 
+																			   : iSource.substr(nextLinePos, pos - nextLinePos);
 	}
 
 	return shaderSources;
