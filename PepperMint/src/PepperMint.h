@@ -24,8 +24,3 @@
 
 #include "PepperMint/Renderer/OrthographicCamera.h"
 #include "PepperMint/Renderer/OrthographicCameraController.h"
-
-/////////////////
-// Entry point //
-/////////////////
-#include "PepperMint/Core/EntryPoint.h"
