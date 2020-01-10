@@ -6,7 +6,7 @@
 
 namespace PepperMint {
 
-Renderer::SceneData* Renderer::sSceneData = new Renderer::SceneData;
+Scope<Renderer::SceneData> Renderer::sSceneData = CreateScope<Renderer::SceneData>();
 
 void Renderer::Init() {
 	RenderCommand::Init();

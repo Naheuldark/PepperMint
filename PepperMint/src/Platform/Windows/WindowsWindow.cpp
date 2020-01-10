@@ -46,7 +46,7 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 
 	_window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
 
-	_context = new OpenGLContext(_window);
+	_context = CreateScope<OpenGLContext>(_window);
 	_context->init();
 
 	glfwSetWindowUserPointer(_window, &_data);

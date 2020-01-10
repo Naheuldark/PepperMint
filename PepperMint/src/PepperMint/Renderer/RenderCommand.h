@@ -30,6 +30,6 @@ public:
 	}
 
 private:
-	static RendererAPI* sRendererAPI;
+	static Scope<RendererAPI> sRendererAPI;
 };
 }

@@ -27,6 +27,6 @@ private:
 	struct SceneData {
 		glm::mat4 viewProjectionMatrix;
 	};
-	static SceneData* sSceneData;
+	static Scope<SceneData> sSceneData;
 };
 }

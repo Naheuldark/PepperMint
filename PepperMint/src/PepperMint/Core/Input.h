@@ -31,6 +31,6 @@ protected:
 	virtual float getMouseYImpl() = 0;
 
 private:
-	static Input* sInstance;
+	static Scope<Input> sInstance;
 };
 }

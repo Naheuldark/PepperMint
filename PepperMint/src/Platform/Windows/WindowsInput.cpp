@@ -8,7 +8,7 @@
 
 namespace PepperMint {
 
-Input* Input::sInstance = new WindowsInput();
+Scope<Input> Input::sInstance = CreateScope<WindowsInput>();
 
 bool WindowsInput::isKeyPressedImpl(int iKeyCode) {
 	auto window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());

@@ -6,5 +6,5 @@
 
 namespace PepperMint {
 
-RendererAPI* RenderCommand::sRendererAPI = new OpenGLRendererAPI;
+Scope<RendererAPI> RenderCommand::sRendererAPI = CreateScope<OpenGLRendererAPI>();
 }
