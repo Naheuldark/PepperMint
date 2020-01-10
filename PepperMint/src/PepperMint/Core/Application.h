@@ -17,8 +17,8 @@ public:
 
 	void onEvent(Event& iEvent);
 
-	void pushLayer(Layer* iLayer);
-	void pushOverlay(Layer* iOverlay);
+	void pushLayer(Ref<Layer> iLayer);
+	void pushOverlay(Ref<Layer> iOverlay);
 
 	void run();
 
@@ -31,7 +31,7 @@ private:
 
 private:
 	Scope<Window> _window;
-	ImGuiLayer* _imguiLayer;
+	Ref<ImGuiLayer> _imguiLayer;
 	bool _running = true;
 	bool _minimized = false;
 	LayerStack _layerStack;

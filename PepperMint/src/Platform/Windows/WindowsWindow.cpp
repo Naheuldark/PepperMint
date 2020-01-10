@@ -14,8 +14,8 @@ namespace PepperMint {
 
 static bool kGLFWInitialized = false;
 
-Window* Window::Create(const WindowProperties& iProperties) {
-	return new WindowsWindow(iProperties);
+Scope<Window> Window::Create(const WindowProperties& iProperties) {
+	return CreateScope<WindowsWindow>(iProperties);
 }
 
 WindowsWindow::WindowsWindow(const WindowProperties& iProperties) {

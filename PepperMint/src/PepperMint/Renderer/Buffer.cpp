@@ -7,20 +7,20 @@
 
 namespace PepperMint {
 
-VertexBuffer* VertexBuffer::Create(float* iVertices, uint32_t iSize) {
+Ref<VertexBuffer> VertexBuffer::Create(float* iVertices, uint32_t iSize) {
 	switch (Renderer::API()) {
 		case RendererAPI::API::OPENGL:
-			return new OpenGLVertexBuffer(iVertices, iSize);
+			return CreateRef<OpenGLVertexBuffer>(iVertices, iSize);
 		default:
 			PM_CORE_ASSERT(false, "Specified RendererAPI is currently not supported!"); 
 			return nullptr;
-	}
+	}	
 }
 
-IndexBuffer* IndexBuffer::Create(uint32_t* iIndices, uint32_t iSize) {
+Ref<IndexBuffer> IndexBuffer::Create(uint32_t* iIndices, uint32_t iSize) {
 	switch (Renderer::API()) {
 		case RendererAPI::API::OPENGL:
-			return new OpenGLIndexBuffer(iIndices, iSize);
+			return CreateRef<OpenGLIndexBuffer>(iIndices, iSize);
 		default:
 			PM_CORE_ASSERT(false, "Specified RendererAPI is currently not supported!");
 			return nullptr;

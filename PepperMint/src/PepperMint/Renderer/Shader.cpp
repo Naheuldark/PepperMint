@@ -10,7 +10,7 @@ namespace PepperMint {
 Ref<Shader> Shader::Create(const std::string& iShaderFile) {
 	switch (Renderer::API()) {
 		case RendererAPI::API::OPENGL:
-			return std::make_shared<OpenGLShader>(iShaderFile);
+			return CreateRef<OpenGLShader>(iShaderFile);
 		default:
 			PM_CORE_ASSERT(false, "Specified RendererAPI is currently not supported!");
 			return nullptr;

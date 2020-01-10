@@ -20,7 +20,7 @@ Application::Application() {
 
 	Renderer::Init();
 
-	_imguiLayer = new ImGuiLayer();
+	_imguiLayer = CreateRef<ImGuiLayer>();
 	pushOverlay(_imguiLayer);
 }
 
@@ -46,11 +46,11 @@ void Application::run() {
 	}
 }
 
-void Application::pushLayer(Layer* iLayer) {
+void Application::pushLayer(Ref<Layer> iLayer) {
 	_layerStack.pushLayer(iLayer);
 }
 
-void Application::pushOverlay(Layer* iOverlay) {
+void Application::pushOverlay(Ref<Layer> iOverlay) {
 	_layerStack.pushOverlay(iOverlay);
 }
 

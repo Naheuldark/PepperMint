@@ -13,7 +13,7 @@ public:
 		// Square //
 		////////////
 
-		_squareVA.reset(PepperMint::VertexArray::Create());
+		_squareVA = PepperMint::VertexArray::Create();
 
 		// Vertex Buffer
 		float squareVertices[5 * 4] = {
@@ -24,7 +24,7 @@ public:
 		};
 
 		PepperMint::Ref<PepperMint::VertexBuffer> squareVB;
-		squareVB.reset(PepperMint::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+		squareVB = PepperMint::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 		squareVB->setLayout({
 			{ PepperMint::ShaderDataType::FLOAT3, "iPosition" },
 			{ PepperMint::ShaderDataType::FLOAT2, "iTexCoord" },
@@ -35,7 +35,7 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
 		PepperMint::Ref<PepperMint::IndexBuffer> squareIB;
-		squareIB.reset(PepperMint::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		squareIB = PepperMint::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		_squareVA->setIndexBuffer(squareIB);
 
 		/////////////
@@ -117,7 +117,7 @@ private:
 class Sandbox : public PepperMint::Application {
 public:
 	Sandbox() { 
-		pushLayer(new ExampleLayer());
+		pushLayer(PepperMint::CreateRef<ExampleLayer>());
 	}
 
 	~Sandbox() = default;

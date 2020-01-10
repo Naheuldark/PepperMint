@@ -10,16 +10,16 @@ public:
 	LayerStack() = default;
 	~LayerStack();
 
-	void pushLayer(Layer* iLayer);
-	void pushOverlay(Layer* iOverlay);
-	void popLayer(Layer* iLayer);
-	void popOverlay(Layer* iOverlay);
+	void pushLayer(Ref<Layer> iLayer);
+	void pushOverlay(Ref<Layer> iOverlay);
+	void popLayer(Ref<Layer> iLayer);
+	void popOverlay(Ref<Layer> iOverlay);
 
-	std::vector<Layer*>::iterator begin() { return _layers.begin(); }
-	std::vector<Layer*>::iterator end() { return _layers.end(); }
+	std::vector<Ref<Layer>>::iterator begin() { return _layers.begin(); }
+	std::vector<Ref<Layer>>::iterator end() { return _layers.end(); }
 
 private:
-	std::vector<Layer*> _layers;
+	std::vector<Ref<Layer>> _layers;
 	size_t _layerInsertIndex = 0;
 };
 
