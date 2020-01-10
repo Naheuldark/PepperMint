@@ -2,6 +2,7 @@
 
 #include "Renderer.h"
 
+#include "Renderer2D.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace PepperMint {
@@ -10,6 +11,7 @@ Scope<Renderer::SceneData> Renderer::sSceneData = CreateScope<Renderer::SceneDat
 
 void Renderer::Init() {
 	RenderCommand::Init();
+	Renderer2D::Init();
 }
 
 void Renderer::OnWindowResize(uint32_t iWidth, uint32_t iHeight) {
