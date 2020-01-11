@@ -10,4 +10,5 @@ bin-int/
 **/*.filters
 **/*.lib
 **/*.pdb
+**/*.json
 *.sln
