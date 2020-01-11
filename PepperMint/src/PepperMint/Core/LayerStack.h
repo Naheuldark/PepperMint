@@ -17,6 +17,14 @@ public:
 
 	std::vector<Ref<Layer>>::iterator begin() { return _layers.begin(); }
 	std::vector<Ref<Layer>>::iterator end() { return _layers.end(); }
+	std::vector<Ref<Layer>>::reverse_iterator rbegin() { return _layers.rbegin(); }
+	std::vector<Ref<Layer>>::reverse_iterator rend() { return _layers.rend(); }
+
+	std::vector<Ref<Layer>>::const_iterator begin() const { return _layers.begin(); }
+	std::vector<Ref<Layer>>::const_iterator end() const { return _layers.end(); }
+	std::vector<Ref<Layer>>::const_reverse_iterator rbegin() const { return _layers.rbegin(); }
+	std::vector<Ref<Layer>>::const_reverse_iterator rend() const { return _layers.rend(); }
+
 
 private:
 	std::vector<Ref<Layer>> _layers;
