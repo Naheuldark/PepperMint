@@ -1,7 +1,7 @@
 #pragma once
 
-#include "OrthographicCamera.h"
-#include "Texture.h"
+#include "PepperMint/Renderer/OrthographicCamera.h"
+#include "PepperMint/Renderer/Texture.h"
 
 namespace PepperMint {
 

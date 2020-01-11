@@ -1,6 +1,5 @@
 #include "pmpch.h"
-
-#include "WindowsInput.h"
+#include "Platform/Windows/WindowsInput.h"
 
 #include "PepperMint/Core/Application.h"
 

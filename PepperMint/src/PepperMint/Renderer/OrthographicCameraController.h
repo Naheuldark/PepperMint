@@ -1,7 +1,6 @@
 #pragma once
 
-#include "OrthographicCamera.h"
-
+#include "PepperMint/Renderer/OrthographicCamera.h"
 #include "PepperMint/Core/Timestep.h"
 #include "PepperMint/Events/ApplicationEvent.h"
 #include "PepperMint/Events/MouseEvent.h"

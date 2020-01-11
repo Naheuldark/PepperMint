@@ -1,10 +1,9 @@
 #include "pmpch.h"
+#include "PepperMint/Renderer/Renderer2D.h"
 
-#include "Renderer2D.h"
-
-#include "VertexArray.h"
-#include "Shader.h"
-#include "RenderCommand.h"
+#include "PepperMint/Renderer/VertexArray.h"
+#include "PepperMint/Renderer/Shader.h"
+#include "PepperMint/Renderer/RenderCommand.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -33,19 +32,17 @@ void Renderer2D::Init() {
 			-0.5f,  0.5f, 0.0f,		0.0f, 1.0f
 	};
 
-	PepperMint::Ref<PepperMint::VertexBuffer> squareVB;
-	squareVB = PepperMint::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
+	Ref<VertexBuffer> squareVB = VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 	squareVB->setLayout({
-		{ PepperMint::ShaderDataType::FLOAT3, "iPosition" },
-		{ PepperMint::ShaderDataType::FLOAT2, "iTexCoord" },
+		{ ShaderDataType::FLOAT3, "iPosition" },
+		{ ShaderDataType::FLOAT2, "iTexCoord" },
 	});
 	sData->quadVertexArray->addVertexBuffer(squareVB);
 
 	// Index Buffer
 	uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
-	PepperMint::Ref<PepperMint::IndexBuffer> squareIB;
-	squareIB = PepperMint::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
+	Ref<IndexBuffer> squareIB = IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 	sData->quadVertexArray->setIndexBuffer(squareIB);
 
 	/////////////
@@ -56,7 +53,7 @@ void Renderer2D::Init() {
 	uint32_t whiteTextureData = 0xffffffff;
 	sData->whiteTexture->setData(&whiteTextureData, sizeof(uint32_t));
 	
-	sData->textureShader = PepperMint::Shader::Create("assets/shaders/Texture.glsl");
+	sData->textureShader = Shader::Create("assets/shaders/Texture.glsl");
 	sData->textureShader->bind();
 	sData->textureShader->setInt("uTexture", 0);
 }

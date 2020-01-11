@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Core.h"
-#include "Window.h"
-#include "LayerStack.h"
-#include "Timestep.h"
-
+#include "PepperMint/Core/Core.h"
+#include "PepperMint/Core/Window.h"
+#include "PepperMint/Core/LayerStack.h"
+#include "PepperMint/Core/Timestep.h"
 #include "PepperMint/Events/ApplicationEvent.h"
 #include "PepperMint/ImGui/ImGuiLayer.h"
 
@@ -13,7 +12,7 @@ namespace PepperMint {
 class Application {
 public:
 	Application();
-	virtual ~Application() = default;
+	virtual ~Application();
 
 	void onEvent(Event& iEvent);
 

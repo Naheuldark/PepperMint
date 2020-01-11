@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "PepperMint/Renderer/VertexArray.h"
 
-#include "VertexArray.h"
+#include <glm/glm.hpp>
 
 namespace PepperMint {
 
@@ -26,6 +26,8 @@ public:
 	virtual void drawIndexed(Ref<VertexArray> iVertexArray) = 0;
 
 	inline static API GetAPI() { return sAPI; }
+
+	static Scope<RendererAPI> Create();
 
 private:
 	static API sAPI;

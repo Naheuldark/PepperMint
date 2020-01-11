@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PepperMint/Core/Core.h"
+
 #ifdef PM_PLATFORM_WINDOWS
 
 extern PepperMint::Application* PepperMint::CreateApplication();

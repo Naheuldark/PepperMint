@@ -1,6 +1,5 @@
-#include "pmpch.h"
-
-#include "OpenGLVertexArray.h"
+#include "pmpch.h" 
+#include "Platform/OpenGL/OpenGLVertexArray.h"
 
 #include <glad/glad.h>
 
@@ -8,17 +7,17 @@ namespace PepperMint {
 
 static GLenum ShaderDataType2OpenGLBaseType(ShaderDataType iType) {
 	switch (iType) {
-		case PepperMint::ShaderDataType::BOOL:		return GL_BOOL;
-		case PepperMint::ShaderDataType::INT:		return GL_INT;
-		case PepperMint::ShaderDataType::INT2:		return GL_INT;
-		case PepperMint::ShaderDataType::INT3:		return GL_INT;
-		case PepperMint::ShaderDataType::INT4:		return GL_INT;
-		case PepperMint::ShaderDataType::FLOAT:		return GL_FLOAT;
-		case PepperMint::ShaderDataType::FLOAT2:	return GL_FLOAT;
-		case PepperMint::ShaderDataType::FLOAT3:	return GL_FLOAT;
-		case PepperMint::ShaderDataType::FLOAT4:	return GL_FLOAT;
-		case PepperMint::ShaderDataType::MAT3:		return GL_FLOAT;
-		case PepperMint::ShaderDataType::MAT4:		return GL_FLOAT;
+		case ShaderDataType::BOOL:		return GL_BOOL;
+		case ShaderDataType::INT:		return GL_INT;
+		case ShaderDataType::INT2:		return GL_INT;
+		case ShaderDataType::INT3:		return GL_INT;
+		case ShaderDataType::INT4:		return GL_INT;
+		case ShaderDataType::FLOAT:		return GL_FLOAT;
+		case ShaderDataType::FLOAT2:	return GL_FLOAT;
+		case ShaderDataType::FLOAT3:	return GL_FLOAT;
+		case ShaderDataType::FLOAT4:	return GL_FLOAT;
+		case ShaderDataType::MAT3:		return GL_FLOAT;
+		case ShaderDataType::MAT4:		return GL_FLOAT;
 		default:
 			PM_CORE_ASSERT(false, "Unknown ShaderDataType"); return 0;
 	}

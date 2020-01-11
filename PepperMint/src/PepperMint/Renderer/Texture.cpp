@@ -1,8 +1,7 @@
 #include "pmpch.h"
+#include "PepperMint/Renderer/Texture.h"
 
-#include "Texture.h"
-
-#include "Renderer.h"
+#include "PepperMint/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLTexture.h"
 
 namespace PepperMint {

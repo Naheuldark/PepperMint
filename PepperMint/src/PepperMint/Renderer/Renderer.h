@@ -1,8 +1,8 @@
 #pragma once
 
-#include "RenderCommand.h"
-#include "OrthographicCamera.h"
-#include "Shader.h"
+#include "PepperMint/Renderer/RenderCommand.h"
+#include "PepperMint/Renderer/OrthographicCamera.h"
+#include "PepperMint/Renderer/Shader.h"
 
 namespace PepperMint {
 
@@ -12,6 +12,8 @@ public:
 	~Renderer() = default;
 
 	static void Init();
+	static void Shutdown();
+
 	static void OnWindowResize(uint32_t iWidth, uint32_t iHeight);
 
 	static void BeginScene(OrthographicCamera& ioCamera);

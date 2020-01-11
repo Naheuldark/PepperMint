@@ -6,8 +6,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <Platform/OpenGL/OpenGLShader.h>
-
 #include "Sandbox2D.h"
 
 class ExampleLayer : public PepperMint::Layer {
@@ -27,8 +25,7 @@ public:
 			-0.5f,  0.5f, 0.0f,		0.0f, 1.0f
 		};
 
-		PepperMint::Ref<PepperMint::VertexBuffer> squareVB;
-		squareVB = PepperMint::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
+		PepperMint::Ref<PepperMint::VertexBuffer> squareVB = PepperMint::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 		squareVB->setLayout({
 			{ PepperMint::ShaderDataType::FLOAT3, "iPosition" },
 			{ PepperMint::ShaderDataType::FLOAT2, "iTexCoord" },
@@ -38,8 +35,8 @@ public:
 		// Index Buffer
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
-		PepperMint::Ref<PepperMint::IndexBuffer> squareIB;
-		squareIB = PepperMint::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
+		PepperMint::Ref<PepperMint::IndexBuffer> squareIB = PepperMint::IndexBuffer::Create(squareIndices, 
+																							sizeof(squareIndices) / sizeof(uint32_t));
 		_squareVA->setIndexBuffer(squareIB);
 
 		/////////////
@@ -56,8 +53,8 @@ public:
 		_texture = PepperMint::Texture2D::Create("assets/textures/Checkerboard.png");
 		_chernoTexture = PepperMint::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(textureShader)->bind();
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(textureShader)->setInt("uTexture", 0);
+		textureShader->bind();
+		textureShader->setInt("uTexture", 0);
 	}
 
 	~ExampleLayer() = default;
@@ -75,8 +72,8 @@ public:
 		auto textureShader = _shaderLibrary.get("Texture");
 
 		auto flatColorShader = _shaderLibrary.get("Flat");
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(flatColorShader)->bind();
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(flatColorShader)->setFloat3("uColor", _squareColor);
+		flatColorShader->bind();
+		flatColorShader->setFloat3("uColor", _squareColor);
 
 		// Draw squares
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));

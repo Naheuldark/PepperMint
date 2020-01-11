@@ -1,6 +1,5 @@
 #include "pmpch.h"
-
-#include "OrthographicCamera.h"
+#include "PepperMint/Renderer/OrthographicCamera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

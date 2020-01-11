@@ -1,8 +1,7 @@
 #include "pmpch.h"
+#include "PepperMint/Renderer/Shader.h"
 
-#include "Shader.h"
-
-#include "Renderer.h"
+#include "PepperMint/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace PepperMint {

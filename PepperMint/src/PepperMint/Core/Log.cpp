@@ -1,13 +1,12 @@
 #include "pmpch.h"
-
-#include "Log.h"
+#include "PepperMint/Core/Log.h"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace PepperMint {
 
-std::shared_ptr<spdlog::logger> Log::_coreLogger;
-std::shared_ptr<spdlog::logger> Log::_clientLogger;
+Ref<spdlog::logger> Log::_coreLogger;
+Ref<spdlog::logger> Log::_clientLogger;
 
 void Log::Init() {
 	spdlog::set_pattern("%^[%T] %n: %v%$");

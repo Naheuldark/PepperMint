@@ -1,7 +1,6 @@
 #pragma once
 
 #include "PepperMint/Core/Layer.h"
-
 #include "PepperMint/Events/MouseEvent.h"
 #include "PepperMint/Events/KeyEvent.h"
 #include "PepperMint/Events/ApplicationEvent.h"

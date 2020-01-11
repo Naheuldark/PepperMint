@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "PepperMint/Core/Core.h"
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
@@ -14,12 +14,12 @@ public:
 
 	static void Init();
 	
-	inline static std::shared_ptr<spdlog::logger>& CoreLogger() { return _coreLogger; }
-	inline static std::shared_ptr<spdlog::logger>& ClientLogger() { return _clientLogger; }
+	inline static Ref<spdlog::logger>& CoreLogger() { return _coreLogger; }
+	inline static Ref<spdlog::logger>& ClientLogger() { return _clientLogger; }
 
 private:
-	static std::shared_ptr<spdlog::logger> _coreLogger;
-	static std::shared_ptr<spdlog::logger> _clientLogger;
+	static Ref<spdlog::logger> _coreLogger;
+	static Ref<spdlog::logger> _clientLogger;
 };
 }
 

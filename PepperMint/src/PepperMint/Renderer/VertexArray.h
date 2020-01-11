@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "Buffer.h"
+#include "PepperMint/Renderer/Buffer.h"
 
 namespace PepperMint {
 

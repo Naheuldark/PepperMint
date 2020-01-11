@@ -1,8 +1,7 @@
 #include "pmpch.h"
+#include "PepperMint/Core/Application.h"
 
-#include "Application.h"
-
-#include "Input.h"
+#include "PepperMint/Core/Input.h"
 #include "PepperMint/Renderer/Renderer.h"
 
 #include <GLFW/glfw3.h>
@@ -15,13 +14,17 @@ Application::Application() {
 	PM_CORE_ASSERT(!sInstance, "Application already exists!")
 	sInstance = this;
 
-	_window = Scope<Window>(Window::Create());
+	_window = Window::Create();
 	_window->setEventCallback(PM_BIND_EVENT_FN(Application::onEvent));
 
 	Renderer::Init();
 
 	_imguiLayer = CreateRef<ImGuiLayer>();
 	pushOverlay(_imguiLayer);
+}
+
+Application::~Application() {
+	Renderer::Shutdown();
 }
 
 void Application::run() {
@@ -58,8 +61,6 @@ void Application::onEvent(Event& iEvent) {
 	EventDispatcher dispatcher(iEvent);
 	dispatcher.dispatch<WindowCloseEvent>(PM_BIND_EVENT_FN(Application::onWindowClose));
 	dispatcher.dispatch<WindowResizeEvent>(PM_BIND_EVENT_FN(Application::onWindowResize));
-
-	//PM_CORE_TRACE("{0}", iEvent);
 
 	for (auto it = _layerStack.end(); it != _layerStack.begin(); ) {
 		(*--it)->onEvent(iEvent);

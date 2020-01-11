@@ -1,10 +1,9 @@
 #include "pmpch.h"
-
-#include "RenderCommand.h"
+#include "PepperMint/Renderer/RenderCommand.h"
 
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 
 namespace PepperMint {
 
-Scope<RendererAPI> RenderCommand::sRendererAPI = CreateScope<OpenGLRendererAPI>();
+Scope<RendererAPI> RenderCommand::sRendererAPI = RendererAPI::Create();
 }

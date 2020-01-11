@@ -1,6 +1,5 @@
 #include "pmpch.h"
-
-#include "WindowsWindow.h"
+#include "Platform/Windows/WindowsWindow.h"
 
 #include "PepperMint/Events/ApplicationEvent.h"
 #include "PepperMint/Events/KeyEvent.h"
@@ -34,7 +33,6 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 	PM_CORE_INFO("Creating window {0} ({1} x {2})", _data.title, _data.width, _data.height);
 
 	if (sGLFWWindowCount == 0) {
-		PM_CORE_INFO("Initializing GLFW");
 		int success = glfwInit();
 		PM_CORE_ASSERT(success, "Failed to initialize GLFW!");
 
@@ -46,7 +44,7 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 	_window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
 	++sGLFWWindowCount;
 
-	_context = CreateScope<OpenGLContext>(_window);
+	_context = GraphicsContext::Create(_window);
 	_context->init();
 
 	glfwSetWindowUserPointer(_window, &_data);
@@ -151,7 +149,6 @@ void WindowsWindow::shutdown() {
 	--sGLFWWindowCount;
 
 	if (sGLFWWindowCount == 0) {
-		PM_CORE_INFO("Terminating GLFW");
 		glfwTerminate();
 	}
 }

@@ -1,9 +1,7 @@
 #include "pmpch.h"
+#include "PepperMint/Renderer/Renderer.h"
 
-#include "Renderer.h"
-
-#include "Renderer2D.h"
-#include "Platform/OpenGL/OpenGLShader.h"
+#include "PepperMint/Renderer/Renderer2D.h"
 
 namespace PepperMint {
 
@@ -12,6 +10,10 @@ Scope<Renderer::SceneData> Renderer::sSceneData = CreateScope<Renderer::SceneDat
 void Renderer::Init() {
 	RenderCommand::Init();
 	Renderer2D::Init();
+}
+
+void Renderer::Shutdown() {
+	Renderer2D::Shutdown();
 }
 
 void Renderer::OnWindowResize(uint32_t iWidth, uint32_t iHeight) {
@@ -28,8 +30,8 @@ void Renderer::Submit(Ref<Shader> iShader,
 					  Ref<VertexArray> iVertexArray,
 					  const glm::mat4& iTransform) {
 	iShader->bind();
-	std::dynamic_pointer_cast<OpenGLShader>(iShader)->setMat4("uViewProjection", sSceneData->viewProjectionMatrix);
-	std::dynamic_pointer_cast<OpenGLShader>(iShader)->setMat4("uTransform", iTransform);
+	iShader->setMat4("uViewProjection", sSceneData->viewProjectionMatrix);
+	iShader->setMat4("uTransform", iTransform);
 
 	iVertexArray->bind();
 	RenderCommand::DrawIndexed(iVertexArray);

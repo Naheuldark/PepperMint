@@ -1,6 +1,5 @@
 #include "pmpch.h"
-
-#include "OrthographicCameraController.h"
+#include "PepperMint/Renderer/OrthographicCameraController.h"
 
 #include "PepperMint/Core/Input.h"
 #include "PepperMint/Core/KeyCodes.h"
