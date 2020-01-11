@@ -4,6 +4,7 @@
 #include "PepperMint/Events/ApplicationEvent.h"
 #include "PepperMint/Events/KeyEvent.h"
 #include "PepperMint/Events/MouseEvent.h"
+#include "PepperMint/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
@@ -50,6 +51,12 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 
 	{
 		PM_PROFILE_SCOPE("glfwCreateWindow");
+		#ifdef PM_DEBUG
+			if (RendererAPI::GetAPI() == RendererAPI::API::OPENGL) {
+				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+			}
+		#endif // PM_DEBUG
+
 		_window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
 		++sGLFWWindowCount;
 	}
