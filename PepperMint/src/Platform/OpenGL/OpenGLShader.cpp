@@ -22,6 +22,8 @@ GLenum shaderTypeFromString(const std::string& iType) {
 }
 
 OpenGLShader::OpenGLShader(const std::string& iShaderFile) {
+	PM_PROFILE_FUNCTION();
+
 	const std::string& source = readFile(iShaderFile);
 	const auto& shaderSources = preProcess(source);
 	compile(shaderSources);
@@ -34,42 +36,62 @@ OpenGLShader::OpenGLShader(const std::string& iShaderFile) {
 }
 
 OpenGLShader::~OpenGLShader() {
+	PM_PROFILE_FUNCTION();
+
 	glDeleteProgram(_rendererId);
 }
 
 void OpenGLShader::bind() const {
+	PM_PROFILE_FUNCTION();
+
 	glUseProgram(_rendererId);
 }
 
 void OpenGLShader::unbind() const {
+	PM_PROFILE_FUNCTION();
+
 	glUseProgram(0);
 }
 
 void OpenGLShader::setInt(const std::string& iName, int iValue) {
+	PM_PROFILE_FUNCTION();
+
 	uploadUniformInt(iName, iValue);
 }
 
 void OpenGLShader::setFloat(const std::string& iName, float iValue) {
+	PM_PROFILE_FUNCTION();
+
 	uploadUniformFloat(iName, iValue);
 }
 
 void OpenGLShader::setFloat2(const std::string& iName, const glm::vec2& iValue) {
+	PM_PROFILE_FUNCTION();
+
 	uploadUniformFloat2(iName, iValue);
 }
 
 void OpenGLShader::setFloat3(const std::string& iName, const glm::vec3& iValue) {
+	PM_PROFILE_FUNCTION();
+
 	uploadUniformFloat3(iName, iValue);
 }
 
 void OpenGLShader::setFloat4(const std::string& iName, const glm::vec4& iValue) {
+	PM_PROFILE_FUNCTION();
+
 	uploadUniformFloat4(iName, iValue);
 }
 
 void OpenGLShader::setMat3(const std::string& iName, const glm::mat3& iValue) {
+	PM_PROFILE_FUNCTION();
+
 	uploadUniformMat3(iName, iValue);
 }
 
 void OpenGLShader::setMat4(const std::string& iName, const glm::mat4& iValue) {
+	PM_PROFILE_FUNCTION();
+
 	uploadUniformMat4(iName, iValue);
 }
 
@@ -109,6 +131,8 @@ void OpenGLShader::uploadUniformMat4(const std::string& iName, const glm::mat4& 
 }
 
 std::string OpenGLShader::readFile(const std::string& iShaderFile) {
+	PM_PROFILE_FUNCTION();
+
 	std::string result;
 
 	std::ifstream in(iShaderFile, std::ios::in | std::ios::binary);
@@ -131,6 +155,8 @@ std::string OpenGLShader::readFile(const std::string& iShaderFile) {
 }
 
 std::unordered_map<GLenum, std::string> OpenGLShader::preProcess(const std::string& iSource) {
+	PM_PROFILE_FUNCTION();
+
 	std::unordered_map<GLenum, std::string> shaderSources;
 
 	const char* typeToken = "#type";
@@ -157,6 +183,8 @@ std::unordered_map<GLenum, std::string> OpenGLShader::preProcess(const std::stri
 }
 
 void OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& iShaderSources) {
+	PM_PROFILE_FUNCTION();
+
 	GLuint program = glCreateProgram();
 
 	PM_CORE_ASSERT(iShaderSources.size() <= 2, "We only support 2 shaders for now");

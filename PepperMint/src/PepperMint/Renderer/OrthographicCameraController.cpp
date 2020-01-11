@@ -13,6 +13,8 @@ OrthographicCameraController::OrthographicCameraController(float iAspectRatio, b
 }
 
 void OrthographicCameraController::onUpdate(Timestep iTimestep) {
+	PM_PROFILE_FUNCTION();
+
 	if (Input::IsKeyPressed(PM_KEY_A)) {
 		_cameraPosition.x -= cos(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
 		_cameraPosition.y -= sin(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
@@ -51,12 +53,16 @@ void OrthographicCameraController::onUpdate(Timestep iTimestep) {
 }
 
 void OrthographicCameraController::onEvent(Event& iEvent) {
+	PM_PROFILE_FUNCTION();
+
 	EventDispatcher dispatcher(iEvent);
 	dispatcher.dispatch<MouseScrolledEvent>(PM_BIND_EVENT_FN(OrthographicCameraController::onMouseScrolled));
 	dispatcher.dispatch<WindowResizeEvent>(PM_BIND_EVENT_FN(OrthographicCameraController::onWindowResize));
 }
 
 bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& iEvent) {
+	PM_PROFILE_FUNCTION();
+
 	_zoomLevel -= iEvent.yOffset() * 0.25f;
 	_zoomLevel = std::max(_zoomLevel, 0.25f);
 	_camera.setProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
@@ -64,6 +70,8 @@ bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& iEvent) {
 }
 
 bool OrthographicCameraController::onWindowResize(WindowResizeEvent& iEvent) {
+	PM_PROFILE_FUNCTION();
+
 	_aspectRatio = (float)iEvent.width() / (float)iEvent.height();
 	_camera.setProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
 	return false;

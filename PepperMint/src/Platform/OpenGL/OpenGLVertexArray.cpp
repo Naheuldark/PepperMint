@@ -24,22 +24,32 @@ static GLenum ShaderDataType2OpenGLBaseType(ShaderDataType iType) {
 }
 
 OpenGLVertexArray::OpenGLVertexArray() {
+	PM_PROFILE_FUNCTION();
+
 	glCreateVertexArrays(1, &_rendererId);
 }
 
 OpenGLVertexArray::~OpenGLVertexArray() {
+	PM_PROFILE_FUNCTION();
+
 	glDeleteVertexArrays(1, &_rendererId);
 }
 
 void OpenGLVertexArray::bind() const {
+	PM_PROFILE_FUNCTION();
+
 	glBindVertexArray(_rendererId);
 }
 
 void OpenGLVertexArray::unbind() const {
+	PM_PROFILE_FUNCTION();
+
 	glBindVertexArray(0);
 }
 
 void OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> iVertexBuffer) {
+	PM_PROFILE_FUNCTION();
+
 	PM_CORE_ASSERT(iVertexBuffer->layout().elements().size(), "VertexBuffer has no layout!");
 
 	glBindVertexArray(_rendererId);
@@ -61,6 +71,8 @@ void OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> iVertexBuffer) {
 }
 
 void OpenGLVertexArray::setIndexBuffer(Ref<IndexBuffer> iIndexBuffer) {
+	PM_PROFILE_FUNCTION();
+
 	glBindVertexArray(_rendererId);
 	iIndexBuffer->bind();
 

@@ -6,19 +6,20 @@
 #include <glm/gtc/type_ptr.hpp>
 
 void Sandbox2D::onAttach() {
+	PM_PROFILE_FUNCTION();
+
 	_checkerboardTexture = PepperMint::Texture2D::Create("assets/textures/Checkerboard.png");
 }
 
-void Sandbox2D::onDetach() {}
+void Sandbox2D::onDetach() {
+	PM_PROFILE_FUNCTION();
+}
 
 void Sandbox2D::onUpdate(PepperMint::Timestep iTimestep) {
 	PM_PROFILE_FUNCTION();
 
 	// Update
-	{
-		PM_PROFILE_SCOPE("CameraController::onUpdate");
-		_cameraController.onUpdate(iTimestep);
-	}
+	_cameraController.onUpdate(iTimestep);
 
 	// Render
 	{

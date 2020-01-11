@@ -18,14 +18,20 @@ Scope<Window> Window::Create(const WindowProperties& iProperties) {
 }
 
 WindowsWindow::WindowsWindow(const WindowProperties& iProperties) {
+	PM_PROFILE_FUNCTION();
+
 	init(iProperties);
 }
 
 WindowsWindow::~WindowsWindow() {
+	PM_PROFILE_FUNCTION();
+
 	shutdown();
 }
 
 void WindowsWindow::init(const WindowProperties& iProperties) {
+	PM_PROFILE_FUNCTION();
+
 	_data.title = iProperties.title;
 	_data.width = iProperties.width;
 	_data.height = iProperties.height;
@@ -33,6 +39,7 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 	PM_CORE_INFO("Creating window {0} ({1} x {2})", _data.title, _data.width, _data.height);
 
 	if (sGLFWWindowCount == 0) {
+		PM_PROFILE_SCOPE("glfwInit");
 		int success = glfwInit();
 		PM_CORE_ASSERT(success, "Failed to initialize GLFW!");
 
@@ -41,8 +48,11 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 							 });
 	}
 
-	_window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
-	++sGLFWWindowCount;
+	{
+		PM_PROFILE_SCOPE("glfwCreateWindow");
+		_window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
+		++sGLFWWindowCount;
+	}
 
 	_context = GraphicsContext::Create(_window);
 	_context->init();
@@ -145,6 +155,8 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 }
 
 void WindowsWindow::shutdown() {
+	PM_PROFILE_FUNCTION();
+
 	glfwDestroyWindow(_window);
 	--sGLFWWindowCount;
 
@@ -154,11 +166,15 @@ void WindowsWindow::shutdown() {
 }
 
 void WindowsWindow::onUpdate() {
+	PM_PROFILE_FUNCTION();
+
 	glfwPollEvents();
 	_context->swapBuffers();
 }
 
 void WindowsWindow::setVSync(bool iEnabled) {
+	PM_PROFILE_FUNCTION();
+
 	if (iEnabled) {
 		glfwSwapInterval(1);
 	} else {

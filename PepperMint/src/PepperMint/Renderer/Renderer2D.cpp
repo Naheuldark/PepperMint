@@ -18,6 +18,8 @@ struct Renderer2DStorage {
 static Scope<Renderer2DStorage> sData = CreateScope<Renderer2DStorage>();
 
 void Renderer2D::Init() {
+	PM_PROFILE_FUNCTION();
+
 	////////////
 	// Square //
 	////////////
@@ -58,20 +60,28 @@ void Renderer2D::Init() {
 	sData->textureShader->setInt("uTexture", 0);
 }
 
-void Renderer2D::Shutdown() {}
+void Renderer2D::Shutdown() {
+	PM_PROFILE_FUNCTION();
+}
 
 void Renderer2D::BeginScene(const OrthographicCamera& iCamera) {
+	PM_PROFILE_FUNCTION();
+
 	sData->textureShader->bind();
 	sData->textureShader->setMat4("uViewProjection", iCamera.viewProjectionMatrix());
 }
 
-void Renderer2D::EndScene() {}
+void Renderer2D::EndScene() {
+	PM_PROFILE_FUNCTION();
+}
 
 void Renderer2D::DrawQuad(const glm::vec2& iPosition, const glm::vec2& iSize, const glm::vec4& iColor) {
 	DrawQuad({ iPosition.x, iPosition.y, 0.0f }, iSize, iColor);
 }
 
 void Renderer2D::DrawQuad(const glm::vec3& iPosition, const glm::vec2& iSize, const glm::vec4& iColor) {
+	PM_PROFILE_FUNCTION();
+
 	sData->textureShader->setFloat4("uColor", iColor);
 	sData->whiteTexture->bind();
 
@@ -87,6 +97,8 @@ void Renderer2D::DrawQuad(const glm::vec2& iPosition, const glm::vec2& iSize, Re
 }
 	
 void Renderer2D::DrawQuad(const glm::vec3& iPosition, const glm::vec2& iSize, Ref<Texture2D> iTexture) {
+	PM_PROFILE_FUNCTION();
+
 	sData->textureShader->setFloat4("uColor", glm::vec4(1.0f));
 	iTexture->bind();
 

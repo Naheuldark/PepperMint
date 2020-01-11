@@ -8,6 +8,8 @@ namespace PepperMint {
 Scope<Renderer::SceneData> Renderer::sSceneData = CreateScope<Renderer::SceneData>();
 
 void Renderer::Init() {
+	PM_PROFILE_FUNCTION();
+
 	RenderCommand::Init();
 	Renderer2D::Init();
 }

@@ -12,12 +12,10 @@ LayerStack::~LayerStack() {
 void LayerStack::pushLayer(Ref<Layer> iLayer) {
 	_layers.emplace(_layers.begin() + _layerInsertIndex, iLayer);
 	_layerInsertIndex++;
-	iLayer->onAttach();
 }
 
 void LayerStack::pushOverlay(Ref<Layer> iOverlay) {
 	_layers.emplace_back(iOverlay);
-	iOverlay->onAttach();
 }
 
 void LayerStack::popLayer(Ref<Layer> iLayer) {
