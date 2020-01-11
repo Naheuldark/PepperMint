@@ -16,6 +16,8 @@
 
 #include "PepperMint/Core/Log.h"
 
+#include "PepperMint/Debug/Instrumentor.h"
+
 #ifdef PM_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif // PM_PLATFORM_WINDOWS
