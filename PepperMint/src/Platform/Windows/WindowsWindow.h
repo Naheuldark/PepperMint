@@ -36,8 +36,9 @@ private:
 
 	struct WindowData {
 		std::string title;
-		unsigned int width, height;
-		bool vsync;
+		unsigned int width = 0;
+		unsigned int height = 0;
+		bool vsync = false;
 
 		EventCallbackFn eventCallback;
 	};

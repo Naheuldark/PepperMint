@@ -54,7 +54,7 @@ void OpenGLVertexArray::addVertexBuffer(const Ref<VertexBuffer>& iVertexBuffer) 
 							  ShaderDataType2OpenGLBaseType(element.type),
 							  element.normalized ? GL_TRUE : GL_FALSE,
 							  layout.stride(),
-							  (const void*)(intptr_t)element.offset);
+							  (const void*)element.offset);
 		_vertexBufferIndex++;
 	}
 

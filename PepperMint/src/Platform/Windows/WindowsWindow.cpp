@@ -12,7 +12,7 @@
 
 namespace PepperMint {
 
-static bool kGLFWInitialized = false;
+static uint8_t sGLFWWindowCount = 0;
 
 Scope<Window> Window::Create(const WindowProperties& iProperties) {
 	return CreateScope<WindowsWindow>(iProperties);
@@ -33,18 +33,18 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 
 	PM_CORE_INFO("Creating window {0} ({1} x {2})", _data.title, _data.width, _data.height);
 
-	if (!kGLFWInitialized) {
+	if (sGLFWWindowCount == 0) {
+		PM_CORE_INFO("Initializing GLFW");
 		int success = glfwInit();
 		PM_CORE_ASSERT(success, "Failed to initialize GLFW!");
 
 		glfwSetErrorCallback([](int iError, const char* iDescription) {
 								PM_CORE_ERROR("GLFW Error ({0}): {1}", iError, iDescription)
 							 });
-
-		kGLFWInitialized = true;
 	}
 
 	_window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
+	++sGLFWWindowCount;
 
 	_context = CreateScope<OpenGLContext>(_window);
 	_context->init();
@@ -148,6 +148,12 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 
 void WindowsWindow::shutdown() {
 	glfwDestroyWindow(_window);
+	--sGLFWWindowCount;
+
+	if (sGLFWWindowCount == 0) {
+		PM_CORE_INFO("Terminating GLFW");
+		glfwTerminate();
+	}
 }
 
 void WindowsWindow::onUpdate() {
