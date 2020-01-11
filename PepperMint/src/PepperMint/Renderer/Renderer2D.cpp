@@ -12,8 +12,8 @@ namespace PepperMint {
 
 struct Renderer2DStorage {
 	Ref<VertexArray> quadVertexArray;
-	Ref<Shader> flatColorShader;
 	Ref<Shader> textureShader;
+	Ref<Texture2D> whiteTexture;
 };
 
 static Scope<Renderer2DStorage> sData = CreateScope<Renderer2DStorage>();
@@ -52,7 +52,9 @@ void Renderer2D::Init() {
 	// Shaders //
 	/////////////
 
-	sData->flatColorShader = PepperMint::Shader::Create("assets/shaders/Flat.glsl");
+	sData->whiteTexture = Texture2D::Create(1, 1);
+	uint32_t whiteTextureData = 0xffffffff;
+	sData->whiteTexture->setData(&whiteTextureData, sizeof(uint32_t));
 	
 	sData->textureShader = PepperMint::Shader::Create("assets/shaders/Texture.glsl");
 	sData->textureShader->bind();
@@ -62,9 +64,6 @@ void Renderer2D::Init() {
 void Renderer2D::Shutdown() {}
 
 void Renderer2D::BeginScene(const OrthographicCamera& iCamera) {
-	sData->flatColorShader->bind();
-	sData->flatColorShader->setMat4("uViewProjection", iCamera.viewProjectionMatrix());
-
 	sData->textureShader->bind();
 	sData->textureShader->setMat4("uViewProjection", iCamera.viewProjectionMatrix());
 }
@@ -76,11 +75,11 @@ void Renderer2D::DrawQuad(const glm::vec2& iPosition, const glm::vec2& iSize, co
 }
 
 void Renderer2D::DrawQuad(const glm::vec3& iPosition, const glm::vec2& iSize, const glm::vec4& iColor) {
-	sData->flatColorShader->bind();
-	sData->flatColorShader->setFloat4("uColor", iColor);
+	sData->textureShader->setFloat4("uColor", iColor);
+	sData->whiteTexture->bind();
 
 	glm::mat4 transform = glm::translate(glm::mat4(1.0f), iPosition) * glm::scale(glm::mat4(1.0f), { iSize.x, iSize.y, 1.0f });
-	sData->flatColorShader->setMat4("uTransform", transform);
+	sData->textureShader->setMat4("uTransform", transform);
 
 	sData->quadVertexArray->bind();
 	RenderCommand::DrawIndexed(sData->quadVertexArray);
@@ -91,12 +90,11 @@ void Renderer2D::DrawQuad(const glm::vec2& iPosition, const glm::vec2& iSize, Re
 }
 	
 void Renderer2D::DrawQuad(const glm::vec3& iPosition, const glm::vec2& iSize, Ref<Texture2D> iTexture) {
-	sData->textureShader->bind();
+	sData->textureShader->setFloat4("uColor", glm::vec4(1.0f));
+	iTexture->bind();
 
 	glm::mat4 transform = glm::translate(glm::mat4(1.0f), iPosition) * glm::scale(glm::mat4(1.0f), { iSize.x, iSize.y, 1.0f });
 	sData->textureShader->setMat4("uTransform", transform);
-
-	iTexture->bind();
 
 	sData->quadVertexArray->bind();
 	RenderCommand::DrawIndexed(sData->quadVertexArray);

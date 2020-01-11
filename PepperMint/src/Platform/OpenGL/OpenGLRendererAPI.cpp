@@ -27,5 +27,6 @@ void OpenGLRendererAPI::clear() {
 
 void OpenGLRendererAPI::drawIndexed(Ref<VertexArray> iVertexArray) {
 	glDrawElements(GL_TRIANGLES, iVertexArray->indexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 }
