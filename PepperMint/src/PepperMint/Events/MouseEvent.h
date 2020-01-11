@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PepperMint/Events/Event.h"
+#include "PepperMint/Core/Input.h"
 
 namespace PepperMint {
 
@@ -52,20 +53,20 @@ class MouseButtonEvent : public Event {
 public:
 	~MouseButtonEvent() = default;
 
-	inline int mouseButton() const { return _button; }
+	inline MouseCode mouseButton() const { return _button; }
 
 	EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 
 protected:
-	MouseButtonEvent(int iButton) :
+	MouseButtonEvent(MouseCode iButton) :
 		_button(iButton) {}
 
-	int _button;
+	MouseCode _button;
 };
 
 class MouseButtonPressedEvent : public MouseButtonEvent {
 public:
-	MouseButtonPressedEvent(int iButton) : 
+	MouseButtonPressedEvent(MouseCode iButton) : 
 		MouseButtonEvent(iButton) {}
 	~MouseButtonPressedEvent() = default;
 
@@ -80,7 +81,7 @@ public:
 
 class MouseButtonReleasedEvent : public MouseButtonEvent {
 public:
-	MouseButtonReleasedEvent(int iButton) :
+	MouseButtonReleasedEvent(MouseCode iButton) :
 		MouseButtonEvent(iButton) {}
 	~MouseButtonReleasedEvent() = default;
 

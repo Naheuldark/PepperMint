@@ -9,15 +9,15 @@ namespace PepperMint {
 
 Scope<Input> Input::sInstance = CreateScope<WindowsInput>();
 
-bool WindowsInput::isKeyPressedImpl(int iKeyCode) {
+bool WindowsInput::isKeyPressedImpl(KeyCode iKeyCode) {
 	auto window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());
-	auto state = glfwGetKey(window, iKeyCode);
+	auto state = glfwGetKey(window, static_cast<int>(iKeyCode));
 	return (state == GLFW_PRESS) || (state == GLFW_REPEAT);
 }
 
-bool WindowsInput::isMouseButtonPressedImpl(int iButton) {
+bool WindowsInput::isMouseButtonPressedImpl(MouseCode iButton) {
 	auto window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());
-	auto state = glfwGetMouseButton(window, iButton);
+	auto state = glfwGetMouseButton(window, static_cast<int>(iButton));
 	return (state == GLFW_PRESS);
 }
 

@@ -6,9 +6,9 @@ namespace PepperMint {
 
 class WindowsInput : public Input {
 protected:
-	bool isKeyPressedImpl(int iKeyCode) override;
+	bool isKeyPressedImpl(KeyCode iKeyCode) override;
 
-	bool isMouseButtonPressedImpl(int iButton) override;
+	bool isMouseButtonPressedImpl(MouseCode iButton) override;
 	std::pair<float, float> getMousePositionImpl() override;
 	float getMouseXImpl() override;
 	float getMouseYImpl() override;

@@ -1,6 +1,7 @@
 #include "pmpch.h"
 #include "Platform/Windows/WindowsWindow.h"
 
+#include "PepperMint/Core/Input.h"
 #include "PepperMint/Events/ApplicationEvent.h"
 #include "PepperMint/Events/KeyEvent.h"
 #include "PepperMint/Events/MouseEvent.h"
@@ -93,19 +94,19 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 						   switch (action) {
 							   case GLFW_PRESS:
 							   {
-								   KeyPressedEvent event(key, 0);
+								   KeyPressedEvent event(static_cast<KeyCode>(key), 0);
 								   data.eventCallback(event);
 								   break;
 							   }
 							   case GLFW_RELEASE:
 							   {
-								   KeyReleasedEvent event(key);
+								   KeyReleasedEvent event(static_cast<KeyCode>(key));
 								   data.eventCallback(event);
 								   break;
 							   }
 							   case GLFW_REPEAT:
 							   {
-								   KeyPressedEvent event(key, 1);
+								   KeyPressedEvent event(static_cast<KeyCode>(key), 1);
 								   data.eventCallback(event);
 								   break;
 							   }   
@@ -118,7 +119,7 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 					    [](GLFWwindow* window, unsigned int keyCode) {
 							WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-							KeyTypedEvent event(keyCode);
+							KeyTypedEvent event(static_cast<KeyCode>(keyCode));
 							data.eventCallback(event);
 					    });
 
@@ -129,13 +130,13 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 								   switch (action) {
 									   case GLFW_PRESS:
 									   {
-										   MouseButtonPressedEvent event(button);
+										   MouseButtonPressedEvent event(static_cast<MouseCode>(button));
 										   data.eventCallback(event);
 										   break;
 									   }
 									   case GLFW_RELEASE:
 									   {
-										   MouseButtonReleasedEvent event(button);
+										   MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
 										   data.eventCallback(event);
 										   break;
 									   }

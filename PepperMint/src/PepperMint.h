@@ -12,7 +12,7 @@
 
 #include "PepperMint/Core/Input.h"
 #include "PepperMint/Core/KeyCodes.h"
-#include "PepperMint/Core/MouseButtonCodes.h"
+#include "PepperMint/Core/MouseCodes.h"
 
 #include "PepperMint/ImGui/ImGuiLayer.h"
 

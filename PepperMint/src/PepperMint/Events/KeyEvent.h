@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PepperMint/Events/Event.h"
+#include "PepperMint/Core/Input.h"
 
 namespace PepperMint {
 
@@ -8,20 +9,20 @@ class KeyEvent : public Event {
 public:
 	~KeyEvent() = default;
 
-	inline int keyCode() const { return _keyCode; }
+	inline KeyCode keyCode() const { return _keyCode; }
 
 	EVENT_CATEGORY(EVENT_CATEGORY_KEYBOARD | EVENT_CATEGORY_INPUT)
 
 protected:
-	KeyEvent(int iKeyCode) :
+	KeyEvent(KeyCode iKeyCode) :
 		_keyCode(iKeyCode) {}
 
-	int _keyCode;
+	KeyCode _keyCode;
 };
 
 class KeyPressedEvent : public KeyEvent {
 public:
-	KeyPressedEvent(int iKeyCode, int iRepeatCount) : 
+	KeyPressedEvent(KeyCode iKeyCode, int iRepeatCount) : 
 		KeyEvent(iKeyCode), _repeatCount(iRepeatCount) {}
 	~KeyPressedEvent() = default;
 
@@ -41,7 +42,7 @@ private:
 
 class KeyReleasedEvent : public KeyEvent {
 public:
-	KeyReleasedEvent(int iKeyCode) : 
+	KeyReleasedEvent(KeyCode iKeyCode) : 
 		KeyEvent(iKeyCode) {}
 	~KeyReleasedEvent() = default;
 
@@ -56,7 +57,7 @@ public:
 
 class KeyTypedEvent : public KeyEvent {
 public:
-	KeyTypedEvent(int iKeyCode) :
+	KeyTypedEvent(KeyCode iKeyCode) :
 		KeyEvent(iKeyCode) {}
 	~KeyTypedEvent() = default;
 
