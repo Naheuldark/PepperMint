@@ -14,7 +14,6 @@ public:
 
 	void onAttach() override;
 	void onDetach() override;
-	void onImGuiRender() override;
 
 	void begin();
 	void end();
