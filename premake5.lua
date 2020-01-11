@@ -1,5 +1,5 @@
 workspace "PepperMint"
-	architecture "x64"
+	architecture "x86_64"
 
 	startproject "Sandbox"
 
