@@ -1,8 +1,8 @@
 #include <PepperMint.h>
 #include <PepperMint/Core/EntryPoint.h>
 
-#include "Sandbox2D.h"
-#include "ExampleLayer.h"
+#include "Sandbox2D/Sandbox2D.h"
+#include "Example/ExampleLayer.h"
 
 class Sandbox : public PepperMint::Application {
 public:
