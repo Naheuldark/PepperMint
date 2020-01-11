@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OrthographicCamera.h"
+#include "Texture.h"
 
 namespace PepperMint {
 
@@ -15,6 +16,9 @@ public:
 	// Primitives
 	static void DrawQuad(const glm::vec2& iPosition, const glm::vec2& iSize, const glm::vec4& iColor);
 	static void DrawQuad(const glm::vec3& iPosition, const glm::vec2& iSize, const glm::vec4& iColor);
+
+	static void DrawQuad(const glm::vec2& iPosition, const glm::vec2& iSize, Ref<Texture2D> iTexture);
+	static void DrawQuad(const glm::vec3& iPosition, const glm::vec2& iSize, Ref<Texture2D> iTexture);
 };
 
 }

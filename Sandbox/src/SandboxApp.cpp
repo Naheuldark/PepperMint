@@ -57,7 +57,7 @@ public:
 		_chernoTexture = PepperMint::Texture2D::Create("assets/textures/ChernoLogo.png");
 
 		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(textureShader)->bind();
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(textureShader)->uploadUniformInt("uTexture", 0);
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(textureShader)->setInt("uTexture", 0);
 	}
 
 	~ExampleLayer() = default;
@@ -76,7 +76,7 @@ public:
 
 		auto flatColorShader = _shaderLibrary.get("Flat");
 		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(flatColorShader)->bind();
-		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(flatColorShader)->uploadUniformFloat3("uColor", _squareColor);
+		std::dynamic_pointer_cast<PepperMint::OpenGLShader>(flatColorShader)->setFloat3("uColor", _squareColor);
 
 		// Draw squares
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));

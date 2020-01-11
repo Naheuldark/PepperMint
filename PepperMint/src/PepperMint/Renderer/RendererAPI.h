@@ -23,7 +23,7 @@ public:
 	virtual void setClearColor(const glm::vec4& iColor) = 0;
 	virtual void clear() = 0;
 
-	virtual void drawIndexed(const Ref<VertexArray>& iVertexArray) = 0;
+	virtual void drawIndexed(Ref<VertexArray> iVertexArray) = 0;
 
 	inline static API GetAPI() { return sAPI; }
 

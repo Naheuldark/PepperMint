@@ -17,7 +17,9 @@ private:
 	PepperMint::OrthographicCameraController _cameraController;
 
 	PepperMint::Ref<PepperMint::VertexArray> _squareVA;
-	PepperMint::Ref<PepperMint::Shader> _flatShader;
+	PepperMint::Ref<PepperMint::Shader> _flatColorShader;
+
+	PepperMint::Ref<PepperMint::Texture2D> _checkerboardTexture;
 
 	glm::vec4 _squareColor = { 0.2f, 0.3f, 0.8f, 1.0 };
 };

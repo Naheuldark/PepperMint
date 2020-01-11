@@ -19,17 +19,23 @@ public:
 
 	inline std::string name() const override { return _name; }
 
-	void uploadUniformInt(const std::string& iName, int iValue);
+	void setInt(const std::string& iName, int iValue) override;
+	void setFloat(const std::string& iName, float iValue) override;
+	void setFloat2(const std::string& iName, const glm::vec2& iValue) override;
+	void setFloat3(const std::string& iName, const glm::vec3& iValue) override;
+	void setFloat4(const std::string& iName, const glm::vec4& iValue) override;
+	void setMat3(const std::string& iName, const glm::mat3& iValue) override;
+	void setMat4(const std::string& iName, const glm::mat4& iValue) override;
 
+private:
+	void uploadUniformInt(const std::string& iName, int iValue);
 	void uploadUniformFloat(const std::string& iName, float iValue);
 	void uploadUniformFloat2(const std::string& iName, const glm::vec2& iValue);
 	void uploadUniformFloat3(const std::string& iName, const glm::vec3& iValue);
 	void uploadUniformFloat4(const std::string& iName, const glm::vec4& iValue);
-
 	void uploadUniformMat3(const std::string& iName, const glm::mat3& iValue);
 	void uploadUniformMat4(const std::string& iName, const glm::mat4& iValue);
 
-private:
 	std::string readFile(const std::string& iShaderFile);
 	std::unordered_map<GLenum, std::string> preProcess(const std::string& iSource);
 	void compile(const std::unordered_map<GLenum, std::string>& iShaderSources);

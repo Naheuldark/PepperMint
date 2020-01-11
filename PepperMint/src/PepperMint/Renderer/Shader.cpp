@@ -17,7 +17,7 @@ Ref<Shader> Shader::Create(const std::string& iShaderFile) {
 	}
 }
 
-void ShaderLibrary::add(const Ref<Shader>& iShader) {
+void ShaderLibrary::add(Ref<Shader> iShader) {
 	const std::string& name = iShader->name();
 	PM_CORE_ASSERT(!exists(name), "Shader already exists");
 	_shaders[name] = iShader;

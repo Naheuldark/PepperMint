@@ -17,8 +17,8 @@ public:
 	static void BeginScene(OrthographicCamera& ioCamera);
 	static void EndScene();
 
-	static void Submit(const Ref<Shader>& iShader, 
-					   const Ref<VertexArray>& iVertexArray,
+	static void Submit(Ref<Shader> iShader, 
+					   Ref<VertexArray> iVertexArray,
 					   const glm::mat4& iTransform = glm::mat4(1.0f));
 
 	inline static RendererAPI::API API() { return RendererAPI::GetAPI(); }

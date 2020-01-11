@@ -40,7 +40,7 @@ void OpenGLVertexArray::unbind() const {
 	glBindVertexArray(0);
 }
 
-void OpenGLVertexArray::addVertexBuffer(const Ref<VertexBuffer>& iVertexBuffer) {
+void OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> iVertexBuffer) {
 	PM_CORE_ASSERT(iVertexBuffer->layout().elements().size(), "VertexBuffer has no layout!");
 
 	glBindVertexArray(_rendererId);
@@ -61,7 +61,7 @@ void OpenGLVertexArray::addVertexBuffer(const Ref<VertexBuffer>& iVertexBuffer) 
 	_vertexBuffers.push_back(iVertexBuffer);
 }
 
-void OpenGLVertexArray::setIndexBuffer(const Ref<IndexBuffer>& iIndexBuffer) {
+void OpenGLVertexArray::setIndexBuffer(Ref<IndexBuffer> iIndexBuffer) {
 	glBindVertexArray(_rendererId);
 	iIndexBuffer->bind();
 

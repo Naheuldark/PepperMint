@@ -5,9 +5,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <Platform/OpenGL/OpenGLShader.h>
-
-void Sandbox2D::onAttach() {}
+void Sandbox2D::onAttach() {
+	_checkerboardTexture = PepperMint::Texture2D::Create("assets/textures/Checkerboard.png");
+}
 
 void Sandbox2D::onDetach() {}
 
@@ -20,7 +20,9 @@ void Sandbox2D::onUpdate(PepperMint::Timestep iTimestep) {
 	PepperMint::RenderCommand::Clear();
 
 	PepperMint::Renderer2D::BeginScene(_cameraController.camera());
-	PepperMint::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, _squareColor);
+	PepperMint::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, _squareColor);
+	PepperMint::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.8f, 0.3f, 0.8f, 1.0f });
+	PepperMint::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, _checkerboardTexture);
 	PepperMint::Renderer2D::EndScene();
 }
 
