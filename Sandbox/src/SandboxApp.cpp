@@ -9,8 +9,8 @@ class Sandbox : public PepperMint::Application {
 public:
 	Sandbox() { 
 		// pushLayer(PepperMint::CreateRef<ExampleLayer>());
-		pushLayer(PepperMint::CreateRef<Sandbox2D>());
-		// pushLayer(PepperMint::CreateRef<FlappyShipLayer>());
+		// pushLayer(PepperMint::CreateRef<Sandbox2D>());
+		pushLayer(PepperMint::CreateRef<FlappyShipLayer>());
 	}
 
 	~Sandbox() = default;

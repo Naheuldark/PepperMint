@@ -51,13 +51,17 @@ void Renderer2D::Init() {
 	// Shaders //
 	/////////////
 
-	sData->whiteTexture = Texture2D::Create(1, 1);
-	uint32_t whiteTextureData = 0xffffffff;
-	sData->whiteTexture->setData(&whiteTextureData, sizeof(uint32_t));
-	
 	sData->textureShader = Shader::Create("assets/shaders/Texture.glsl");
 	sData->textureShader->bind();
 	sData->textureShader->setInt("uTexture", 0);
+
+	//////////////
+	// Textures //
+	//////////////
+
+	sData->whiteTexture = Texture2D::Create(1, 1);
+	uint32_t whiteTextureData = 0xffffffff;
+	sData->whiteTexture->setData(&whiteTextureData, sizeof(uint32_t));
 }
 
 void Renderer2D::Shutdown() {
@@ -75,34 +79,32 @@ void Renderer2D::EndScene() {
 	PM_PROFILE_FUNCTION();
 }
 
-void Renderer2D::DrawQuad(const glm::vec2& iPosition, const glm::vec2& iSize, const glm::vec4& iColor) {
-	DrawQuad({ iPosition.x, iPosition.y, 0.0f }, iSize, iColor);
+void Renderer2D::DrawQuad(const glm::vec2& iPosition,
+						  float iRotation,
+						  const glm::vec2& iScale,
+						  Ref<Texture2D> iTexture,
+						  const glm::vec4& iColor) {
+	DrawQuad({ iPosition.x, iPosition.y, 0.0f }, iRotation, iScale, iTexture, iColor);
 }
 
-void Renderer2D::DrawQuad(const glm::vec3& iPosition, const glm::vec2& iSize, const glm::vec4& iColor) {
+void Renderer2D::DrawQuad(const glm::vec3& iPosition,
+						  float iRotation,
+						  const glm::vec2& iScale,
+						  Ref<Texture2D> iTexture,
+						  const glm::vec4& iColor) {
 	PM_PROFILE_FUNCTION();
 
 	sData->textureShader->setFloat4("uColor", iColor);
-	sData->whiteTexture->bind();
 
-	glm::mat4 transform = glm::translate(glm::mat4(1.0f), iPosition) * glm::scale(glm::mat4(1.0f), { iSize.x, iSize.y, 1.0f });
-	sData->textureShader->setMat4("uTransform", transform);
+	if (iTexture) {
+		iTexture->bind();
+	} else {
+		sData->whiteTexture->bind();
+	}
 
-	sData->quadVertexArray->bind();
-	RenderCommand::DrawIndexed(sData->quadVertexArray);
-}
-
-void Renderer2D::DrawQuad(const glm::vec2& iPosition, const glm::vec2& iSize, Ref<Texture2D> iTexture) {
-	DrawQuad({ iPosition.x, iPosition.y, 0.0f }, iSize, iTexture);
-}
-	
-void Renderer2D::DrawQuad(const glm::vec3& iPosition, const glm::vec2& iSize, Ref<Texture2D> iTexture) {
-	PM_PROFILE_FUNCTION();
-
-	sData->textureShader->setFloat4("uColor", glm::vec4(1.0f));
-	iTexture->bind();
-
-	glm::mat4 transform = glm::translate(glm::mat4(1.0f), iPosition) * glm::scale(glm::mat4(1.0f), { iSize.x, iSize.y, 1.0f });
+	glm::mat4 transform = glm::translate(glm::mat4(1.0f), iPosition) * 
+						  glm::rotate(glm::mat4(1.0f), iRotation, { 0.0f, 0.0f, 1.0f }) *
+						  glm::scale(glm::mat4(1.0f), { iScale.x, iScale.y, 1.0f });
 	sData->textureShader->setMat4("uTransform", transform);
 
 	sData->quadVertexArray->bind();
