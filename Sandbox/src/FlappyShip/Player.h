@@ -2,9 +2,11 @@
 
 #include <PepperMint.h>
 
+#include "ParticleSystem.h"
+
 class Player {
 public:
-	Player() = default;
+	Player();
 	~Player() = default;
 
 	void init();
@@ -27,4 +29,12 @@ private:
 	float _gravity = 0.4f;
 
 	PepperMint::Ref<PepperMint::Texture2D> _shipTexture;
+
+	// Particles
+	ParticleProperties _smoke, _flames;
+	ParticleSystem _particleSystem;
+
+	float _time = 0.0f;
+	float _smokeEmitInterval = 0.4f;
+	float _smokeNextEmitTime = _smokeEmitInterval;
 };
