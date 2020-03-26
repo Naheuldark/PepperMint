@@ -15,10 +15,6 @@ namespace PepperMint {
 
 static uint8_t sGLFWWindowCount = 0;
 
-Scope<Window> Window::Create(const WindowProperties& iProperties) {
-	return CreateScope<WindowsWindow>(iProperties);
-}
-
 WindowsWindow::WindowsWindow(const WindowProperties& iProperties) {
 	PM_PROFILE_FUNCTION();
 

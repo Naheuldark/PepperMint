@@ -22,6 +22,8 @@ public:
 	inline static float GetMouseX() { return sInstance->getMouseXImpl(); }
 	inline static float GetMouseY() { return sInstance->getMouseYImpl(); }
 
+	static Scope<Input> Create();
+
 protected:
 	Input() = default;
 
