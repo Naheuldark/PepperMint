@@ -7,6 +7,8 @@
 #include "PepperMint/Events/ApplicationEvent.h"
 #include "PepperMint/ImGui/ImGuiLayer.h"
 
+int main(int argc, char** argv);
+
 namespace PepperMint {
 
 class Application {
@@ -19,12 +21,12 @@ public:
 	void pushLayer(Ref<Layer> iLayer);
 	void pushOverlay(Ref<Layer> iOverlay);
 
-	void run();
-
 	inline static Application& Get() { return *sInstance; }
 	inline Window& window() { return *_window; }
 
 private:
+	void run();
+
 	bool onWindowClose(WindowCloseEvent& iEvent);
 	bool onWindowResize(WindowResizeEvent& iEvent);
 
@@ -38,6 +40,7 @@ private:
 
 private:
 	static Application* sInstance;
+	friend int ::main(int argc, char** argv);
 };
 
 // To be defined in CLIENT
