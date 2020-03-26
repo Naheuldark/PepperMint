@@ -11,4 +11,5 @@ bin-int/
 **/*.lib
 **/*.pdb
 **/*.json
+**/*.log
 *.sln
