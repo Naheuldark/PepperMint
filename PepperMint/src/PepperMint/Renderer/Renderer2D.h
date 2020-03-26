@@ -15,14 +15,16 @@ public:
 
 	// Primitives
 	static void DrawQuad(const glm::vec2& iPosition,
-						 float iRotation = 0.0f,
+						 const float iRotation = 0.0f,
 						 const glm::vec2& iScale = glm::vec2(1.0f),
+						 const float iTilingFactor = 1.0f,
 						 Ref<Texture2D> iTexture = nullptr,
 						 const glm::vec4& iColor = glm::vec4(1.0f));
 
 	static void DrawQuad(const glm::vec3& iPosition, 
-						 float iRotation = 0.0f,
+						 const float iRotation = 0.0f,
 						 const glm::vec2& iScale = glm::vec2(1.0f), 
+						 const float iTilingFactor = 1.0f,
 						 Ref<Texture2D> iTexture = nullptr,
 						 const glm::vec4& iColor = glm::vec4(1.0f));
 };

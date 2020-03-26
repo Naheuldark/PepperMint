@@ -98,16 +98,16 @@ void Level::onRender() {
 	auto&& color = HSVtoRGB(_pillarHSV);
 
 	// Background
-	PepperMint::Renderer2D::DrawQuad({ playerPos.x, 0.0f, -0.8f }, 0.0f, { 50.0f, 50.0f }, nullptr, { 0.3f, 0.3f, 0.3f, 1.0f });
+	PepperMint::Renderer2D::DrawQuad({ playerPos.x, 0.0f, -0.8f }, 0.0f, { 50.0f, 50.0f }, 1.0f, nullptr, { 0.3f, 0.3f, 0.3f, 1.0f });
 
 	// Floors + Ceiling
-	PepperMint::Renderer2D::DrawQuad({ playerPos.x,  34.0f }, 0.0f, { 50.0f, 50.0f }, nullptr, color);
-	PepperMint::Renderer2D::DrawQuad({ playerPos.x, -34.0f }, 0.0f, { 50.0f, 50.0f }, nullptr, color);
+	PepperMint::Renderer2D::DrawQuad({ playerPos.x,  34.0f }, 0.0f, { 50.0f, 50.0f }, 1.0f, nullptr, color);
+	PepperMint::Renderer2D::DrawQuad({ playerPos.x, -34.0f }, 0.0f, { 50.0f, 50.0f }, 1.0f, nullptr, color);
 
 	// Pillars
 	for (auto&& pillar : _pillars) {
-		PepperMint::Renderer2D::DrawQuad(pillar.topPosition, glm::radians(180.0f), pillar.topScale, _pillarTexture, color);
-		PepperMint::Renderer2D::DrawQuad(pillar.bottomPosition, 0.0f, pillar.bottomScale, _pillarTexture, color);
+		PepperMint::Renderer2D::DrawQuad(pillar.topPosition, glm::radians(180.0f), pillar.topScale, 1.0f, _pillarTexture, color);
+		PepperMint::Renderer2D::DrawQuad(pillar.bottomPosition, 0.0f, pillar.bottomScale, 1.0f, _pillarTexture, color);
 	}
 
 	// Player

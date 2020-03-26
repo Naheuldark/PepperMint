@@ -31,9 +31,9 @@ void Sandbox2D::onUpdate(PepperMint::Timestep iTimestep) {
 	{
 		PM_PROFILE_SCOPE("Renderer Draw");
 		PepperMint::Renderer2D::BeginScene(_cameraController.camera());
-		PepperMint::Renderer2D::DrawQuad({ -1.0f, 0.0f }, 0.0f, { 0.8f, 0.8f }, nullptr, _squareColor);
-		PepperMint::Renderer2D::DrawQuad({ 0.5f, -0.5f }, 0.0f, { 0.5f, 0.75f }, nullptr, { 0.8f, 0.3f, 0.8f, 1.0f });
-		PepperMint::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, 0.0f, { 10.0f, 10.0f }, _checkerboardTexture);
+		PepperMint::Renderer2D::DrawQuad({ -1.0f, 0.0f }, -45.0f, { 0.8f, 0.8f }, 1.0f, nullptr, _squareColor);
+		PepperMint::Renderer2D::DrawQuad({ 0.5f, -0.5f }, 0.0f, { 0.5f, 0.75f }, 1.0f, nullptr, { 0.8f, 0.3f, 0.8f, 1.0f });
+		PepperMint::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, 0.0f, { 10.0f, 10.0f }, 10.0f, _checkerboardTexture);
 		PepperMint::Renderer2D::EndScene();
 	}
 }

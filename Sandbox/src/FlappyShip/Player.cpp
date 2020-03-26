@@ -71,7 +71,7 @@ void Player::onUpdate(PepperMint::Timestep iTimestep) {
 
 void Player::onRender() {
 	_particleSystem.onRender();
-	PepperMint::Renderer2D::DrawQuad({ _position.x, _position.y, 0.5f }, glm::radians(rotation()), { 1.0f, 1.3f }, _shipTexture);
+	PepperMint::Renderer2D::DrawQuad({ _position.x, _position.y, 0.5f }, glm::radians(rotation()), { 1.0f, 1.3f }, 1.0f, _shipTexture);
 }
 
 void Player::onImGuiRender() {

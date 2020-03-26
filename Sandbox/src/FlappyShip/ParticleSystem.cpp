@@ -62,6 +62,6 @@ void ParticleSystem::onRender() {
 
 		float size = glm::lerp(particle.sizeEnd, particle.sizeBegin, life);
 
-		PepperMint::Renderer2D::DrawQuad(particle.position, particle.rotation, { size, size }, nullptr, color);
+		PepperMint::Renderer2D::DrawQuad(particle.position, particle.rotation, { size, size }, 1.0f, nullptr, color);
 	}
 }

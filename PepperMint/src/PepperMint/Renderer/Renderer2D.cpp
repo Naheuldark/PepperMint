@@ -80,21 +80,24 @@ void Renderer2D::EndScene() {
 }
 
 void Renderer2D::DrawQuad(const glm::vec2& iPosition,
-						  float iRotation,
+						  const float iRotation,
 						  const glm::vec2& iScale,
+						  const float iTilingFactor,
 						  Ref<Texture2D> iTexture,
 						  const glm::vec4& iColor) {
-	DrawQuad({ iPosition.x, iPosition.y, 0.0f }, iRotation, iScale, iTexture, iColor);
+	DrawQuad({ iPosition.x, iPosition.y, 0.0f }, iRotation, iScale, iTilingFactor, iTexture, iColor);
 }
 
 void Renderer2D::DrawQuad(const glm::vec3& iPosition,
-						  float iRotation,
+						  const float iRotation,
 						  const glm::vec2& iScale,
+						  const float iTilingFactor,
 						  Ref<Texture2D> iTexture,
 						  const glm::vec4& iColor) {
 	PM_PROFILE_FUNCTION();
 
 	sData->textureShader->setFloat4("uColor", iColor);
+	sData->textureShader->setFloat("uTilingFactor", iTilingFactor);
 
 	if (iTexture) {
 		iTexture->bind();

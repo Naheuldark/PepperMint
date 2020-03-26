@@ -26,7 +26,7 @@ void GraphLayer::onUpdate(PepperMint::Timestep iTimestep) {
 
 	PepperMint::Renderer2D::BeginScene(*_camera);
 	if (_send) {
-		PepperMint::Renderer2D::DrawQuad({ -10.0f, 0.0f }, 0.0f, { 1.0f, 1.0f }, nullptr, { 1,0,0,1 });
+		PepperMint::Renderer2D::DrawQuad({ -10.0f, 0.0f }, 0.0f, { 1.0f, 1.0f }, 1.0f, nullptr, { 1,0,0,1 });
 	}
 	PepperMint::Renderer2D::EndScene();
 }
