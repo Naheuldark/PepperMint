@@ -5,13 +5,18 @@
 #include <algorithm>
 #include <fstream>
 #include <thread>
+#include <iomanip>
 
 namespace PepperMint {
 
+using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
+
 struct ProfileResult {
-	const char* name;
-	long long start, end;
-	size_t threadId;
+	std::string name;
+
+	FloatingPointMicroseconds start;
+	std::chrono::microseconds elapsedTime;
+	std::thread::id threadId;
 };
 
 struct InstrumentationSession {
@@ -22,39 +27,59 @@ struct InstrumentationSession {
 
 class Instrumentor {
 public:
-	Instrumentor() : _currentSession(nullptr), _profileCount(0) {}
+	Instrumentor() : _currentSession(nullptr) {}
 	~Instrumentor() = default;
 
 	void beginSession(const std::string& iName, const std::string& iFilepath = "results.json") {
+		std::lock_guard lock(_mutex);
+		if (_currentSession) {
+			// If there is already a current session, then close it before beginning new one.
+			// Subsequent profiling output meant for the original session will end up in the
+			// newly opened session instead.  That's better than having badly formatted profiling output.
+			if (Log::CoreLogger()) { // Edge case: BeginSession() might be before Log::Init()
+				PM_CORE_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", iName, _currentSession->name);
+			}
+			internalEndSession();
+		}
+
 		_outputStream.open(iFilepath);
-		writeHeader();
-		_currentSession = CreateScope<InstrumentationSession>(iName);
+		if (_outputStream.is_open()) {
+			_currentSession = new InstrumentationSession({ iName });
+			writeHeader();
+		} else {
+			if (Log::CoreLogger()) { // Edge case: BeginSession() might be before Log::Init()
+				PM_CORE_ERROR("Instrumentor could not open results file '{0}'.", iFilepath);
+			}
+		}
 	}
 
 	void endSession() {
-		writeFooter();
-		_outputStream.close();
-		_profileCount = 0;
+		std::lock_guard lock(_mutex);
+		internalEndSession();
 	}
 
 	void writeProfile(const ProfileResult& iResult) {
-		if (_profileCount++ > 0)
-			_outputStream << ",";
+		std::stringstream json;
 
 		std::string name = iResult.name;
 		std::replace(name.begin(), name.end(), '"', '\'');
 
-		_outputStream << "{";
-		_outputStream << "\"cat\":\"function\",";
-		_outputStream << "\"dur\":" << (iResult.end - iResult.start) << ',';
-		_outputStream << "\"name\":\"" << name << "\",";
-		_outputStream << "\"ph\":\"X\",";
-		_outputStream << "\"pid\":0,";
-		_outputStream << "\"tid\":" << iResult.threadId << ",";
-		_outputStream << "\"ts\":" << iResult.start;
-		_outputStream << "}";
+		json << std::setprecision(3) << std::fixed;
+		json << ",{";
+		json << "\"cat\":\"function\",";
+		json << "\"dur\":" << (iResult.elapsedTime.count()) << ',';
+		json << "\"name\":\"" << name << "\",";
+		json << "\"ph\":\"X\",";
+		json << "\"pid\":0,";
+		json << "\"tid\":" << iResult.threadId << ",";
+		json << "\"ts\":" << iResult.start.count();
+		json << "}";
 
-		_outputStream.flush();
+		std::lock_guard lock(_mutex);
+		if (_currentSession) {
+			_outputStream << json.str();
+			_outputStream.flush();
+		}
 	}
 
 	static Instrumentor& Get() {
@@ -64,7 +89,7 @@ public:
 
 private:
 	void writeHeader() {
-		_outputStream << "{\"otherData\": {},\"traceEvents\":[";
+		_outputStream << "{\"otherData\": {},\"traceEvents\":[{}";
 		_outputStream.flush();
 	}
 
@@ -73,17 +98,27 @@ private:
 		_outputStream.flush();
 	}
 
+	// Note: you must already own lock on m_Mutex before calling InternalEndSession()
+	void internalEndSession() {
+		if (_currentSession) {
+			writeFooter();
+			_outputStream.close();
+			delete _currentSession;
+			_currentSession = nullptr;
+		}
+	}
+
 private:
-	Scope<InstrumentationSession> _currentSession;
+	std::mutex _mutex;
+	InstrumentationSession* _currentSession;
 	std::ofstream _outputStream;
-	int _profileCount;
 };
 
 class InstrumentationTimer {
 public:
 	InstrumentationTimer(const char* iName) :
 		_name(iName), _stopped(false) {
-		_startTimepoint = std::chrono::high_resolution_clock::now();
+		_startTimepoint = std::chrono::steady_clock::now();
 	}
 
 	~InstrumentationTimer() {
@@ -94,20 +129,18 @@ public:
 
 private:
 	void Stop() {
-		auto&& endTimepoint = std::chrono::high_resolution_clock::now();
+		auto endTimepoint = std::chrono::steady_clock::now();
+		auto highResStart = FloatingPointMicroseconds{ _startTimepoint.time_since_epoch() };
+		auto elapsedTime = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() - std::chrono::time_point_cast<std::chrono::microseconds>(_startTimepoint).time_since_epoch();
 
-		long long start = std::chrono::time_point_cast<std::chrono::microseconds>(_startTimepoint).time_since_epoch().count();
-		long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
-
-		size_t threadId = std::hash<std::thread::id>{}(std::this_thread::get_id());
-		Instrumentor::Get().writeProfile({ _name, start, end, threadId });
+		Instrumentor::Get().writeProfile({ _name, highResStart, elapsedTime, std::this_thread::get_id() });
 
 		_stopped = true;
 	}
 
 private:
 	const char* _name;
-	std::chrono::time_point<std::chrono::high_resolution_clock> _startTimepoint;
+	std::chrono::time_point<std::chrono::steady_clock> _startTimepoint;
 	bool _stopped;
 };
 }
