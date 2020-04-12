@@ -12,6 +12,7 @@ public:
 
 	static void BeginScene(const OrthographicCamera& iCamera);
 	static void EndScene();
+	static void Flush();
 
 	// Primitives
 	static void DrawQuad(const glm::vec2& iPosition,

@@ -25,8 +25,8 @@ public:
 		sRendererAPI->clear();
 	}
 
-	inline static void DrawIndexed(Ref<VertexArray> iVertexArray) {
-		sRendererAPI->drawIndexed(iVertexArray);
+	inline static void DrawIndexed(Ref<VertexArray> iVertexArray, uint32_t iCount = 0) {
+		sRendererAPI->drawIndexed(iVertexArray, iCount);
 	}
 
 private:

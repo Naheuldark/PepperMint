@@ -145,7 +145,7 @@ private:
 };
 }
 
-#define PM_PROFILE 1
+#define PM_PROFILE 0
 #if PM_PROFILE
 	// Resolve which function signature macro will be used
 	#if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)

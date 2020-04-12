@@ -6,11 +6,14 @@ namespace PepperMint {
 
 class OpenGLVertexBuffer : public VertexBuffer {
 public:
+	OpenGLVertexBuffer(uint32_t iSize);
 	OpenGLVertexBuffer(float* iVertices, uint32_t iSize);
 	~OpenGLVertexBuffer() override;
 
 	void bind() const override;
 	void unbind() const override;
+
+	void setData(void* iData, uint32_t iSize) override;
 
 	inline const BufferLayout& layout() const override { return _layout; }
 	inline void setLayout(const BufferLayout& iLayout) override { _layout = iLayout; }

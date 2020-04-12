@@ -9,6 +9,14 @@ namespace PepperMint {
 // Vertex Buffer //
 ///////////////////
 
+OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t iSize) {
+	PM_PROFILE_FUNCTION();
+
+	glCreateBuffers(1, &_rendererId);
+	glBindBuffer(GL_ARRAY_BUFFER, _rendererId);
+	glBufferData(GL_ARRAY_BUFFER, iSize, nullptr, GL_STATIC_DRAW);
+}
+
 OpenGLVertexBuffer::OpenGLVertexBuffer(float* iVertices, uint32_t iSize) {
 	PM_PROFILE_FUNCTION();
 
@@ -33,6 +41,11 @@ void OpenGLVertexBuffer::unbind() const {
 	PM_PROFILE_FUNCTION();
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void OpenGLVertexBuffer::setData(void* iData, uint32_t iSize) {
+	glBindBuffer(GL_ARRAY_BUFFER, _rendererId);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, iSize, iData);
 }
 
 

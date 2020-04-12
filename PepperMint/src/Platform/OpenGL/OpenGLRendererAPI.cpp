@@ -48,8 +48,9 @@ void OpenGLRendererAPI::clear() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void OpenGLRendererAPI::drawIndexed(Ref<VertexArray> iVertexArray) {
-	glDrawElements(GL_TRIANGLES, iVertexArray->indexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
+void OpenGLRendererAPI::drawIndexed(Ref<VertexArray> iVertexArray, uint32_t iIndexCount) {
+	auto&& count = iIndexCount ? iVertexArray->indexBuffer()->count() : iIndexCount;
+	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 }
