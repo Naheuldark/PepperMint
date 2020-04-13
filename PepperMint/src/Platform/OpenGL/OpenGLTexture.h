@@ -19,6 +19,10 @@ public:
 
 	void bind(uint32_t iSlot = 0) const override;
 
+	bool operator==(const Texture& iOther) const override {
+		return _rendererId == ((OpenGLTexture2D&)iOther)._rendererId;
+	}
+
 private:
 	std::string _path;
 	

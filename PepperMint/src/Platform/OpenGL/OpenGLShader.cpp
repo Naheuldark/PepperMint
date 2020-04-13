@@ -59,6 +59,12 @@ void OpenGLShader::setInt(const std::string& iName, int iValue) {
 	uploadUniformInt(iName, iValue);
 }
 
+void OpenGLShader::setIntArray(const std::string& iName, int* iValues, uint32_t iCount) {
+	PM_PROFILE_FUNCTION();
+
+	uploadUniformIntArray(iName, iValues, iCount);
+}
+
 void OpenGLShader::setFloat(const std::string& iName, float iValue) {
 	PM_PROFILE_FUNCTION();
 
@@ -98,6 +104,11 @@ void OpenGLShader::setMat4(const std::string& iName, const glm::mat4& iValue) {
 void OpenGLShader::uploadUniformInt(const std::string& iName, int iValue) {
 	GLint location = glGetUniformLocation(_rendererId, iName.c_str());
 	glUniform1i(location, iValue);
+}
+
+void OpenGLShader::uploadUniformIntArray(const std::string& iName, int* iValues, uint32_t iCount) {
+	GLint location = glGetUniformLocation(_rendererId, iName.c_str());
+	glUniform1iv(location, iCount, iValues);
 }
 
 void OpenGLShader::uploadUniformFloat(const std::string& iName, float iValue) {

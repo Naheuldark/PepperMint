@@ -20,6 +20,7 @@ public:
 	inline std::string name() const override { return _name; }
 
 	void setInt(const std::string& iName, int iValue) override;
+	void setIntArray(const std::string& iName, int* iValues, uint32_t iCount) override;
 	void setFloat(const std::string& iName, float iValue) override;
 	void setFloat2(const std::string& iName, const glm::vec2& iValue) override;
 	void setFloat3(const std::string& iName, const glm::vec3& iValue) override;
@@ -29,6 +30,7 @@ public:
 
 private:
 	void uploadUniformInt(const std::string& iName, int iValue);
+	void uploadUniformIntArray(const std::string& iName, int* iValues, uint32_t iCount);
 	void uploadUniformFloat(const std::string& iName, float iValue);
 	void uploadUniformFloat2(const std::string& iName, const glm::vec2& iValue);
 	void uploadUniformFloat3(const std::string& iName, const glm::vec3& iValue);
