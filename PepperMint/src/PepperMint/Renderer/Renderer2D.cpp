@@ -18,9 +18,9 @@ struct QuadVertex {
 };
 
 struct Renderer2DData {
-	const uint32_t MAX_QUADS = 10000;
-	const uint32_t MAX_VERTICES = MAX_QUADS * 4;
-	const uint32_t MAX_INDICES = MAX_QUADS * 6;
+	static const uint32_t MAX_QUADS = 20000;
+	static const uint32_t MAX_VERTICES = MAX_QUADS * 4;
+	static const uint32_t MAX_INDICES = MAX_QUADS * 6;
 	static const uint32_t MAX_TEXTURE_SLOTS = 32; // TODO Render capacity
 
 	Ref<VertexArray> quadVertexArray;
@@ -36,6 +36,8 @@ struct Renderer2DData {
 	uint32_t textureSlotIndex = 1; // 0 = white texture
 
 	glm::vec4 quadVertexPositions[4];
+
+	Renderer2D::Statistics stats;
 };
 
 static Renderer2DData sData;
@@ -51,7 +53,7 @@ void Renderer2D::Init() {
 	sData.quadVertexArray = VertexArray::Create();
 
 	// Vertex Buffer
-	sData.quadVertexBuffer = VertexBuffer::Create(sData.MAX_VERTICES * sizeof(QuadVertex));
+	sData.quadVertexBuffer = VertexBuffer::Create(Renderer2DData::MAX_VERTICES * sizeof(QuadVertex));
 	sData.quadVertexBuffer->setLayout({
 		{ ShaderDataType::FLOAT3, "iPosition" },
 		{ ShaderDataType::FLOAT4, "iColor" },
@@ -61,13 +63,13 @@ void Renderer2D::Init() {
 	});
 	sData.quadVertexArray->addVertexBuffer(sData.quadVertexBuffer);
 
-	sData.quadVertexBufferBase = new QuadVertex[sData.MAX_VERTICES];
+	sData.quadVertexBufferBase = new QuadVertex[Renderer2DData::MAX_VERTICES];
 
 	// Index Buffer
-	uint32_t* quadIndices = new uint32_t[sData.MAX_INDICES];
+	uint32_t* quadIndices = new uint32_t[Renderer2DData::MAX_INDICES];
 	uint32_t offset = 0;
 
-	for (uint32_t i = 0; i < sData.MAX_INDICES; i += 6) {
+	for (uint32_t i = 0; i < Renderer2DData::MAX_INDICES; i += 6) {
 		quadIndices[i + 0] = offset + 0;
 		quadIndices[i + 1] = offset + 1;
 		quadIndices[i + 2] = offset + 2;
@@ -79,7 +81,7 @@ void Renderer2D::Init() {
 		offset += 4;
 	}
 
-	Ref<IndexBuffer> quadIndexBuffer = IndexBuffer::Create(quadIndices, sData.MAX_INDICES);
+	Ref<IndexBuffer> quadIndexBuffer = IndexBuffer::Create(quadIndices, Renderer2DData::MAX_INDICES);
 	sData.quadVertexArray->setIndexBuffer(quadIndexBuffer);
 	delete[] quadIndices;
 
@@ -92,8 +94,8 @@ void Renderer2D::Init() {
 	uint32_t whiteTextureData = 0xffffffff;
 	sData.whiteTexture->setData(&whiteTextureData, sizeof(uint32_t));
 
-	int32_t samplers[sData.MAX_TEXTURE_SLOTS];
-	for (uint32_t i = 0; i < sData.MAX_TEXTURE_SLOTS; ++i) {
+	int32_t samplers[Renderer2DData::MAX_TEXTURE_SLOTS];
+	for (uint32_t i = 0; i < Renderer2DData::MAX_TEXTURE_SLOTS; ++i) {
 		samplers[i] = i;
 	}
 
@@ -117,7 +119,7 @@ void Renderer2D::Init() {
 
 	sData.textureShader = Shader::Create("assets/shaders/Texture.glsl");
 	sData.textureShader->bind();
-	sData.textureShader->setIntArray("uTextures", samplers, sData.MAX_TEXTURE_SLOTS);
+	sData.textureShader->setIntArray("uTextures", samplers, Renderer2DData::MAX_TEXTURE_SLOTS);
 }
 
 void Renderer2D::Shutdown() {
@@ -152,6 +154,25 @@ void Renderer2D::Flush() {
 	}
 
 	RenderCommand::DrawIndexed(sData.quadVertexArray, sData.quadIndexCount);
+
+	sData.stats.drawCalls++;
+}
+
+void Renderer2D::FlushAndReset() {
+	EndScene();
+
+	sData.quadIndexCount = 0;
+	sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
+
+	sData.textureSlotIndex = 0;
+}
+
+void Renderer2D::ResetStats() {
+	memset(&sData.stats, 0, sizeof(Statistics));
+}
+
+Renderer2D::Statistics Renderer2D::Stats() {
+	return sData.stats;
 }
 
 void Renderer2D::DrawQuad(const glm::vec2& iPosition,
@@ -170,6 +191,10 @@ void Renderer2D::DrawQuad(const glm::vec3& iPosition,
 						  Ref<Texture2D> iTexture,
 						  const glm::vec4& iColor) {
 	PM_PROFILE_FUNCTION();
+
+	if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES) {
+		FlushAndReset();
+	}
 
 	float textureIndex = 0.0f; // White texture (default)
 	if (iTexture) {
@@ -221,5 +246,7 @@ void Renderer2D::DrawQuad(const glm::vec3& iPosition,
 	sData.quadVertexBufferPtr++;
 
 	sData.quadIndexCount += 6;
+
+	sData.stats.quadCount++;
 }
 }

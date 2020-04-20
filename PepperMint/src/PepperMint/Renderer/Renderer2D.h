@@ -28,6 +28,21 @@ public:
 						 const float iTilingFactor = 1.0f,
 						 Ref<Texture2D> iTexture = nullptr,
 						 const glm::vec4& iColor = glm::vec4(1.0f));
+
+	// Statistics
+	struct Statistics {
+		uint32_t drawCalls;
+		uint32_t quadCount;
+
+		uint32_t totalVertexCount() const { return quadCount * 4; }
+		uint32_t totalIndexCount() const { return quadCount * 6; }
+	};
+
+	static void ResetStats();
+	static Statistics Stats();
+
+private:
+	static void FlushAndReset();
 };
 
 }
