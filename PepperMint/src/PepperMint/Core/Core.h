@@ -44,18 +44,25 @@
 	#error "Unknown platform!"
 #endif // End of platform detection
 
-#ifndef PM_PLATFORM_WINDOWS
-	#error PepperMint only support Windows!
-#endif // PM_PLATFORM_WINDOWS
 
 #ifdef PM_DEBUG
+	#if defined(PM_PLATFORM_WINDOWS)
+		#define PM_DEBUGBREAK() __debugbreak()
+	#elif defined(PM_PLATFORM_LINUX)
+		#include <signal.h>
+		#define PM_DEBUGBREAK() raise(SIGTRAP)
+	#else
+		#error "Platform does not support debugbreak yet!"
+	#endif
 	#define PM_ENABLE_ASSERTS
-#endif // PM_DEBUG
+#else
+	#define PM_DEBUGBREAK()
+#endif // End of debugbreak and debug mode
 
 
 #ifdef PM_ENABLE_ASSERTS
-	#define PM_ASSERT(x, ...) { if(!(x)) { PM_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-	#define PM_CORE_ASSERT(x, ...) { if(!(x)) { PM_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define PM_ASSERT(x, ...) { if(!(x)) { PM_ERROR("Assertion Failed: {0}", __VA_ARGS__); PM_DEBUGBREAK(); } }
+	#define PM_CORE_ASSERT(x, ...) { if(!(x)) { PM_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); PM_DEBUGBREAK(); } }
 #else
 	#define PM_ASSERT(x, ...)
 	#define PM_CORE_ASSERT(x, ...)
