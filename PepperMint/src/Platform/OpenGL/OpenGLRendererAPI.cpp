@@ -49,7 +49,7 @@ void OpenGLRendererAPI::clear() {
 }
 
 void OpenGLRendererAPI::drawIndexed(Ref<VertexArray> iVertexArray, uint32_t iIndexCount) {
-	auto&& count = iIndexCount ? iVertexArray->indexBuffer()->count() : iIndexCount;
+	auto&& count = iIndexCount ? iIndexCount : iVertexArray->indexBuffer()->count();
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

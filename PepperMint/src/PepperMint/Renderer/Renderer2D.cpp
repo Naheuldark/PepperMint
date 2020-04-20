@@ -192,6 +192,9 @@ void Renderer2D::DrawQuad(const glm::vec3& iPosition,
 						  const glm::vec4& iColor) {
 	PM_PROFILE_FUNCTION();
 
+	constexpr size_t quadVertexCount = 4;
+	constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+
 	if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES) {
 		FlushAndReset();
 	}
@@ -207,43 +210,28 @@ void Renderer2D::DrawQuad(const glm::vec3& iPosition,
 
 		// Add the new texture if it does not exist yet
 		if (textureIndex == 0.0f) {
+			if (sData.textureSlotIndex >= Renderer2DData::MAX_TEXTURE_SLOTS) {
+				FlushAndReset();
+			}
+
 			textureIndex = (float)sData.textureSlotIndex;
 			sData.textureSlots[sData.textureSlotIndex] = iTexture;
 			sData.textureSlotIndex++;
 		}
 	}
 
-	glm::mat4 transform = glm::translate(glm::mat4(1.0f), iPosition) *
-						  glm::rotate(glm::mat4(1.0f), iRotation, { 0.0f, 0.0f, 1.0f }) *
-						  glm::scale(glm::mat4(1.0f), { iScale.x, iScale.y, 1.0f });
+	auto&& transform = glm::translate(glm::mat4(1.0f), iPosition) *
+					   glm::rotate(glm::mat4(1.0f), iRotation, { 0.0f, 0.0f, 1.0f }) *
+					   glm::scale(glm::mat4(1.0f), { iScale.x, iScale.y, 1.0f });
 
-	sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[0];
-	sData.quadVertexBufferPtr->color = iColor;
-	sData.quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
-	sData.quadVertexBufferPtr->texIndex = textureIndex;
-	sData.quadVertexBufferPtr->tilingFactor = iTilingFactor;
-	sData.quadVertexBufferPtr++;
-
-	sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[1];
-	sData.quadVertexBufferPtr->color = iColor;
-	sData.quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
-	sData.quadVertexBufferPtr->texIndex = textureIndex;
-	sData.quadVertexBufferPtr->tilingFactor = iTilingFactor;
-	sData.quadVertexBufferPtr++;
-
-	sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[2];
-	sData.quadVertexBufferPtr->color = iColor;
-	sData.quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
-	sData.quadVertexBufferPtr->texIndex = textureIndex;
-	sData.quadVertexBufferPtr->tilingFactor = iTilingFactor;
-	sData.quadVertexBufferPtr++;
-
-	sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[3];
-	sData.quadVertexBufferPtr->color = iColor;
-	sData.quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
-	sData.quadVertexBufferPtr->texIndex = textureIndex;
-	sData.quadVertexBufferPtr->tilingFactor = iTilingFactor;
-	sData.quadVertexBufferPtr++;
+	for (size_t i = 0; i < quadVertexCount; i++) {
+		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[i];
+		sData.quadVertexBufferPtr->color = iColor;
+		sData.quadVertexBufferPtr->texCoord = textureCoords[i];
+		sData.quadVertexBufferPtr->texIndex = textureIndex;
+		sData.quadVertexBufferPtr->tilingFactor = iTilingFactor;
+		sData.quadVertexBufferPtr++;
+	}
 
 	sData.quadIndexCount += 6;
 
