@@ -2,7 +2,7 @@
 
 // Include files
 
-#include "PepperMint/Core/Core.h"
+#include "PepperMint/Core/Base.h"
 
 #include "PepperMint/Core/Application.h"
 #include "PepperMint/Core/Layer.h"

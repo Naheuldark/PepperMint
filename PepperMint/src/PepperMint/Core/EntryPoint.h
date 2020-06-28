@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PepperMint/Core/Core.h"
+#include "PepperMint/Core/Base.h"
 
 #ifdef PM_PLATFORM_WINDOWS
 

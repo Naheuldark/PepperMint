@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "PepperMint/Core/Core.h"
+#include "PepperMint/Core/Base.h"
 #include "PepperMint/Core/KeyCodes.h"
 #include "PepperMint/Core/MouseCodes.h"
 

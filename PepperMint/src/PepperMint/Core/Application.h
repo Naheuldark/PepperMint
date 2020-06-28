@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PepperMint/Core/Core.h"
+#include "PepperMint/Core/Base.h"
 #include "PepperMint/Core/Window.h"
 #include "PepperMint/Core/LayerStack.h"
 #include "PepperMint/Core/Timestep.h"

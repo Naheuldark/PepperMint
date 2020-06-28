@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PepperMint/Core/Core.h"
+#include "PepperMint/Core/Base.h"
 #include "PepperMint/Events/Event.h"
 
 namespace PepperMint {
