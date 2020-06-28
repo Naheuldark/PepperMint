@@ -2,7 +2,8 @@
 
 ![PepperMint](/Resources/Branding/PepperMintLogo.png?raw=true "PepperMint")
 
-PepperMint is primarily an early-stage interactive application and rendering engine for Windows. 
+PepperMint is primarily an early-stage interactive application and rendering engine for Windows.<br>
+It is based on the [_TheCherno_](https://www.youtube.com/channel/UCQ-W1KE9EYfdxhL6S4twUNw)'s project called [Hazel](https://github.com/TheCherno/Hazel).
 
 ### Main features to come:
 - Fast 2D rendering (UI, particles, sprites, etc.)
