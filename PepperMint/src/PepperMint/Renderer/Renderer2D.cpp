@@ -35,9 +35,9 @@ struct Renderer2DData {
 	std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> textureSlots;
 	uint32_t textureSlotIndex = 1; // 0 = white texture
 
-	glm::vec4 quadVertexPositions[4];
+	glm::vec4 quadVertexPositions[4]{};
 
-	Renderer2D::Statistics stats;
+	Renderer2D::Statistics stats{};
 };
 
 static Renderer2DData sData;
@@ -141,7 +141,7 @@ void Renderer2D::BeginScene(const OrthographicCamera& iCamera) {
 void Renderer2D::EndScene() {
 	PM_PROFILE_FUNCTION();
 
-	uint32_t dataSize = (uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase;
+	uint32_t dataSize = (uint32_t)((uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
 	sData.quadVertexBuffer->setData(sData.quadVertexBufferBase, dataSize);
 
 	Flush();
