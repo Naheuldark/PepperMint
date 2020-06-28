@@ -63,6 +63,10 @@ void Application::run() {
 	}
 }
 
+void Application::close() {
+	_running = false;
+}
+
 void Application::pushLayer(Ref<Layer> iLayer) {
 	PM_PROFILE_FUNCTION();
 	

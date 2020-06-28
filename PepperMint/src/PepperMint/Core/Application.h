@@ -21,6 +21,8 @@ public:
 	void pushLayer(Ref<Layer> iLayer);
 	void pushOverlay(Ref<Layer> iOverlay);
 
+	void close();
+
 	inline static Application& Get() { return *sInstance; }
 	inline Window& window() { return *_window; }
 
