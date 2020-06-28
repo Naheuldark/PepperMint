@@ -57,14 +57,47 @@ void OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> iVertexBuffer) {
 
 	const auto& layout = iVertexBuffer->layout();
 	for (auto&& element : layout) {
-		glEnableVertexAttribArray(_vertexBufferIndex);
-		glVertexAttribPointer(_vertexBufferIndex,
-							  element.componentCount(),
-							  ShaderDataType2OpenGLBaseType(element.type),
-							  element.normalized ? GL_TRUE : GL_FALSE,
-							  layout.stride(),
-							  (const void*)element.offset);
-		_vertexBufferIndex++;
+		switch (element.type) {
+			case ShaderDataType::BOOL:
+			case ShaderDataType::INT:
+			case ShaderDataType::INT2:
+			case ShaderDataType::INT3:
+			case ShaderDataType::INT4:
+			case ShaderDataType::FLOAT:
+			case ShaderDataType::FLOAT2:
+			case ShaderDataType::FLOAT3:
+			case ShaderDataType::FLOAT4:
+			{
+				glEnableVertexAttribArray(_vertexBufferIndex);
+				glVertexAttribPointer(_vertexBufferIndex,
+									  element.componentCount(),
+									  ShaderDataType2OpenGLBaseType(element.type),
+									  element.normalized ? GL_TRUE : GL_FALSE,
+									  layout.stride(),
+									  (const void*)element.offset);
+				_vertexBufferIndex++;
+				break;
+			}
+			case ShaderDataType::MAT3:
+			case ShaderDataType::MAT4:
+			{
+				uint8_t count = element.componentCount();
+				for (uint8_t i = 0; i < count; ++i) {
+					glEnableVertexAttribArray(_vertexBufferIndex);
+					glVertexAttribPointer(_vertexBufferIndex,
+										  count,
+										  ShaderDataType2OpenGLBaseType(element.type),
+										  element.normalized ? GL_TRUE : GL_FALSE,
+										  layout.stride(),
+										  (const void*)(sizeof(float) * count * i));
+					glVertexAttribDivisor(_vertexBufferIndex, 1);
+					_vertexBufferIndex++;
+				}
+				break;
+			}
+			default:
+				PM_CORE_ASSERT(false, "Unknown ShaderDataType!")
+		}
 	}
 
 	_vertexBuffers.push_back(iVertexBuffer);
