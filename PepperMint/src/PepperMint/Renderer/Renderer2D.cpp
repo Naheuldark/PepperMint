@@ -150,6 +150,8 @@ void Renderer2D::EndScene() {
 }
 
 void Renderer2D::Flush() {
+	if (sData.quadIndexCount == 0) return; // Nothing to draw
+
 	// Bind textures
 	for (uint32_t i = 0; i < sData.textureSlotIndex; ++i) {
 		sData.textureSlots[i]->bind(i);
