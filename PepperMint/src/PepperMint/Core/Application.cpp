@@ -85,8 +85,8 @@ void Application::onEvent(Event& iEvent) {
 	dispatcher.dispatch<WindowResizeEvent>(PM_BIND_EVENT_FN(Application::onWindowResize));
 
 	for (auto it = _layerStack.rbegin(); it != _layerStack.rend(); ++it) {
-		(*it)->onEvent(iEvent);
 		if (iEvent.handled()) break;
+		(*it)->onEvent(iEvent);
 	}
 }
 

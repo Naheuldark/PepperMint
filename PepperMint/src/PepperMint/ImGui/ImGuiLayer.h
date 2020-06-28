@@ -14,6 +14,7 @@ public:
 
 	void onAttach() override;
 	void onDetach() override;
+	void onEvent(Event& iEvent) override;
 
 	void begin();
 	void end();
