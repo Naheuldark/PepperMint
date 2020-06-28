@@ -124,6 +124,8 @@ void Renderer2D::Init() {
 
 void Renderer2D::Shutdown() {
 	PM_PROFILE_FUNCTION();
+
+	delete[] sData.quadVertexBufferBase;
 }
 
 void Renderer2D::BeginScene(const OrthographicCamera& iCamera) {
