@@ -10,13 +10,13 @@ namespace PepperMint {
 
 Application* Application::sInstance = nullptr;
 
-Application::Application() {
+Application::Application(const std::string& iName) {
 	PM_PROFILE_FUNCTION();
 
 	PM_CORE_ASSERT(!sInstance, "Application already exists!")
 	sInstance = this;
 
-	_window = Window::Create();
+	_window = Window::Create(WindowProperties(iName));
 	_window->setEventCallback(PM_BIND_EVENT_FN(Application::onEvent));
 
 	Renderer::Init();

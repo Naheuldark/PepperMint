@@ -7,11 +7,11 @@ namespace PepperMint {
 
 struct WindowProperties {
 	std::string title;
-	unsigned int width, height;
+	uint32_t width, height;
 
 	WindowProperties(const std::string& iTitle = "PepperMint Engine",
-					 unsigned int iWidth = 1280,
-					 unsigned int iHeight = 720) :
+					 uint32_t iWidth = 1280,
+					 uint32_t iHeight = 720) :
 		title(iTitle), width(iWidth), height(iHeight) {}
 };
 
@@ -26,8 +26,8 @@ public:
 
 	virtual void onUpdate() = 0;
 
-	virtual unsigned int width() const = 0;
-	virtual unsigned int height() const = 0;
+	virtual uint32_t width() const = 0;
+	virtual uint32_t height() const = 0;
 
 	// Window attributes
 	virtual void setEventCallback(const EventCallbackFn& iCallback) = 0;

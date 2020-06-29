@@ -13,7 +13,7 @@ namespace PepperMint {
 
 class Application {
 public:
-	Application();
+	Application(const std::string& iName = "PepperMint App");
 	virtual ~Application();
 
 	void onEvent(Event& iEvent);

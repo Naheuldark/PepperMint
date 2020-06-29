@@ -1,7 +1,7 @@
 workspace "PepperMint"
 	architecture "x86_64"
 
-	startproject "Sandbox"
+	startproject "Menthol"
 
 	configurations {
 		"Debug",
@@ -28,7 +28,6 @@ group "Dependencies"
 	include "PepperMint/vendor/GLFW"
 	include "PepperMint/vendor/Glad"
 	include "PepperMint/vendor/imgui"
-
 group ""
 
 project "PepperMint"
@@ -73,6 +72,50 @@ project "PepperMint"
 		"ImGui",
 		"Glad",
 		"opengl32.lib"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+	filter "configurations:Debug"
+		defines "PM_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "PM_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "PM_DIST"
+		runtime "Release"
+		optimize "on"
+
+project "Menthol"
+	location "Menthol"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")	
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files {
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs {
+		"PepperMint/vendor/spdlog/include",
+		"PepperMint/src",
+		"PepperMint/vendor",
+		"%{IncludeDir.glm}"
+	}
+
+	links {
+		"PepperMint"
 	}
 
 	filter "system:windows"

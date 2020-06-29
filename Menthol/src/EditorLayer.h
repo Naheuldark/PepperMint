@@ -2,10 +2,12 @@
 
 #include <PepperMint.h>
 
-class Sandbox2D : public PepperMint::Layer {
+namespace Menthol {
+
+class EditorLayer : public PepperMint::Layer {
 public:
-	Sandbox2D() : Layer("Sandbox2D"), _cameraController(1280.0f / 720.0f, true) {}
-	~Sandbox2D() override = default;
+	EditorLayer() : Layer("Menthol"), _cameraController(1280.0f / 720.0f, true) {}
+	~EditorLayer() override = default;
 
 	void onAttach() override;
 	void onDetach() override;
@@ -18,8 +20,11 @@ private:
 
 	PepperMint::Ref<PepperMint::VertexArray> _squareVA;
 	PepperMint::Ref<PepperMint::Shader> _flatColorShader;
+	PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
 
 	PepperMint::Ref<PepperMint::Texture2D> _checkerboardTexture;
 
 	glm::vec4 _squareColor = { 0.2f, 0.3f, 0.8f, 1.0 };
 };
+
+}
