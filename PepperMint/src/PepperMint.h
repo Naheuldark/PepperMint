@@ -21,6 +21,7 @@
 #include "PepperMint/Renderer/RenderCommand.h"
 
 #include "PepperMint/Renderer/Buffer.h"
+#include "PepperMint/Renderer/FrameBuffer.h"
 #include "PepperMint/Renderer/Shader.h"
 #include "PepperMint/Renderer/Texture.h"
 #include "PepperMint/Renderer/VertexArray.h"

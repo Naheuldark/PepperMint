@@ -9,6 +9,11 @@ void Sandbox2D::onAttach() {
 	PM_PROFILE_FUNCTION();
 
 	_checkerboardTexture = PepperMint::Texture2D::Create("assets/textures/Checkerboard.png");
+
+	PepperMint::FrameBufferProperties frameBufferProperties;
+	frameBufferProperties.width = 1280;
+	frameBufferProperties.height = 720;
+	_frameBuffer = PepperMint::FrameBuffer::Create(frameBufferProperties);
 }
 
 void Sandbox2D::onDetach() {
@@ -27,6 +32,7 @@ void Sandbox2D::onUpdate(PepperMint::Timestep iTimestep) {
 	// Render
 	{
 		PM_PROFILE_SCOPE("Renderer Preparation");
+		_frameBuffer->bind();
 		PepperMint::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		PepperMint::RenderCommand::Clear();
 	}
@@ -52,6 +58,7 @@ void Sandbox2D::onUpdate(PepperMint::Timestep iTimestep) {
 			}
 		}
 		PepperMint::Renderer2D::EndScene();
+		_frameBuffer->unbind();
 	}
 }
 
@@ -130,8 +137,8 @@ void Sandbox2D::onImGuiRender() {
 
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(_squareColor));
 
-		uint32_t textureID = _checkerboardTexture->rendererId();
-		ImGui::Image((void*)textureID, ImVec2{ 256.0f, 256.0f });
+		uint32_t textureID = _frameBuffer->colorAttachmentRendererId();
+		ImGui::Image((void*)textureID, ImVec2{ 1280, 720 });
 
 		ImGui::End();
 
@@ -148,8 +155,8 @@ void Sandbox2D::onImGuiRender() {
 
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(_squareColor));
 
-		uint32_t textureID = _checkerboardTexture->rendererId();
-		ImGui::Image((void*)textureID, ImVec2{ 256.0f, 256.0f });
+		uint32_t textureID = _frameBuffer->colorAttachmentRendererId();
+		ImGui::Image((void*)textureID, ImVec2{ 1280, 720 });
 
 		ImGui::End();
 	}

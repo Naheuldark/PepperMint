@@ -18,6 +18,7 @@ private:
 
 	PepperMint::Ref<PepperMint::VertexArray> _squareVA;
 	PepperMint::Ref<PepperMint::Shader> _flatColorShader;
+	PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
 
 	PepperMint::Ref<PepperMint::Texture2D> _checkerboardTexture;
 
