@@ -10,31 +10,11 @@ namespace PepperMint {
 
 class Input {
 public:
-	Input(const Input&) = delete;
-	Input& operator=(const Input&) = delete;
+	static bool IsKeyPressed(KeyCode iKeyCode);
 
-	virtual ~Input() = default;
-
-	inline static bool IsKeyPressed(KeyCode iKeyCode) { return sInstance->isKeyPressedImpl(iKeyCode); }
-
-	inline static bool IsMouseButtonPressed(MouseCode iButton) { return sInstance->isMouseButtonPressedImpl(iButton); }
-	inline static std::pair<float, float> GetMousePosition() { return sInstance->getMousePositionImpl(); }
-	inline static float GetMouseX() { return sInstance->getMouseXImpl(); }
-	inline static float GetMouseY() { return sInstance->getMouseYImpl(); }
-
-	static Scope<Input> Create();
-
-protected:
-	Input() = default;
-
-	virtual bool isKeyPressedImpl(KeyCode iKeyCode) = 0;
-
-	virtual bool isMouseButtonPressedImpl(MouseCode iButton) = 0;
-	virtual std::pair<float, float> getMousePositionImpl() = 0;
-	virtual float getMouseXImpl() = 0;
-	virtual float getMouseYImpl() = 0;
-
-private:
-	static Scope<Input> sInstance;
+	static bool IsMouseButtonPressed(MouseCode iButton);
+	static std::pair<float, float> GetMousePosition();
+	static float GetMouseX();
+	static float GetMouseY();
 };
 }
