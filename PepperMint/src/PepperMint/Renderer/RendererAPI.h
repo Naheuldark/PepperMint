@@ -15,7 +15,7 @@ public:
 
 public:
 	RendererAPI() = default;
-	~RendererAPI() = default;
+	virtual ~RendererAPI() = default;
 
 	virtual void init() = 0;
 

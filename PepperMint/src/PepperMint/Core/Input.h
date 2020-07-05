@@ -13,7 +13,7 @@ public:
 	Input(const Input&) = delete;
 	Input& operator=(const Input&) = delete;
 
-	~Input() = default;
+	virtual ~Input() = default;
 
 	inline static bool IsKeyPressed(KeyCode iKeyCode) { return sInstance->isKeyPressedImpl(iKeyCode); }
 

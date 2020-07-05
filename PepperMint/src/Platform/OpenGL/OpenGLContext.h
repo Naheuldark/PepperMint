@@ -9,7 +9,7 @@ namespace PepperMint {
 class OpenGLContext : public GraphicsContext {
 public:
 	OpenGLContext(GLFWwindow* iWindowHandle);
-	~OpenGLContext() = default;
+	~OpenGLContext() override = default;
 
 	void init() override;
 	void swapBuffers() override;

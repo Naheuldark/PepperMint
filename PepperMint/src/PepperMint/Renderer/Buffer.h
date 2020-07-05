@@ -64,8 +64,7 @@ struct BufferElement {
 class BufferLayout {
 public:
 	BufferLayout() = default;
-	BufferLayout(const std::initializer_list<BufferElement>& iElements) :
-		_elements(iElements) {
+	BufferLayout(const std::initializer_list<BufferElement>& iElements) : _elements(iElements) {
 		computeOffsetAndStride();
 	}
 

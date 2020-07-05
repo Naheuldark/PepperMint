@@ -8,8 +8,7 @@ namespace PepperMint {
 
 class Layer {
 public:
-	Layer(const std::string& iDebugName = "Layer") :
-		_debugName(iDebugName) {}
+	Layer(const std::string& iDebugName = "Layer") : _debugName(iDebugName) {}
 	virtual ~Layer() = default;
 
 	virtual void onAttach() {}

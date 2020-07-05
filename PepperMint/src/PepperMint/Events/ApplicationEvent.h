@@ -7,7 +7,7 @@ namespace PepperMint {
 class WindowCloseEvent : public Event {
 public:
 	WindowCloseEvent() = default;
-	~WindowCloseEvent() = default;
+	~WindowCloseEvent() override = default;
 
 	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
 	EVENT_TYPE(WINDOW_CLOSE)
@@ -15,9 +15,8 @@ public:
 
 class WindowResizeEvent : public Event {
 public:
-	WindowResizeEvent(unsigned int iWidth, unsigned int iHeight) :
-		_width(iWidth), _height(iHeight) {}
-	~WindowResizeEvent() = default;
+	WindowResizeEvent(unsigned int iWidth, unsigned int iHeight) : _width(iWidth), _height(iHeight) {}
+	~WindowResizeEvent() override = default;
 	
 	std::string toString() const override {
 		std::ostringstream ss;
@@ -38,7 +37,7 @@ private:
 class AppTickEvent : public Event {
 public:
 	AppTickEvent() = default;
-	~AppTickEvent() = default;
+	~AppTickEvent() override = default;
 
 	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
 	EVENT_TYPE(APP_TICK)
@@ -47,7 +46,7 @@ public:
 class AppUpdateEvent : public Event {
 public:
 	AppUpdateEvent() = default;
-	~AppUpdateEvent() = default;
+	~AppUpdateEvent() override = default;
 
 	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
 	EVENT_TYPE(APP_UPDATE)
@@ -56,7 +55,7 @@ public:
 class AppRenderEvent : public Event {
 public:
 	AppRenderEvent() = default;
-	~AppRenderEvent() = default;
+	~AppRenderEvent() override = default;
 
 	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
 	EVENT_TYPE(APP_RENDER)

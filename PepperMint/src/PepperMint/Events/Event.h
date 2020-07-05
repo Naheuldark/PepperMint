@@ -38,7 +38,7 @@ enum EventCategory {
 class Event {
 public:
 	Event() = default;
-	~Event() = default;
+	virtual ~Event() = default;
 
 	virtual EventType eventType() const = 0;
 	virtual const char* name() const = 0;
@@ -63,8 +63,7 @@ inline std::ostream& operator<<(std::ostream& out, const Event& iEvent) {
 
 class EventDispatcher {
 public:
-	EventDispatcher(Event& iEvent) :
-		_event(iEvent) {}
+	EventDispatcher(Event& iEvent) : _event(iEvent) {}
 	~EventDispatcher() = default;
 
 	template<typename T, typename F>

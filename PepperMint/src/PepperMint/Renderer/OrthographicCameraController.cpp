@@ -6,9 +6,7 @@
 
 namespace PepperMint {
 
-OrthographicCameraController::OrthographicCameraController(float iAspectRatio, bool iRotation) :
-	_aspectRatio(iAspectRatio),
-	_rotation(iRotation) {
+OrthographicCameraController::OrthographicCameraController(float iAspectRatio, bool iRotation) : _aspectRatio(iAspectRatio), _rotation(iRotation) {
 	_camera.setProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
 }
 

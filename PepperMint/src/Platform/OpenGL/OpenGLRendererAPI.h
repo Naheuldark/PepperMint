@@ -7,7 +7,7 @@ namespace PepperMint {
 class OpenGLRendererAPI : public RendererAPI {
 public:
 	OpenGLRendererAPI() = default;
-	~OpenGLRendererAPI() = default;
+	~OpenGLRendererAPI() override = default;
 
 	virtual void init() override;
 

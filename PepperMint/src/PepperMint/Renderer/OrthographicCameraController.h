@@ -10,7 +10,6 @@ namespace PepperMint {
 class OrthographicCameraController {
 public:
 	OrthographicCameraController(float iAspectRatio, bool iRotation = false);
-
 	~OrthographicCameraController() = default;
 
 	void onUpdate(Timestep iTimestep);

@@ -7,9 +7,8 @@ namespace PepperMint {
 
 class MouseMovedEvent : public Event {
 public:
-	MouseMovedEvent(float iMouseX, float iMouseY) :
-		_mouseX(iMouseX), _mouseY(iMouseY) {}
-	~MouseMovedEvent() = default;
+	MouseMovedEvent(float iMouseX, float iMouseY) : _mouseX(iMouseX), _mouseY(iMouseY) {}
+	~MouseMovedEvent() override = default;
 
 	inline float x() const { return _mouseX; }
 	inline float y() const { return _mouseY; }
@@ -29,9 +28,8 @@ private:
 
 class MouseScrolledEvent : public Event {
 public:
-	MouseScrolledEvent(float iXOffset, float iYOffset) :
-		_xOffset(iXOffset), _yOffset(iYOffset) {}
-	~MouseScrolledEvent() = default;
+	MouseScrolledEvent(float iXOffset, float iYOffset) : _xOffset(iXOffset), _yOffset(iYOffset) {}
+	~MouseScrolledEvent() override = default;
 
 	inline float xOffset() const { return _xOffset; }
 	inline float yOffset() const { return _yOffset; }
@@ -51,24 +49,22 @@ private:
 
 class MouseButtonEvent : public Event {
 public:
-	~MouseButtonEvent() = default;
+	~MouseButtonEvent() override = default;
 
 	inline MouseCode mouseButton() const { return _button; }
 
 	EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 
 protected:
-	MouseButtonEvent(MouseCode iButton) :
-		_button(iButton) {}
+	MouseButtonEvent(MouseCode iButton) : _button(iButton) {}
 
 	MouseCode _button;
 };
 
 class MouseButtonPressedEvent : public MouseButtonEvent {
 public:
-	MouseButtonPressedEvent(MouseCode iButton) : 
-		MouseButtonEvent(iButton) {}
-	~MouseButtonPressedEvent() = default;
+	MouseButtonPressedEvent(MouseCode iButton) : MouseButtonEvent(iButton) {}
+	~MouseButtonPressedEvent() override = default;
 
 	std::string toString() const override {
 		std::ostringstream ss;
@@ -81,9 +77,8 @@ public:
 
 class MouseButtonReleasedEvent : public MouseButtonEvent {
 public:
-	MouseButtonReleasedEvent(MouseCode iButton) :
-		MouseButtonEvent(iButton) {}
-	~MouseButtonReleasedEvent() = default;
+	MouseButtonReleasedEvent(MouseCode iButton) : MouseButtonEvent(iButton) {}
+	~MouseButtonReleasedEvent() override = default;
 
 	std::string toString() const override {
 		std::ostringstream ss;

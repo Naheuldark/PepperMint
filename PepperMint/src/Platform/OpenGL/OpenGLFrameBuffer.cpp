@@ -5,8 +5,7 @@
 
 namespace PepperMint {
 
-OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferProperties& iProperties) 
-	: _properties(iProperties) {
+OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferProperties& iProperties) : _properties(iProperties) {
 	invalidate();
 }
 
