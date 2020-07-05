@@ -18,6 +18,8 @@ public:
 	virtual void bind() = 0;
 	virtual void unbind() = 0;
 
+	virtual void resize(uint32_t iWidth, uint32_t iHeight) = 0;
+
 	virtual uint32_t colorAttachmentRendererId() const = 0;
 	virtual const FrameBufferProperties& properties() const = 0;
 

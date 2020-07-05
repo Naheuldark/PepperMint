@@ -60,6 +60,11 @@ void OrthographicCameraController::onEvent(Event& iEvent) {
 	dispatcher.dispatch<WindowResizeEvent>(PM_BIND_EVENT_FN(OrthographicCameraController::onWindowResize));
 }
 
+void OrthographicCameraController::onResize(float iWidth, float iHeight) {
+	_aspectRatio = iWidth / iHeight;
+	_camera.setProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
+}
+
 bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& iEvent) {
 	PM_PROFILE_FUNCTION();
 

@@ -16,6 +16,8 @@ public:
 	void onUpdate(Timestep iTimestep);
 	void onEvent(Event& iEvent);
 
+	void onResize(float iWidth, float iHeight);
+
 	inline OrthographicCamera& camera() { return _camera; }
 	inline const OrthographicCamera& camera() const { return _camera; }
 

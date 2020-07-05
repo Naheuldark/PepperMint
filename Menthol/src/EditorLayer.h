@@ -24,6 +24,7 @@ private:
 
 	PepperMint::Ref<PepperMint::Texture2D> _checkerboardTexture;
 
+	glm::vec2 _viewportSize = { 0.0f, 0.0f };
 	glm::vec4 _squareColor = { 0.2f, 0.3f, 0.8f, 1.0 };
 };
 
