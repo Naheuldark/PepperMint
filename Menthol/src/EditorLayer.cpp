@@ -26,7 +26,9 @@ void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
 	PM_PROFILE_FUNCTION();
 
 	// Update
-	_cameraController.onUpdate(iTimestep);
+	if (_viewportFocused) {
+		_cameraController.onUpdate(iTimestep);
+	}
 
 	// Statistics
 	PepperMint::Renderer2D::ResetStats();
@@ -142,6 +144,10 @@ void EditorLayer::onImGuiRender() {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 	ImGui::Begin("Viewport");
 	{
+		_viewportFocused = ImGui::IsWindowFocused();
+		_viewportHovered = ImGui::IsWindowHovered();
+		PepperMint::Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused || !_viewportHovered);
+
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		if (_viewportSize != *((glm::vec2*) & viewportPanelSize)) {
 			_frameBuffer->resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);

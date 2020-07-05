@@ -25,6 +25,7 @@ public:
 
 	inline static Application& Get() { return *sInstance; }
 	inline Window& window() { return *_window; }
+	inline Ref<ImGuiLayer> imguiLayer() { return _imguiLayer; }
 
 private:
 	void run();
