@@ -25,6 +25,14 @@ void EditorLayer::onDetach() {
 void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
 	PM_PROFILE_FUNCTION();
 
+	// Resize
+	if (PepperMint::FrameBufferProperties spec = _frameBuffer->properties();
+		_viewportSize.x > 0.0f && _viewportSize.y > 0.0f && // zero sized framebuffer is invalid
+		(spec.width != _viewportSize.x || spec.height != _viewportSize.y)) {
+		_frameBuffer->resize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
+		_cameraController.onResize(_viewportSize.x, _viewportSize.y);
+	}
+
 	// Update
 	if (_viewportFocused) {
 		_cameraController.onUpdate(iTimestep);
@@ -149,12 +157,8 @@ void EditorLayer::onImGuiRender() {
 		PepperMint::Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused || !_viewportHovered);
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (_viewportSize != *((glm::vec2*) & viewportPanelSize)) {
-			_frameBuffer->resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-			_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+		_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-			_cameraController.onResize(viewportPanelSize.x, viewportPanelSize.y);
-		}
 		uint32_t textureID = _frameBuffer->colorAttachmentRendererId();
 		ImGui::Image((void*)textureID, ImVec2{ _viewportSize.x, _viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 	}
