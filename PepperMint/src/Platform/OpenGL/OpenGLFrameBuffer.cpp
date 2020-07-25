@@ -5,6 +5,8 @@
 
 namespace PepperMint {
 
+static const uint32_t kMAX_FRAMEBUFFER_SIZE = 8192;
+
 OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferProperties& iProperties) : _properties(iProperties) {
 	invalidate();
 }
@@ -25,6 +27,10 @@ void OpenGLFrameBuffer::unbind() {
 }
 
 void OpenGLFrameBuffer::resize(uint32_t iWidth, uint32_t iHeight) {
+	if (iWidth == 0 || iHeight == 0 || iWidth > kMAX_FRAMEBUFFER_SIZE || iHeight > kMAX_FRAMEBUFFER_SIZE) {
+		PM_CORE_WARN("Attempted to rezize framebuffer to {0}, {1}", iWidth, iHeight);
+		return;
+	}
 	_properties.width = iWidth;
 	_properties.height = iHeight;
 
