@@ -22,6 +22,7 @@ IncludeDir["Glad"] = "PepperMint/vendor/Glad/include"
 IncludeDir["ImGui"] = "PepperMint/vendor/imgui"
 IncludeDir["glm"] = "PepperMint/vendor/glm"
 IncludeDir["stb_image"] = "PepperMint/vendor/stb_image"
+IncludeDir["entt"] = "PepperMint/vendor/entt/include"
 
 -- Include external premake files
 group "Dependencies"
@@ -64,7 +65,8 @@ project "PepperMint"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}"
 	}
 
 	links {
@@ -111,7 +113,8 @@ project "Menthol"
 		"PepperMint/vendor/spdlog/include",
 		"PepperMint/src",
 		"PepperMint/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links {
@@ -155,7 +158,8 @@ project "Sandbox"
 		"PepperMint/vendor/spdlog/include",
 		"PepperMint/src",
 		"PepperMint/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links {
