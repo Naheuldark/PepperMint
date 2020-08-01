@@ -29,6 +29,11 @@ public:
 						 Ref<Texture2D> iTexture = nullptr,
 						 const glm::vec4& iColor = glm::vec4(1.0f));
 
+	static void DrawQuad(const glm::mat4& iTransform, 
+						 const float iTilingFactor = 1.0f,
+						 Ref<Texture2D> iTexture = nullptr,
+						 const glm::vec4& iColor = glm::vec4(1.0f));
+
 	// Statistics
 	struct Statistics {
 		uint32_t drawCalls;

@@ -16,6 +16,9 @@
 
 #include "PepperMint/ImGui/ImGuiLayer.h"
 
+#include "PepperMint/Scene/Components.h"
+#include "PepperMint/Scene/Scene.h"
+
 #include "PepperMint/Renderer/Renderer.h"
 #include "PepperMint/Renderer/Renderer2D.h"
 #include "PepperMint/Renderer/RenderCommand.h"

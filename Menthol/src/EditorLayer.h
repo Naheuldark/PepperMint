@@ -22,6 +22,9 @@ private:
 	PepperMint::Ref<PepperMint::Shader> _flatColorShader;
 	PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
 
+	PepperMint::Ref<PepperMint::Scene> _activeScene;
+	entt::entity _squareEntity;
+
 	PepperMint::Ref<PepperMint::Texture2D> _checkerboardTexture;
 
 	glm::vec2 _viewportSize = { 0.0f, 0.0f };

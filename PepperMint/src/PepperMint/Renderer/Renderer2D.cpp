@@ -194,6 +194,17 @@ void Renderer2D::DrawQuad(const glm::vec3& iPosition,
 						  const float iTilingFactor,
 						  Ref<Texture2D> iTexture,
 						  const glm::vec4& iColor) {
+	auto&& transform = glm::translate(glm::mat4(1.0f), iPosition) *
+					   glm::rotate(glm::mat4(1.0f), glm::radians(iRotation), { 0.0f, 0.0f, 1.0f }) *
+					   glm::scale(glm::mat4(1.0f), { iScale.x, iScale.y, 1.0f });
+	DrawQuad(transform, iTilingFactor, iTexture, iColor);
+
+}
+
+void Renderer2D::DrawQuad(const glm::mat4& iTransform,
+						  const float iTilingFactor,
+						  Ref<Texture2D> iTexture,
+						  const glm::vec4& iColor) {
 	PM_PROFILE_FUNCTION();
 
 	constexpr size_t quadVertexCount = 4;
@@ -224,12 +235,8 @@ void Renderer2D::DrawQuad(const glm::vec3& iPosition,
 		}
 	}
 
-	auto&& transform = glm::translate(glm::mat4(1.0f), iPosition) *
-					   glm::rotate(glm::mat4(1.0f), glm::radians(iRotation), { 0.0f, 0.0f, 1.0f }) *
-					   glm::scale(glm::mat4(1.0f), { iScale.x, iScale.y, 1.0f });
-
 	for (size_t i = 0; i < quadVertexCount; i++) {
-		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[i];
+		sData.quadVertexBufferPtr->position = iTransform * sData.quadVertexPositions[i];
 		sData.quadVertexBufferPtr->color = iColor;
 		sData.quadVertexBufferPtr->texCoord = textureCoords[i];
 		sData.quadVertexBufferPtr->texIndex = textureIndex;
