@@ -7,18 +7,18 @@
 namespace PepperMint {
 
 class Scene {
-public:
-	Scene();
-	~Scene() = default;
+  public:
+    Scene();
+    ~Scene() = default;
 
-	entt::entity createEntity();
+    entt::entity createEntity();
 
-	// TEMP
-	entt::registry& registry() { return _registry; }
+    // TEMP
+    entt::registry& registry() { return _registry; }
 
-	void onUpdate(Timestep iTimestep);
+    void onUpdate(Timestep iTimestep);
 
-private:
-	entt::registry _registry;
+  private:
+    entt::registry _registry;
 };
 }

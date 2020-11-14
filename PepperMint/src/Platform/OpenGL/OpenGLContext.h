@@ -7,14 +7,14 @@ struct GLFWwindow;
 namespace PepperMint {
 
 class OpenGLContext : public GraphicsContext {
-public:
-	OpenGLContext(GLFWwindow* iWindowHandle);
-	~OpenGLContext() override = default;
+  public:
+    OpenGLContext(GLFWwindow* iWindowHandle);
+    ~OpenGLContext() override = default;
 
-	void init() override;
-	void swapBuffers() override;
+    void init() override;
+    void swapBuffers() override;
 
-private:
-	GLFWwindow* _windowHandle;
+  private:
+    GLFWwindow* _windowHandle;
 };
 }

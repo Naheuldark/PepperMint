@@ -5,59 +5,60 @@
 namespace PepperMint {
 
 class WindowCloseEvent : public Event {
-public:
-	WindowCloseEvent() = default;
-	~WindowCloseEvent() override = default;
+  public:
+    WindowCloseEvent()           = default;
+    ~WindowCloseEvent() override = default;
 
-	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
-	EVENT_TYPE(WINDOW_CLOSE)
+    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_TYPE(WINDOW_CLOSE)
 };
 
 class WindowResizeEvent : public Event {
-public:
-	WindowResizeEvent(unsigned int iWidth, unsigned int iHeight) : _width(iWidth), _height(iHeight) {}
-	~WindowResizeEvent() override = default;
-	
-	std::string toString() const override {
-		std::ostringstream ss;
-		ss << "WindowResizeEvent: " << _width << ", " << _height;
-		return ss.str();
-	}
+  public:
+    WindowResizeEvent(unsigned int iWidth, unsigned int iHeight)
+        : _width(iWidth), _height(iHeight) {}
+    ~WindowResizeEvent() override = default;
 
-	inline unsigned int width() const { return _width; }
-	inline unsigned int height() const { return _height; }
+    std::string toString() const override {
+        std::ostringstream ss;
+        ss << "WindowResizeEvent: " << _width << ", " << _height;
+        return ss.str();
+    }
 
-	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
-	EVENT_TYPE(WINDOW_RESIZE)
+    inline unsigned int width() const { return _width; }
+    inline unsigned int height() const { return _height; }
 
-private:
-	unsigned int _width, _height;
+    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_TYPE(WINDOW_RESIZE)
+
+  private:
+    unsigned int _width, _height;
 };
 
 class AppTickEvent : public Event {
-public:
-	AppTickEvent() = default;
-	~AppTickEvent() override = default;
+  public:
+    AppTickEvent()           = default;
+    ~AppTickEvent() override = default;
 
-	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
-	EVENT_TYPE(APP_TICK)
+    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_TYPE(APP_TICK)
 };
 
 class AppUpdateEvent : public Event {
-public:
-	AppUpdateEvent() = default;
-	~AppUpdateEvent() override = default;
+  public:
+    AppUpdateEvent()           = default;
+    ~AppUpdateEvent() override = default;
 
-	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
-	EVENT_TYPE(APP_UPDATE)
+    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_TYPE(APP_UPDATE)
 };
 
 class AppRenderEvent : public Event {
-public:
-	AppRenderEvent() = default;
-	~AppRenderEvent() override = default;
+  public:
+    AppRenderEvent()           = default;
+    ~AppRenderEvent() override = default;
 
-	EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
-	EVENT_TYPE(APP_RENDER)
+    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_TYPE(APP_RENDER)
 };
 }

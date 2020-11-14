@@ -9,12 +9,12 @@
 namespace PepperMint {
 
 class Input {
-public:
-	static bool IsKeyPressed(KeyCode iKeyCode);
+  public:
+    static bool IsKeyPressed(KeyCode iKeyCode);
 
-	static bool IsMouseButtonPressed(MouseCode iButton);
-	static std::pair<float, float> GetMousePosition();
-	static float GetMouseX();
-	static float GetMouseY();
+    static bool                    IsMouseButtonPressed(MouseCode iButton);
+    static std::pair<float, float> GetMousePosition();
+    static float                   GetMouseX();
+    static float                   GetMouseY();
 };
 }

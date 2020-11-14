@@ -1,5 +1,5 @@
-#include "pmpch.h"
 #include "PepperMint/Renderer/RenderCommand.h"
+#include "pmpch.h"
 
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 
