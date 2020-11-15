@@ -1,7 +1,8 @@
-#include "PepperMint/Renderer/OrthographicCamera.h"
 #include "pmpch.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "PepperMint/Renderer/OrthographicCamera.h"
 
 namespace PepperMint {
 

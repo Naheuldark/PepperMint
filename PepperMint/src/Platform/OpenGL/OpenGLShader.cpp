@@ -1,9 +1,10 @@
-#include "Platform/OpenGL/OpenGLShader.h"
 #include "pmpch.h"
 
 #include <fstream>
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace PepperMint {
 

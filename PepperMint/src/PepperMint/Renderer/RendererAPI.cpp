@@ -1,6 +1,6 @@
-#include "PepperMint/Renderer/RendererAPI.h"
 #include "pmpch.h"
 
+#include "PepperMint/Renderer/RendererAPI.h"
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 
 namespace PepperMint {

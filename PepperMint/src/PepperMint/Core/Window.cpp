@@ -1,5 +1,6 @@
-#include "PepperMint/Core/Window.h"
 #include "pmpch.h"
+
+#include "PepperMint/Core/Window.h"
 
 #ifdef PM_PLATFORM_WINDOWS
 #include "Platform/Windows/WindowsWindow.h"

@@ -1,6 +1,6 @@
-#include "PepperMint/Core/Application.h"
 #include "pmpch.h"
 
+#include "PepperMint/Core/Application.h"
 #include "PepperMint/Core/Input.h"
 #include "PepperMint/Renderer/Renderer.h"
 

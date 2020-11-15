@@ -1,8 +1,8 @@
-#include "PepperMint/Scene/Scene.h"
 #include "pmpch.h"
 
 #include "PepperMint/Renderer/Renderer2D.h"
 #include "PepperMint/Scene/Components.h"
+#include "PepperMint/Scene/Scene.h"
 
 namespace PepperMint {
 

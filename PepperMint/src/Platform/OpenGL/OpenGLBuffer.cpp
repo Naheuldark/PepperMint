@@ -1,7 +1,8 @@
-#include "Platform/OpenGL/OpenGLBuffer.h"
 #include "pmpch.h"
 
 #include <glad/glad.h>
+
+#include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace PepperMint {
 

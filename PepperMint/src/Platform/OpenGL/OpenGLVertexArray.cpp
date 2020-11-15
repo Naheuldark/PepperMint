@@ -1,7 +1,8 @@
-#include "Platform/OpenGL/OpenGLVertexArray.h"
 #include "pmpch.h"
 
 #include <glad/glad.h>
+
+#include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace PepperMint {
 

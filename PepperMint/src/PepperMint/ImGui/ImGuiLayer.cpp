@@ -1,11 +1,12 @@
-#include "PepperMint/ImGui/ImGuiLayer.h"
 #include "pmpch.h"
 
 #include "PepperMint/Core/Application.h"
+#include "PepperMint/ImGui/ImGuiLayer.h"
+
+#include <imgui.h>
 
 #include <examples/imgui_impl_glfw.h>
 #include <examples/imgui_impl_opengl3.h>
-#include <imgui.h>
 
 // TODO remove
 #include <GLFW/glfw3.h>

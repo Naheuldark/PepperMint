@@ -1,8 +1,9 @@
-#include "PepperMint/Core/Log.h"
 #include "pmpch.h"
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+
+#include "PepperMint/Core/Log.h"
 
 namespace PepperMint {
 

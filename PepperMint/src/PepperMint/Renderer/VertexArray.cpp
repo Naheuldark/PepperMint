@@ -1,7 +1,7 @@
-#include "PepperMint/Renderer/VertexArray.h"
 #include "pmpch.h"
 
 #include "PepperMint/Renderer/Renderer.h"
+#include "PepperMint/Renderer/VertexArray.h"
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace PepperMint {

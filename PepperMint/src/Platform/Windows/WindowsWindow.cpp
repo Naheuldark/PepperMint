@@ -1,15 +1,14 @@
-#include "Platform/Windows/WindowsWindow.h"
 #include "pmpch.h"
+
+#include <GLFW/glfw3.h>
 
 #include "PepperMint/Core/Input.h"
 #include "PepperMint/Events/ApplicationEvent.h"
 #include "PepperMint/Events/KeyEvent.h"
 #include "PepperMint/Events/MouseEvent.h"
 #include "PepperMint/Renderer/Renderer.h"
-
 #include "Platform/OpenGL/OpenGLContext.h"
-
-#include <GLFW/glfw3.h>
+#include "Platform/Windows/WindowsWindow.h"
 
 namespace PepperMint {
 

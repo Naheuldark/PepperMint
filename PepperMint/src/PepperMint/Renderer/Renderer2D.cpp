@@ -1,11 +1,11 @@
-#include "PepperMint/Renderer/Renderer2D.h"
 #include "pmpch.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "PepperMint/Renderer/RenderCommand.h"
+#include "PepperMint/Renderer/Renderer2D.h"
 #include "PepperMint/Renderer/Shader.h"
 #include "PepperMint/Renderer/VertexArray.h"
-
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace PepperMint {
 

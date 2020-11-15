@@ -1,6 +1,6 @@
-#include "PepperMint/Renderer/Renderer.h"
 #include "pmpch.h"
 
+#include "PepperMint/Renderer/Renderer.h"
 #include "PepperMint/Renderer/Renderer2D.h"
 
 namespace PepperMint {

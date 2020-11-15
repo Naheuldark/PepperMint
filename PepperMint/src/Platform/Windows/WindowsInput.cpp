@@ -1,9 +1,9 @@
-#include "PepperMint/Core/Input.h"
 #include "pmpch.h"
 
-#include "PepperMint/Core/Application.h"
-
 #include <GLFW/glfw3.h>
+
+#include "PepperMint/Core/Application.h"
+#include "PepperMint/Core/Input.h"
 
 namespace PepperMint {
 

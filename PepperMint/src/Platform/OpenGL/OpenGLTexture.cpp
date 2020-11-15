@@ -1,7 +1,8 @@
-#include "Platform/OpenGL/OpenGLTexture.h"
 #include "pmpch.h"
 
 #include <stb_image.h>
+
+#include "Platform/OpenGL/OpenGLTexture.h"
 
 namespace PepperMint {
 
