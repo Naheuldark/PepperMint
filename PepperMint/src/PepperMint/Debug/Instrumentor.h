@@ -27,8 +27,8 @@ struct InstrumentationSession {
 
 class Instrumentor {
   public:
-    Instrumentor() : _currentSession(nullptr) {}
-    ~Instrumentor() = default;
+    Instrumentor(const Instrumentor&) = delete;
+    Instrumentor(Instrumentor&&)      = delete;
 
     void beginSession(const std::string& iName, const std::string& iFilepath = "results.json") {
         std::lock_guard lock(_mutex);
@@ -86,6 +86,9 @@ class Instrumentor {
     }
 
   private:
+    Instrumentor() : _currentSession(nullptr) {}
+    ~Instrumentor() { endSession(); }
+
     void writeHeader() {
         _outputStream << "{\"otherData\": {},\"traceEvents\":[{}";
         _outputStream.flush();
