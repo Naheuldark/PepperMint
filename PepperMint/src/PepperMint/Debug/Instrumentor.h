@@ -38,9 +38,7 @@ class Instrumentor {
             // newly opened session instead.  That's better than having badly formatted profiling
             // output.
             if (Log::CoreLogger()) { // Edge case: BeginSession() might be before Log::Init()
-                PM_CORE_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.",
-                              iName,
-                              _currentSession->name);
+                PM_CORE_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", iName, _currentSession->name);
             }
             internalEndSession();
         }
@@ -116,9 +114,7 @@ class Instrumentor {
 
 class InstrumentationTimer {
   public:
-    InstrumentationTimer(const char* iName) : _name(iName), _stopped(false) {
-        _startTimepoint = std::chrono::steady_clock::now();
-    }
+    InstrumentationTimer(const char* iName) : _name(iName), _stopped(false) { _startTimepoint = std::chrono::steady_clock::now(); }
 
     ~InstrumentationTimer() {
         if (!_stopped) {
@@ -130,13 +126,10 @@ class InstrumentationTimer {
     void Stop() {
         auto endTimepoint = std::chrono::steady_clock::now();
         auto highResStart = FloatingPointMicroseconds{_startTimepoint.time_since_epoch()};
-        auto elapsedTime  = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint)
-                               .time_since_epoch() -
-                           std::chrono::time_point_cast<std::chrono::microseconds>(_startTimepoint)
-                               .time_since_epoch();
+        auto elapsedTime  = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() -
+                           std::chrono::time_point_cast<std::chrono::microseconds>(_startTimepoint).time_since_epoch();
 
-        Instrumentor::Get().writeProfile(
-            {_name, highResStart, elapsedTime, std::this_thread::get_id()});
+        Instrumentor::Get().writeProfile({_name, highResStart, elapsedTime, std::this_thread::get_id()});
 
         _stopped = true;
     }
@@ -149,7 +142,10 @@ class InstrumentationTimer {
 
 namespace InstrumentorUtils {
 
-template <size_t N> struct ChangeResult { char data[N]; };
+template <size_t N>
+struct ChangeResult {
+    char data[N];
+};
 
 template <size_t N, size_t K>
 constexpr auto cleanupOutputString(const char (&iExpr)[N], const char (&iRemove)[K]) {
@@ -159,8 +155,7 @@ constexpr auto cleanupOutputString(const char (&iExpr)[N], const char (&iRemove)
     size_t dstIndex = 0;
     while (srcIndex < N) {
         size_t matchIndex = 0;
-        while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 &&
-               iExpr[srcIndex + matchIndex] == iRemove[matchIndex])
+        while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 && iExpr[srcIndex + matchIndex] == iRemove[matchIndex])
             matchIndex++;
         if (matchIndex == K - 1)
             srcIndex += matchIndex;
@@ -176,15 +171,13 @@ constexpr auto cleanupOutputString(const char (&iExpr)[N], const char (&iRemove)
 #define PM_PROFILE 0
 #if PM_PROFILE
 // Resolve which function signature macro will be used
-#if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || \
-    (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
+#if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
 #define PM_FUNC_SIG __PRETTY_FUNCTION__
 #elif defined(__DMC__) && (__DMC__ >= 0x810)
 #define PM_FUNC_SIG __PRETTY_FUNCTION__
 #elif (defined(__FUNCSIG__) || (_MSC_VER))
 #define PM_FUNC_SIG __FUNCSIG__
-#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || \
-    (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
+#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
 #define PM_FUNC_SIG __FUNCTION__
 #elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550)
 #define PM_FUNC_SIG __FUNC__
@@ -196,13 +189,13 @@ constexpr auto cleanupOutputString(const char (&iExpr)[N], const char (&iRemove)
 #define PM_FUNC_SIG "PM_FUNC_SIG unknown!"
 #endif
 
-#define PM_PROFILE_BEGIN_SESSION(name, filepath) \
-    ::PepperMint::Instrumentor::Get().beginSession(name, filepath)
+#define PM_PROFILE_BEGIN_SESSION(name, filepath) ::PepperMint::Instrumentor::Get().beginSession(name, filepath)
 #define PM_PROFILE_END_SESSION() ::PepperMint::Instrumentor::Get().endSession()
-#define HZ_PROFILE_SCOPE(name)                                                  \
-    constexpr auto fixedName =                                                  \
-        ::PepperMint::InstrumentorUtils::cleanupOutputString(name, "__cdecl "); \
-    ::PepperMint::InstrumentationTimer timer##__LINE__(fixedName.Data)
+#define HZ_PROFILE_SCOPE_LINE2(name, line)                                                                             \
+    constexpr auto                fixedName##line = ::Hazel::InstrumentorUtils::CleanupOutputString(name, "__cdecl "); \
+    ::Hazel::InstrumentationTimer timer##line(fixedName##line.Data)
+#define HZ_PROFILE_SCOPE_LINE(name, line) HZ_PROFILE_SCOPE_LINE2(name, line)
+#define HZ_PROFILE_SCOPE(name) HZ_PROFILE_SCOPE_LINE(name, __LINE__)
 #define PM_PROFILE_FUNCTION() PM_PROFILE_SCOPE(PM_FUNC_SIG)
 #else
 #define PM_PROFILE_BEGIN_SESSION(name, filepath)
