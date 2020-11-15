@@ -6,15 +6,16 @@
 
 namespace PepperMint {
 
+class Entity;
+
 class Scene {
+    friend class Entity;
+
   public:
     Scene();
     ~Scene() = default;
 
-    entt::entity createEntity();
-
-    // TEMP
-    entt::registry& registry() { return _registry; }
+    Entity createEntity(const std::string& iName = "Entity");
 
     void onUpdate(Timestep iTimestep);
 

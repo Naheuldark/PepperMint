@@ -2,6 +2,7 @@
 
 #include "PepperMint/Renderer/Renderer2D.h"
 #include "PepperMint/Scene/Components.h"
+#include "PepperMint/Scene/Entity.h"
 #include "PepperMint/Scene/Scene.h"
 
 namespace PepperMint {
@@ -32,7 +33,12 @@ Scene::Scene() {
 #endif // ENTT_EXAMPLE_CODE
 }
 
-entt::entity Scene::createEntity() { return _registry.create(); }
+Entity Scene::createEntity(const std::string& iName) {
+    Entity entity(_registry.create(), this);
+    entity.add<TransformComponent>();
+    entity.add<TagComponent>(iName);
+    return entity;
+}
 
 void Scene::onUpdate(Timestep iTimestep) {
     auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);

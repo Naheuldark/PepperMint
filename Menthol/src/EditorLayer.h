@@ -23,7 +23,7 @@ class EditorLayer : public PepperMint::Layer {
     PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
 
     PepperMint::Ref<PepperMint::Scene> _activeScene;
-    entt::entity                       _squareEntity{};
+    PepperMint::Entity                 _squareEntity;
 
     PepperMint::Ref<PepperMint::Texture2D> _checkerboardTexture;
 

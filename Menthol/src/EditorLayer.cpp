@@ -19,12 +19,8 @@ void EditorLayer::onAttach() {
 
     _activeScene = PepperMint::CreateRef<PepperMint::Scene>();
 
-    auto square = _activeScene->createEntity();
-    _activeScene->registry().emplace<PepperMint::TransformComponent>(square);
-    _activeScene->registry().emplace<PepperMint::SpriteRendererComponent>(
-        square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
-
-    _squareEntity = square;
+    _squareEntity = _activeScene->createEntity("Green Square");
+    _squareEntity.add<PepperMint::SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 }
 
 void EditorLayer::onDetach() { PM_PROFILE_FUNCTION(); }
@@ -33,9 +29,9 @@ void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
     PM_PROFILE_FUNCTION();
 
     // Resize
-    if (PepperMint::FrameBufferProperties spec = _frameBuffer->properties();
-        _viewportSize.x > 0.0f && _viewportSize.y > 0.0f && // zero sized framebuffer is invalid
-        (spec.width != _viewportSize.x || spec.height != _viewportSize.y)) {
+    if (PepperMint::FrameBufferProperties spec = _frameBuffer->properties(); _viewportSize.x > 0.0f &&
+                                                                             _viewportSize.y > 0.0f && // zero sized framebuffer is invalid
+                                                                             (spec.width != _viewportSize.x || spec.height != _viewportSize.y)) {
         _frameBuffer->resize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
         _cameraController.onResize(_viewportSize.x, _viewportSize.y);
     }
@@ -86,8 +82,7 @@ void EditorLayer::onImGuiRender() {
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
-                        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
     }
 
@@ -140,9 +135,17 @@ void EditorLayer::onImGuiRender() {
         ImGui::Text("Vertices: %d", stats.totalVertexCount());
         ImGui::Text("Indices: %d", stats.totalIndexCount());
 
-        auto& squareColor =
-            _activeScene->registry().get<PepperMint::SpriteRendererComponent>(_squareEntity).color;
-        ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+        if (_squareEntity) {
+            ImGui::Separator();
+
+            auto&& tag = _squareEntity.get<PepperMint::TagComponent>().tag;
+            ImGui::Text("%s", tag.c_str());
+
+            auto&& squareColor = _squareEntity.get<PepperMint::SpriteRendererComponent>().color;
+            ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+
+            ImGui::Separator();
+        }
     }
     ImGui::End();
 
@@ -151,15 +154,13 @@ void EditorLayer::onImGuiRender() {
     {
         _viewportFocused = ImGui::IsWindowFocused();
         _viewportHovered = ImGui::IsWindowHovered();
-        PepperMint::Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused ||
-                                                                    !_viewportHovered);
+        PepperMint::Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused || !_viewportHovered);
 
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         _viewportSize            = {viewportPanelSize.x, viewportPanelSize.y};
 
         uint32_t textureID = _frameBuffer->colorAttachmentRendererId();
-        ImGui::Image(
-            (void*)textureID, ImVec2{_viewportSize.x, _viewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+        ImGui::Image((void*)textureID, ImVec2{_viewportSize.x, _viewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
     }
     ImGui::End();
     ImGui::PopStyleVar();
