@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PepperMint/Renderer/Camera.h"
 #include "PepperMint/Renderer/OrthographicCamera.h"
 #include "PepperMint/Renderer/Texture.h"
 
@@ -10,7 +11,8 @@ class Renderer2D {
     static void Init();
     static void Shutdown();
 
-    static void BeginScene(const OrthographicCamera& iCamera);
+    static void BeginScene(const Camera& iCamera, const glm::mat4& iTransform);
+    static void BeginScene(const OrthographicCamera& iCamera); // TODO TO REMOVE
     static void EndScene();
     static void Flush();
 

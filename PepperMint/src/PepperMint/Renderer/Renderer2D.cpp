@@ -53,8 +53,7 @@ void Renderer2D::Init() {
     sData.quadVertexArray = VertexArray::Create();
 
     // Vertex Buffer
-    sData.quadVertexBuffer =
-        VertexBuffer::Create(Renderer2DData::MAX_VERTICES * sizeof(QuadVertex));
+    sData.quadVertexBuffer = VertexBuffer::Create(Renderer2DData::MAX_VERTICES * sizeof(QuadVertex));
     sData.quadVertexBuffer->setLayout({
         {ShaderDataType::FLOAT3, "iPosition"},
         {ShaderDataType::FLOAT4, "iColor"},
@@ -82,8 +81,7 @@ void Renderer2D::Init() {
         offset += 4;
     }
 
-    Ref<IndexBuffer> quadIndexBuffer =
-        IndexBuffer::Create(quadIndices, Renderer2DData::MAX_INDICES);
+    Ref<IndexBuffer> quadIndexBuffer = IndexBuffer::Create(quadIndices, Renderer2DData::MAX_INDICES);
     sData.quadVertexArray->setIndexBuffer(quadIndexBuffer);
     delete[] quadIndices;
 
@@ -127,6 +125,20 @@ void Renderer2D::Shutdown() {
     delete[] sData.quadVertexBufferBase;
 }
 
+void Renderer2D::BeginScene(const Camera& iCamera, const glm::mat4& iTransform) {
+    PM_PROFILE_FUNCTION();
+
+    glm::mat4 viewProjectionMatrix = iCamera.projection() * glm::inverse(iTransform);
+
+    sData.textureShader->bind();
+    sData.textureShader->setMat4("uViewProjection", viewProjectionMatrix);
+
+    sData.quadIndexCount      = 0;
+    sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
+
+    sData.textureSlotIndex = 1;
+}
+
 void Renderer2D::BeginScene(const OrthographicCamera& iCamera) {
     PM_PROFILE_FUNCTION();
 
@@ -142,8 +154,7 @@ void Renderer2D::BeginScene(const OrthographicCamera& iCamera) {
 void Renderer2D::EndScene() {
     PM_PROFILE_FUNCTION();
 
-    uint32_t dataSize =
-        (uint32_t)((uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
+    uint32_t dataSize = (uint32_t)((uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
     sData.quadVertexBuffer->setData(sData.quadVertexBufferBase, dataSize);
 
     Flush();
@@ -191,16 +202,12 @@ void Renderer2D::DrawQuad(const glm::vec3& iPosition,
                           const float      iTilingFactor,
                           Ref<Texture2D>   iTexture,
                           const glm::vec4& iColor) {
-    auto&& transform = glm::translate(glm::mat4(1.0f), iPosition) *
-                       glm::rotate(glm::mat4(1.0f), glm::radians(iRotation), {0.0f, 0.0f, 1.0f}) *
+    auto&& transform = glm::translate(glm::mat4(1.0f), iPosition) * glm::rotate(glm::mat4(1.0f), glm::radians(iRotation), {0.0f, 0.0f, 1.0f}) *
                        glm::scale(glm::mat4(1.0f), {iScale.x, iScale.y, 1.0f});
     DrawQuad(transform, iTilingFactor, iTexture, iColor);
 }
 
-void Renderer2D::DrawQuad(const glm::mat4& iTransform,
-                          const float      iTilingFactor,
-                          Ref<Texture2D>   iTexture,
-                          const glm::vec4& iColor) {
+void Renderer2D::DrawQuad(const glm::mat4& iTransform, const float iTilingFactor, Ref<Texture2D> iTexture, const glm::vec4& iColor) {
     PM_PROFILE_FUNCTION();
 
     constexpr size_t    quadVertexCount = 4;

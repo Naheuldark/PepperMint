@@ -12,7 +12,7 @@ class Scene {
     friend class Entity;
 
   public:
-    Scene();
+    Scene()  = default;
     ~Scene() = default;
 
     Entity createEntity(const std::string& iName = "Entity");

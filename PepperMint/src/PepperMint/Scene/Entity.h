@@ -44,7 +44,7 @@ class Entity {
     operator bool() const { return _entityHandle != entt::null; }
 
   private:
-    entt::entity _entityHandle;
+    entt::entity _entityHandle{entt::null};
     Scene*       _scene = nullptr;
 };
 

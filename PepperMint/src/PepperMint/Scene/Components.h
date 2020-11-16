@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include "PepperMint/Renderer/Camera.h"
+
 namespace PepperMint {
 
 struct TagComponent {
@@ -29,5 +31,14 @@ struct SpriteRendererComponent {
     SpriteRendererComponent()                               = default;
     SpriteRendererComponent(const SpriteRendererComponent&) = default;
     SpriteRendererComponent(const glm::vec4& iColor) : color(iColor) {}
+};
+
+struct CameraComponent {
+    Camera camera;
+    bool   primary = true; // TODO Move to Scene
+
+    CameraComponent()                       = default;
+    CameraComponent(const CameraComponent&) = default;
+    CameraComponent(const glm::mat4& iProjection) : camera(iProjection) {}
 };
 }

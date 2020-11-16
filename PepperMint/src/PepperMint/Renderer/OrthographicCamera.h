@@ -6,10 +6,7 @@ namespace PepperMint {
 
 class OrthographicCamera {
   public:
-    OrthographicCamera(float iLeft   = 0.0f,
-                       float iRight  = 0.0f,
-                       float iBottom = 0.0f,
-                       float iTop    = 0.0f);
+    OrthographicCamera(float iLeft = 0.0f, float iRight = 0.0f, float iBottom = 0.0f, float iTop = 0.0f);
     ~OrthographicCamera() = default;
 
     inline const glm::vec3& position() const { return _position; }

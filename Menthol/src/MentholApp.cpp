@@ -3,13 +3,15 @@
 
 #include "EditorLayer.h"
 
+using namespace PepperMint;
+
 namespace Menthol {
 
-class Menthol : public PepperMint::Application {
+class Menthol : public Application {
   public:
-    Menthol() : Application("Menthol") { pushLayer(PepperMint::CreateRef<EditorLayer>()); }
+    Menthol() : Application("Menthol") { pushLayer(CreateRef<EditorLayer>()); }
     ~Menthol() = default;
 };
 }
 
-PepperMint::Application* PepperMint::CreateApplication() { return new Menthol::Menthol(); }
+Application* PepperMint::CreateApplication() { return new Menthol::Menthol(); }

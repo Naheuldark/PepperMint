@@ -5,33 +5,42 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+using namespace PepperMint;
+
 namespace Menthol {
 
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
 
-    _checkerboardTexture = PepperMint::Texture2D::Create("assets/textures/Checkerboard.png");
+    _checkerboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
 
-    PepperMint::FrameBufferProperties frameBufferProperties;
+    FrameBufferProperties frameBufferProperties;
     frameBufferProperties.width  = 1280;
     frameBufferProperties.height = 720;
-    _frameBuffer                 = PepperMint::FrameBuffer::Create(frameBufferProperties);
+    _frameBuffer                 = FrameBuffer::Create(frameBufferProperties);
 
-    _activeScene = PepperMint::CreateRef<PepperMint::Scene>();
+    _activeScene = CreateRef<Scene>();
 
     _squareEntity = _activeScene->createEntity("Green Square");
-    _squareEntity.add<PepperMint::SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+    _squareEntity.add<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+
+    _mainCamera = _activeScene->createEntity("Camera");
+    _mainCamera.add<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+
+    _secondCamera        = _activeScene->createEntity("Clip-Space");
+    auto&& secondCamera  = _secondCamera.add<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
+    secondCamera.primary = false;
 }
 
 void EditorLayer::onDetach() { PM_PROFILE_FUNCTION(); }
 
-void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
+void EditorLayer::onUpdate(Timestep iTimestep) {
     PM_PROFILE_FUNCTION();
 
     // Resize
-    if (PepperMint::FrameBufferProperties spec = _frameBuffer->properties(); _viewportSize.x > 0.0f &&
-                                                                             _viewportSize.y > 0.0f && // zero sized framebuffer is invalid
-                                                                             (spec.width != _viewportSize.x || spec.height != _viewportSize.y)) {
+    FrameBufferProperties spec = _frameBuffer->properties();
+    if (_viewportSize.x > 0.0f && _viewportSize.y > 0.0f && // zero sized framebuffer is invalid
+        (spec.width != _viewportSize.x || spec.height != _viewportSize.y)) {
         _frameBuffer->resize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
         _cameraController.onResize(_viewportSize.x, _viewportSize.y);
     }
@@ -42,23 +51,21 @@ void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
     }
 
     // Statistics
-    PepperMint::Renderer2D::ResetStats();
+    Renderer2D::ResetStats();
 
     // Render
     {
         PM_PROFILE_SCOPE("Renderer Preparation");
 
         _frameBuffer->bind();
-        PepperMint::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
-        PepperMint::RenderCommand::Clear();
+        RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
+        RenderCommand::Clear();
     }
 
     {
         PM_PROFILE_SCOPE("Renderer Draw");
 
-        PepperMint::Renderer2D::BeginScene(_cameraController.camera());
         _activeScene->onUpdate(iTimestep);
-        PepperMint::Renderer2D::EndScene();
 
         _frameBuffer->unbind();
     }
@@ -119,7 +126,7 @@ void EditorLayer::onImGuiRender() {
             // windows, which we can't undo at the moment without finer window depth/z control.
             // ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
             if (ImGui::MenuItem("Exit")) {
-                PepperMint::Application::Get().close();
+                Application::Get().close();
             }
             ImGui::EndMenu();
         }
@@ -128,7 +135,7 @@ void EditorLayer::onImGuiRender() {
 
     ImGui::Begin("Settings");
     {
-        auto&& stats = PepperMint::Renderer2D::Stats();
+        auto&& stats = Renderer2D::Stats();
         ImGui::Text("Renderer2D Stats:");
         ImGui::Text("Draw Calls: %d", stats.drawCalls);
         ImGui::Text("Quads: %d", stats.quadCount);
@@ -138,13 +145,20 @@ void EditorLayer::onImGuiRender() {
         if (_squareEntity) {
             ImGui::Separator();
 
-            auto&& tag = _squareEntity.get<PepperMint::TagComponent>().tag;
+            auto&& tag = _squareEntity.get<TagComponent>().tag;
             ImGui::Text("%s", tag.c_str());
 
-            auto&& squareColor = _squareEntity.get<PepperMint::SpriteRendererComponent>().color;
+            auto&& squareColor = _squareEntity.get<SpriteRendererComponent>().color;
             ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 
             ImGui::Separator();
+        }
+
+        ImGui::DragFloat3("Camera Transform", glm::value_ptr(_mainCamera.get<TransformComponent>().transform[3]));
+
+        if (ImGui::Checkbox("Camera A", &_primaryCamera)) {
+            _mainCamera.get<CameraComponent>().primary   = _primaryCamera;
+            _secondCamera.get<CameraComponent>().primary = !_primaryCamera;
         }
     }
     ImGui::End();
@@ -154,7 +168,7 @@ void EditorLayer::onImGuiRender() {
     {
         _viewportFocused = ImGui::IsWindowFocused();
         _viewportHovered = ImGui::IsWindowHovered();
-        PepperMint::Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused || !_viewportHovered);
+        Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused || !_viewportHovered);
 
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         _viewportSize            = {viewportPanelSize.x, viewportPanelSize.y};
@@ -168,6 +182,6 @@ void EditorLayer::onImGuiRender() {
     ImGui::End();
 }
 
-void EditorLayer::onEvent(PepperMint::Event& iEvent) { _cameraController.onEvent(iEvent); }
+void EditorLayer::onEvent(Event& iEvent) { _cameraController.onEvent(iEvent); }
 
 }
