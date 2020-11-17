@@ -1,6 +1,6 @@
 # PepperMint
 
-![PepperMint](/Resources/Branding/PepperMintLogo.png?raw=true "PepperMint")
+![PepperMint](/Resources/Branding/PepperMintLogo.png?raw=true "PepperMint") ![Menthol](/Resources/Branding/MentholLogo.png?raw=true "Menthol")
 
 PepperMint is primarily an early-stage interactive application and rendering engine for Windows.<br>
 It is based on the [_TheCherno_](https://www.youtube.com/channel/UCQ-W1KE9EYfdxhL6S4twUNw)'s project called [Hazel](https://github.com/TheCherno/Hazel).
