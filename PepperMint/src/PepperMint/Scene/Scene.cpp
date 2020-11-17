@@ -21,13 +21,13 @@ void Scene::onUpdate(Timestep iTimestep) {
     Camera*    mainCamera      = nullptr;
     glm::mat4* cameraTransform = nullptr;
 
-    auto&& group = _registry.view<TransformComponent, CameraComponent>();
-    for (auto&& entity : group) {
-        auto&& [transform, camera] = group.get<TransformComponent, CameraComponent>(entity);
+    auto&& view = _registry.view<TransformComponent, CameraComponent>();
+    for (auto&& entity : view) {
+        auto&& [transformComponent, cameraComponent] = view.get<TransformComponent, CameraComponent>(entity);
 
-        if (camera.primary) {
-            mainCamera      = &camera.camera;
-            cameraTransform = &transform.transform;
+        if (cameraComponent.primary) {
+            mainCamera      = &cameraComponent.camera;
+            cameraTransform = &transformComponent.transform;
             break;
         }
     }
@@ -37,11 +37,25 @@ void Scene::onUpdate(Timestep iTimestep) {
         {
             auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
             for (auto&& entity : group) {
-                auto&& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-                Renderer2D::DrawQuad(transform, 1.0f, nullptr, sprite.color);
+                auto&& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+                Renderer2D::DrawQuad(transformComponent, 1.0f, nullptr, spriteComponent.color);
             }
         }
         Renderer2D::EndScene();
+    }
+}
+
+void Scene::onViewportResize(uint32_t iWidth, uint32_t iHeight) {
+    _viewportWidth  = iWidth;
+    _viewportHeight = iHeight;
+
+    // Resize all non-fixedAspectRatio cameras
+    auto&& view = _registry.view<CameraComponent>();
+    for (auto&& entity : view) {
+        auto&& cameraComponent = view.get<CameraComponent>(entity);
+        if (!cameraComponent.fixedAspectRatio) {
+            cameraComponent.camera.setViewportSize(iWidth, iHeight);
+        }
     }
 }
 }

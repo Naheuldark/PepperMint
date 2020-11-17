@@ -18,8 +18,12 @@ class Scene {
     Entity createEntity(const std::string& iName = "Entity");
 
     void onUpdate(Timestep iTimestep);
+    void onViewportResize(uint32_t iWidth, uint32_t iHeight);
 
   private:
     entt::registry _registry;
+
+    uint32_t _viewportWidth  = 0;
+    uint32_t _viewportHeight = 0;
 };
 }

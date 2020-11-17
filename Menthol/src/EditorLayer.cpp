@@ -25,11 +25,11 @@ void EditorLayer::onAttach() {
     _squareEntity.add<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 
     _mainCamera = _activeScene->createEntity("Camera");
-    _mainCamera.add<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+    _mainCamera.add<CameraComponent>();
 
-    _secondCamera        = _activeScene->createEntity("Clip-Space");
-    auto&& secondCamera  = _secondCamera.add<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
-    secondCamera.primary = false;
+    _secondCamera                 = _activeScene->createEntity("Clip-Space");
+    auto&& secondCameraComponent  = _secondCamera.add<CameraComponent>();
+    secondCameraComponent.primary = false;
 }
 
 void EditorLayer::onDetach() { PM_PROFILE_FUNCTION(); }
@@ -43,6 +43,7 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
         (spec.width != _viewportSize.x || spec.height != _viewportSize.y)) {
         _frameBuffer->resize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
         _cameraController.onResize(_viewportSize.x, _viewportSize.y);
+        _activeScene->onViewportResize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
     }
 
     // Update
@@ -159,6 +160,14 @@ void EditorLayer::onImGuiRender() {
         if (ImGui::Checkbox("Camera A", &_primaryCamera)) {
             _mainCamera.get<CameraComponent>().primary   = _primaryCamera;
             _secondCamera.get<CameraComponent>().primary = !_primaryCamera;
+        }
+
+        ImGui::Separator();
+
+        auto&& secondCamera = _secondCamera.get<CameraComponent>().camera;
+        float  orthoSize    = secondCamera.orthographicSize();
+        if (ImGui::DragFloat("Second Camera Orthographic Size", &orthoSize)) {
+            secondCamera.setOrthographicSize(orthoSize);
         }
     }
     ImGui::End();

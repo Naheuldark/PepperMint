@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "PepperMint/Renderer/Camera.h"
+#include "PepperMint/Scene/SceneCamera.h"
 
 namespace PepperMint {
 
@@ -34,11 +34,11 @@ struct SpriteRendererComponent {
 };
 
 struct CameraComponent {
-    Camera camera;
-    bool   primary = true; // TODO Move to Scene
+    SceneCamera camera;
+    bool        primary          = true; // TODO Move to Scene
+    bool        fixedAspectRatio = false;
 
     CameraComponent()                       = default;
     CameraComponent(const CameraComponent&) = default;
-    CameraComponent(const glm::mat4& iProjection) : camera(iProjection) {}
 };
 }
