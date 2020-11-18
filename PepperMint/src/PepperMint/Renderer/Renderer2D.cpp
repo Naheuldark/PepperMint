@@ -98,7 +98,7 @@ void Renderer2D::Init() {
         samplers[i] = i;
     }
 
-    // Set all texture slots to 0
+    // Set first texture slot to 0
     sData.textureSlots[0] = sData.whiteTexture;
 
     //////////////
@@ -220,7 +220,7 @@ void Renderer2D::DrawQuad(const glm::mat4& iTransform, const float iTilingFactor
     float textureIndex = 0.0f; // White texture (default)
     if (iTexture) {
         for (uint32_t i = 1; i < sData.textureSlotIndex; i++) {
-            if (*sData.textureSlots[i].get() == *iTexture.get()) {
+            if (*sData.textureSlots[i] == *iTexture) {
                 textureIndex = (float)i;
                 break;
             }

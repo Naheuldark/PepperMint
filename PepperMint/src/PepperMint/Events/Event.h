@@ -1,8 +1,9 @@
 #pragma once
 
-#include "pmpch.h"
+#include <functional>
 
 #include "PepperMint/Core/Base.h"
+#include "PepperMint/Debug/Instrumentor.h"
 
 namespace PepperMint {
 
@@ -68,16 +69,15 @@ class Event {
     bool _handled = false;
 };
 
-inline std::ostream& operator<<(std::ostream& out, const Event& iEvent) {
-    return out << iEvent.toString();
-}
+inline std::ostream& operator<<(std::ostream& out, const Event& iEvent) { return out << iEvent.toString(); }
 
 class EventDispatcher {
   public:
     EventDispatcher(Event& iEvent) : _event(iEvent) {}
     ~EventDispatcher() = default;
 
-    template <typename T, typename F> bool dispatch(const F& func) {
+    template <typename T, typename F>
+    bool dispatch(const F& func) {
         if (_event.eventType() == T::StaticType()) {
             _event.setHandled(func(static_cast<T&>(_event)));
             return true;

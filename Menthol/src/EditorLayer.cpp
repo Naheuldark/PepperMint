@@ -39,15 +39,15 @@ void EditorLayer::onAttach() {
             auto&& transform = get<TransformComponent>().transform;
             float  speed     = 5.0f;
 
-            if (Input::IsKeyPressed(PM_KEY_A)) {
+            if (Input::IsKeyPressed(Key::A)) {
                 transform[3][0] += speed * iTimestep;
-            } else if (Input::IsKeyPressed(PM_KEY_D)) {
+            } else if (Input::IsKeyPressed(Key::D)) {
                 transform[3][0] -= speed * iTimestep;
             }
 
-            if (Input::IsKeyPressed(PM_KEY_S)) {
+            if (Input::IsKeyPressed(Key::S)) {
                 transform[3][1] += speed * iTimestep;
-            } else if (Input::IsKeyPressed(PM_KEY_W)) {
+            } else if (Input::IsKeyPressed(Key::W)) {
                 transform[3][1] -= speed * iTimestep;
             }
         }
@@ -205,8 +205,8 @@ void EditorLayer::onImGuiRender() {
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         _viewportSize            = {viewportPanelSize.x, viewportPanelSize.y};
 
-        uint32_t textureID = _frameBuffer->colorAttachmentRendererId();
-        ImGui::Image((void*)textureID, ImVec2{_viewportSize.x, _viewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+        uint64_t textureID = _frameBuffer->colorAttachmentRendererId();
+        ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{_viewportSize.x, _viewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
     }
     ImGui::End();
     ImGui::PopStyleVar();

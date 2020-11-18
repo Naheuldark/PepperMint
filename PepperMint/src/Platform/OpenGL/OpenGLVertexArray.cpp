@@ -100,7 +100,7 @@ void OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> iVertexBuffer) {
                                       ShaderDataType2OpenGLBaseType(element.type),
                                       element.normalized ? GL_TRUE : GL_FALSE,
                                       layout.stride(),
-                                      (const void*)(sizeof(float) * count * i));
+                                      (const void*)(element.offset + sizeof(float) * count * i));
                 glVertexAttribDivisor(_vertexBufferIndex, 1);
                 _vertexBufferIndex++;
             }

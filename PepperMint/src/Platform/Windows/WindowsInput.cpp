@@ -7,20 +7,20 @@
 
 namespace PepperMint {
 
-bool Input::IsKeyPressed(KeyCode iKeyCode) {
-    auto window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());
-    auto state  = glfwGetKey(window, static_cast<int>(iKeyCode));
+bool Input::IsKeyPressed(const KeyCode iKeyCode) {
+    auto&& window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());
+    auto&& state  = glfwGetKey(window, static_cast<int>(iKeyCode));
     return (state == GLFW_PRESS) || (state == GLFW_REPEAT);
 }
 
-bool Input::IsMouseButtonPressed(MouseCode iButton) {
-    auto window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());
-    auto state  = glfwGetMouseButton(window, static_cast<int>(iButton));
+bool Input::IsMouseButtonPressed(const MouseCode iButton) {
+    auto&& window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());
+    auto&& state  = glfwGetMouseButton(window, static_cast<int>(iButton));
     return (state == GLFW_PRESS);
 }
 
-std::pair<float, float> Input::GetMousePosition() {
-    auto window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());
+glm::vec2 Input::GetMousePosition() {
+    auto&& window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());
 
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
@@ -28,13 +28,7 @@ std::pair<float, float> Input::GetMousePosition() {
     return {(float)xpos, (float)ypos};
 }
 
-float Input::GetMouseX() {
-    auto [x, y] = GetMousePosition();
-    return x;
-}
+float Input::GetMouseX() { return GetMousePosition().x; }
 
-float Input::GetMouseY() {
-    auto [x, y] = GetMousePosition();
-    return y;
-}
+float Input::GetMouseY() { return GetMousePosition().y; }
 }

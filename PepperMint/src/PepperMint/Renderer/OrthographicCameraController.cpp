@@ -6,47 +6,37 @@
 
 namespace PepperMint {
 
-OrthographicCameraController::OrthographicCameraController(float iAspectRatio, bool iRotation)
-    : _aspectRatio(iAspectRatio), _rotation(iRotation) {
-    _camera.setProjection(
-        -_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
+OrthographicCameraController::OrthographicCameraController(float iAspectRatio, bool iRotation) : _aspectRatio(iAspectRatio), _rotation(iRotation) {
+    _camera.setProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
 }
 
 void OrthographicCameraController::onUpdate(Timestep iTimestep) {
     PM_PROFILE_FUNCTION();
 
-    if (Input::IsKeyPressed(PM_KEY_A)) {
-        _cameraPosition.x -=
-            cos(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
-        _cameraPosition.y -=
-            sin(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
-    } else if (Input::IsKeyPressed(PM_KEY_D)) {
-        _cameraPosition.x +=
-            cos(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
-        _cameraPosition.y +=
-            sin(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
+    if (Input::IsKeyPressed(Key::A)) {
+        _cameraPosition.x -= cos(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
+        _cameraPosition.y -= sin(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
+    } else if (Input::IsKeyPressed(Key::D)) {
+        _cameraPosition.x += cos(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
+        _cameraPosition.y += sin(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
     }
 
-    if (Input::IsKeyPressed(PM_KEY_W)) {
-        _cameraPosition.x +=
-            -sin(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
-        _cameraPosition.y +=
-            cos(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
-    } else if (Input::IsKeyPressed(PM_KEY_S)) {
-        _cameraPosition.x -=
-            -sin(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
-        _cameraPosition.y -=
-            cos(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
+    if (Input::IsKeyPressed(Key::W)) {
+        _cameraPosition.x += -sin(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
+        _cameraPosition.y += cos(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
+    } else if (Input::IsKeyPressed(Key::S)) {
+        _cameraPosition.x -= -sin(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
+        _cameraPosition.y -= cos(glm::radians(_cameraRotation)) * _cameraTranslationSpeed * iTimestep;
     }
 
     _camera.setPosition(_cameraPosition);
     _cameraTranslationSpeed = _zoomLevel;
 
     if (_rotation) {
-        if (Input::IsKeyPressed(PM_KEY_Q)) {
+        if (Input::IsKeyPressed(Key::Q)) {
             _cameraRotation += _cameraRotationSpeed * iTimestep;
         }
-        if (Input::IsKeyPressed(PM_KEY_E)) {
+        if (Input::IsKeyPressed(Key::E)) {
             _cameraRotation -= _cameraRotationSpeed * iTimestep;
         }
 
@@ -64,16 +54,13 @@ void OrthographicCameraController::onEvent(Event& iEvent) {
     PM_PROFILE_FUNCTION();
 
     EventDispatcher dispatcher(iEvent);
-    dispatcher.dispatch<MouseScrolledEvent>(
-        PM_BIND_EVENT_FN(OrthographicCameraController::onMouseScrolled));
-    dispatcher.dispatch<WindowResizeEvent>(
-        PM_BIND_EVENT_FN(OrthographicCameraController::onWindowResize));
+    dispatcher.dispatch<MouseScrolledEvent>(PM_BIND_EVENT_FN(OrthographicCameraController::onMouseScrolled));
+    dispatcher.dispatch<WindowResizeEvent>(PM_BIND_EVENT_FN(OrthographicCameraController::onWindowResize));
 }
 
 void OrthographicCameraController::onResize(float iWidth, float iHeight) {
     _aspectRatio = iWidth / iHeight;
-    _camera.setProjection(
-        -_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
+    _camera.setProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
 }
 
 bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& iEvent) {
@@ -81,8 +68,7 @@ bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& iEvent) {
 
     _zoomLevel -= iEvent.yOffset() * 0.25f;
     _zoomLevel = std::max(_zoomLevel, 0.25f);
-    _camera.setProjection(
-        -_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
+    _camera.setProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
     return false;
 }
 
@@ -90,8 +76,7 @@ bool OrthographicCameraController::onWindowResize(WindowResizeEvent& iEvent) {
     PM_PROFILE_FUNCTION();
 
     _aspectRatio = (float)iEvent.width() / (float)iEvent.height();
-    _camera.setProjection(
-        -_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
+    _camera.setProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
     return false;
 }
 }

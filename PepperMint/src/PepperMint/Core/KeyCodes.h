@@ -2,7 +2,11 @@
 
 namespace PepperMint {
 
-using Key = enum class KeyCode : int {
+using KeyCode = uint16_t;
+
+namespace Key {
+
+enum KeyCode {
     // From glfw3.h
     SPACE      = 32,
     APOSTROPHE = 39, /* ' */
@@ -135,138 +139,5 @@ using Key = enum class KeyCode : int {
     RIGHT_SUPER   = 347,
     MENU          = 348,
 };
-
-inline std::ostream& operator<<(std::ostream& os, KeyCode iKeyCode) {
-    os << static_cast<int>(iKeyCode);
-    return os;
 }
 }
-
-#define PM_KEY_SPACE ::PepperMint::Key::SPACE
-#define PM_KEY_APOSTROPHE ::PepperMint::Key::APOSTROPHE
-#define PM_KEY_COMMA ::PepperMint::Key::COMMA
-#define PM_KEY_MINUS ::PepperMint::Key::MINUS
-#define PM_KEY_PERIOD ::PepperMint::Key::PERIOD
-#define PM_KEY_SLASH ::PepperMint::Key::SLASH
-
-#define PM_KEY_0 ::PepperMint::Key::D0
-#define PM_KEY_1 ::PepperMint::Key::D1
-#define PM_KEY_2 ::PepperMint::Key::D2
-#define PM_KEY_3 ::PepperMint::Key::D3
-#define PM_KEY_4 ::PepperMint::Key::D4
-#define PM_KEY_5 ::PepperMint::Key::D5
-#define PM_KEY_6 ::PepperMint::Key::D6
-#define PM_KEY_7 ::PepperMint::Key::D7
-#define PM_KEY_8 ::PepperMint::Key::D8
-#define PM_KEY_9 ::PepperMint::Key::D9
-
-#define PM_KEY_SEMICOLON ::PepperMint::Key::SEMICOLON
-#define PM_KEY_EQUAL ::PepperMint::Key::EQUAL
-
-#define PM_KEY_A ::PepperMint::Key::A
-#define PM_KEY_B ::PepperMint::Key::B
-#define PM_KEY_C ::PepperMint::Key::C
-#define PM_KEY_D ::PepperMint::Key::D
-#define PM_KEY_E ::PepperMint::Key::E
-#define PM_KEY_F ::PepperMint::Key::F
-#define PM_KEY_G ::PepperMint::Key::G
-#define PM_KEY_H ::PepperMint::Key::H
-#define PM_KEY_I ::PepperMint::Key::I
-#define PM_KEY_J ::PepperMint::Key::J
-#define PM_KEY_K ::PepperMint::Key::K
-#define PM_KEY_L ::PepperMint::Key::L
-#define PM_KEY_M ::PepperMint::Key::M
-#define PM_KEY_N ::PepperMint::Key::N
-#define PM_KEY_O ::PepperMint::Key::O
-#define PM_KEY_P ::PepperMint::Key::P
-#define PM_KEY_Q ::PepperMint::Key::Q
-#define PM_KEY_R ::PepperMint::Key::R
-#define PM_KEY_S ::PepperMint::Key::S
-#define PM_KEY_T ::PepperMint::Key::T
-#define PM_KEY_U ::PepperMint::Key::U
-#define PM_KEY_V ::PepperMint::Key::V
-#define PM_KEY_W ::PepperMint::Key::W
-#define PM_KEY_X ::PepperMint::Key::X
-#define PM_KEY_Y ::PepperMint::Key::Y
-#define PM_KEY_Z ::PepperMint::Key::Z
-
-#define PM_KEY_LEFT_BRACKET ::PepperMint::Key::LEFT_BRACKET
-#define PM_KEY_BACKSLASH ::PepperMint::Key::BACKSLASH
-#define PM_KEY_RIGHT_BRACKET ::PepperMint::Key::RIGHT_BRACKET
-#define PM_KEY_GRAVE_ACCENT ::PepperMint::Key::GRAVE_ACCENT
-#define PM_KEY_WORLD_1 ::PepperMint::Key::WORLD_1
-#define PM_KEY_WORLD_2 ::PepperMint::Key::WORLD_2
-
-#define PM_KEY_ESCAPE ::PepperMint::Key::ESCAPE
-#define PM_KEY_ENTER ::PepperMint::Key::ENTER
-#define PM_KEY_TAB ::PepperMint::Key::TAB
-#define PM_KEY_BACKSPACE ::PepperMint::Key::BACKSPACE
-#define PM_KEY_INSERT ::PepperMint::Key::INSERT
-#define PM_KEY_DELETE ::PepperMint::Key::DEL
-#define PM_KEY_RIGHT ::PepperMint::Key::RIGHT
-#define PM_KEY_LEFT ::PepperMint::Key::LEFT
-#define PM_KEY_DOWN ::PepperMint::Key::DOWN
-#define PM_KEY_UP ::PepperMint::Key::UP
-#define PM_KEY_PAGE_UP ::PepperMint::Key::PAGE_UP
-#define PM_KEY_PAGE_DOWN ::PepperMint::Key::PAGE_DOWN
-#define PM_KEY_HOME ::PepperMint::Key::HOME
-#define PM_KEY_END ::PepperMint::Key::END
-#define PM_KEY_CAPS_LOCK ::PepperMint::Key::CAPS_LOCK
-#define PM_KEY_SCROLL_LOCK ::PepperMint::Key::SCROLL_LOCK
-#define PM_KEY_NUM_LOCK ::PepperMint::Key::NUM_LOCK
-#define PM_KEY_PRINT_SCREEN ::PepperMint::Key::PRINT_SCREEN
-#define PM_KEY_PAUSE ::PepperMint::Key::PAUSE
-
-#define PM_KEY_F1 ::PepperMint::Key::F1
-#define PM_KEY_F2 ::PepperMint::Key::F2
-#define PM_KEY_F3 ::PepperMint::Key::F3
-#define PM_KEY_F4 ::PepperMint::Key::F4
-#define PM_KEY_F5 ::PepperMint::Key::F5
-#define PM_KEY_F6 ::PepperMint::Key::F6
-#define PM_KEY_F7 ::PepperMint::Key::F7
-#define PM_KEY_F8 ::PepperMint::Key::F8
-#define PM_KEY_F9 ::PepperMint::Key::F9
-#define PM_KEY_F10 ::PepperMint::Key::F10
-#define PM_KEY_F11 ::PepperMint::Key::F11
-#define PM_KEY_F12 ::PepperMint::Key::F12
-#define PM_KEY_F13 ::PepperMint::Key::F13
-#define PM_KEY_F14 ::PepperMint::Key::F14
-#define PM_KEY_F15 ::PepperMint::Key::F15
-#define PM_KEY_F16 ::PepperMint::Key::F16
-#define PM_KEY_F17 ::PepperMint::Key::F17
-#define PM_KEY_F18 ::PepperMint::Key::F18
-#define PM_KEY_F19 ::PepperMint::Key::F19
-#define PM_KEY_F20 ::PepperMint::Key::F20
-#define PM_KEY_F21 ::PepperMint::Key::F21
-#define PM_KEY_F22 ::PepperMint::Key::F22
-#define PM_KEY_F23 ::PepperMint::Key::F23
-#define PM_KEY_F24 ::PepperMint::Key::F24
-#define PM_KEY_F25 ::PepperMint::Key::F25
-
-#define PM_KEY_KP_0 ::PepperMint::Key::KP0
-#define PM_KEY_KP_1 ::PepperMint::Key::KP1
-#define PM_KEY_KP_2 ::PepperMint::Key::KP2
-#define PM_KEY_KP_3 ::PepperMint::Key::KP3
-#define PM_KEY_KP_4 ::PepperMint::Key::KP4
-#define PM_KEY_KP_5 ::PepperMint::Key::KP5
-#define PM_KEY_KP_6 ::PepperMint::Key::KP6
-#define PM_KEY_KP_7 ::PepperMint::Key::KP7
-#define PM_KEY_KP_8 ::PepperMint::Key::KP8
-#define PM_KEY_KP_9 ::PepperMint::Key::KP9
-#define PM_KEY_KP_DECIMAL ::PepperMint::Key::KP_DECIMAL
-#define PM_KEY_KP_DIVIDE ::PepperMint::Key::KP_DIVIDE
-#define PM_KEY_KP_MULTIPLY ::PepperMint::Key::KP_MULTIPLY
-#define PM_KEY_KP_SUBTRACT ::PepperMint::Key::KP_SUBTRACT
-#define PM_KEY_KP_ADD ::PepperMint::Key::KP_ADD
-#define PM_KEY_KP_ENTER ::PepperMint::Key::KP_ENTER
-#define PM_KEY_KP_EQUAL ::PepperMint::Key::KP_EQUAL
-
-#define PM_KEY_LEFT_SHIFT ::PepperMint::Key::LEFT_SHIFT
-#define PM_KEY_LEFT_CONTROL ::PepperMint::Key::LEFT_CONTROL
-#define PM_KEY_LEFT_ALT ::PepperMint::Key::LEFT_ALT
-#define PM_KEY_LEFT_SUPER ::PepperMint::Key::LEFT_SUPER
-#define PM_KEY_RIGHT_SHIFT ::PepperMint::Key::RIGHT_SHIFT
-#define PM_KEY_RIGHT_CONTROL ::PepperMint::Key::RIGHT_CONTROL
-#define PM_KEY_RIGHT_ALT ::PepperMint::Key::RIGHT_ALT
-#define PM_KEY_RIGHT_SUPER ::PepperMint::Key::RIGHT_SUPER
-#define PM_KEY_MENU ::PepperMint::Key::MENU

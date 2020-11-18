@@ -1,13 +1,13 @@
 #pragma once
 
-#include "PepperMint/Core/Input.h"
+#include "PepperMint/Core/MouseCodes.h"
 #include "PepperMint/Events/Event.h"
 
 namespace PepperMint {
 
 class MouseMovedEvent : public Event {
   public:
-    MouseMovedEvent(float iMouseX, float iMouseY) : _mouseX(iMouseX), _mouseY(iMouseY) {}
+    MouseMovedEvent(const float iMouseX, const float iMouseY) : _mouseX(iMouseX), _mouseY(iMouseY) {}
     ~MouseMovedEvent() override = default;
 
     inline float x() const { return _mouseX; }
@@ -28,7 +28,7 @@ class MouseMovedEvent : public Event {
 
 class MouseScrolledEvent : public Event {
   public:
-    MouseScrolledEvent(float iXOffset, float iYOffset) : _xOffset(iXOffset), _yOffset(iYOffset) {}
+    MouseScrolledEvent(const float iXOffset, const float iYOffset) : _xOffset(iXOffset), _yOffset(iYOffset) {}
     ~MouseScrolledEvent() override = default;
 
     inline float xOffset() const { return _xOffset; }
@@ -56,14 +56,14 @@ class MouseButtonEvent : public Event {
     EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 
   protected:
-    MouseButtonEvent(MouseCode iButton) : _button(iButton) {}
+    MouseButtonEvent(const MouseCode iButton) : _button(iButton) {}
 
     MouseCode _button;
 };
 
 class MouseButtonPressedEvent : public MouseButtonEvent {
   public:
-    MouseButtonPressedEvent(MouseCode iButton) : MouseButtonEvent(iButton) {}
+    MouseButtonPressedEvent(const MouseCode iButton) : MouseButtonEvent(iButton) {}
     ~MouseButtonPressedEvent() override = default;
 
     std::string toString() const override {
@@ -77,7 +77,7 @@ class MouseButtonPressedEvent : public MouseButtonEvent {
 
 class MouseButtonReleasedEvent : public MouseButtonEvent {
   public:
-    MouseButtonReleasedEvent(MouseCode iButton) : MouseButtonEvent(iButton) {}
+    MouseButtonReleasedEvent(const MouseCode iButton) : MouseButtonEvent(iButton) {}
     ~MouseButtonReleasedEvent() override = default;
 
     std::string toString() const override {

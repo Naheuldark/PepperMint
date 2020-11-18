@@ -32,9 +32,8 @@ OpenGLShader::OpenGLShader(const std::string& iShaderFile) {
     auto lastSlash = iShaderFile.find_last_of("/\\");
     lastSlash      = lastSlash == std::string::npos ? 0 : lastSlash + 1;
     auto lastDot   = iShaderFile.rfind('.');
-    auto count =
-        lastDot == std::string::npos ? iShaderFile.size() - lastSlash : lastDot - lastSlash;
-    _name = iShaderFile.substr(lastSlash, count);
+    auto count     = lastDot == std::string::npos ? iShaderFile.size() - lastSlash : lastDot - lastSlash;
+    _name          = iShaderFile.substr(lastSlash, count);
 }
 
 OpenGLShader::~OpenGLShader() {
@@ -148,7 +147,7 @@ std::string OpenGLShader::readFile(const std::string& iShaderFile) {
 
     std::string result;
 
-    std::ifstream in(iShaderFile, std::ios::in | std::ios::binary);
+    std::ifstream in(iShaderFile, std::ios::in | std::ios::binary); // ifstream closes itself due to RAII
     if (in) {
         in.seekg(0, std::ios::end);
         size_t size = in.tellg();
@@ -156,7 +155,6 @@ std::string OpenGLShader::readFile(const std::string& iShaderFile) {
             result.resize(size);
             in.seekg(0, std::ios::beg);
             in.read(&result[0], size);
-            in.close();
         } else {
             PM_CORE_ERROR("Could not read from file '{0}'", iShaderFile);
         }
@@ -174,25 +172,22 @@ std::unordered_map<GLenum, std::string> OpenGLShader::preProcess(const std::stri
 
     const char* typeToken       = "#type";
     size_t      typeTokenLength = strlen(typeToken);
-    size_t      pos = iSource.find(typeToken, 0); // Start of shader type declaration line
+    size_t      pos             = iSource.find(typeToken, 0); // Start of shader type declaration line
 
     while (pos != std::string::npos) {
         size_t eol = iSource.find_first_of("\r\n", pos); // End of shader type declaration line
         PM_CORE_ASSERT(eol != std::string::npos, "Syntax error");
 
-        size_t begin =
-            pos + typeTokenLength + 1; // Start of shader type name (after "#type " keyword)
-        const std::string& type = iSource.substr(begin, eol - begin);
+        size_t             begin = pos + typeTokenLength + 1; // Start of shader type name (after "#type " keyword)
+        const std::string& type  = iSource.substr(begin, eol - begin);
         PM_CORE_ASSERT(shaderTypeFromString(type), "Invalid shader type specified");
 
-        size_t nextLinePos = iSource.find_first_not_of(
-            "\r\n", eol); // Start of shader code after shader type declaration line
+        size_t nextLinePos = iSource.find_first_not_of("\r\n", eol); // Start of shader code after shader type declaration line
         PM_CORE_ASSERT(nextLinePos != std::string::npos, "Syntax error");
         pos = iSource.find(typeToken, nextLinePos); // Start of next shader type declaration line
 
         shaderSources[shaderTypeFromString(type)] =
-            (pos == std::string::npos) ? iSource.substr(nextLinePos)
-                                       : iSource.substr(nextLinePos, pos - nextLinePos);
+            (pos == std::string::npos) ? iSource.substr(nextLinePos) : iSource.substr(nextLinePos, pos - nextLinePos);
     }
 
     return shaderSources;

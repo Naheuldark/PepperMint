@@ -40,9 +40,7 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
         int success = glfwInit();
         PM_CORE_ASSERT(success, "Failed to initialize GLFW!");
 
-        glfwSetErrorCallback([](int iError, const char* iDescription) {
-            PM_CORE_ERROR("GLFW Error ({0}): {1}", iError, iDescription)
-        });
+        glfwSetErrorCallback([](int iError, const char* iDescription) { PM_CORE_ERROR("GLFW Error ({0}): {1}", iError, iDescription) });
     }
 
     {
@@ -53,8 +51,7 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
         }
 #endif // PM_DEBUG
 
-        _window = glfwCreateWindow(
-            (int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
+        _window = glfwCreateWindow((int)_data.width, (int)_data.height, _data.title.c_str(), nullptr, nullptr);
         ++sGLFWWindowCount;
     }
 
@@ -81,35 +78,34 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
         data.eventCallback(event);
     });
 
-    glfwSetKeyCallback(_window,
-                       [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-                           WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+    glfwSetKeyCallback(_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-                           switch (action) {
-                           case GLFW_PRESS: {
-                               KeyPressedEvent event(static_cast<KeyCode>(key), 0);
-                               data.eventCallback(event);
-                               break;
-                           }
-                           case GLFW_RELEASE: {
-                               KeyReleasedEvent event(static_cast<KeyCode>(key));
-                               data.eventCallback(event);
-                               break;
-                           }
-                           case GLFW_REPEAT: {
-                               KeyPressedEvent event(static_cast<KeyCode>(key), 1);
-                               data.eventCallback(event);
-                               break;
-                           }
-                           default:
-                               break;
-                           }
-                       });
+        switch (action) {
+        case GLFW_PRESS: {
+            KeyPressedEvent event(key, 0);
+            data.eventCallback(event);
+            break;
+        }
+        case GLFW_RELEASE: {
+            KeyReleasedEvent event(key);
+            data.eventCallback(event);
+            break;
+        }
+        case GLFW_REPEAT: {
+            KeyPressedEvent event(key, 1);
+            data.eventCallback(event);
+            break;
+        }
+        default:
+            break;
+        }
+    });
 
     glfwSetCharCallback(_window, [](GLFWwindow* window, unsigned int keyCode) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-        KeyTypedEvent event(static_cast<KeyCode>(keyCode));
+        KeyTypedEvent event(keyCode);
         data.eventCallback(event);
     });
 
@@ -118,12 +114,12 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 
         switch (action) {
         case GLFW_PRESS: {
-            MouseButtonPressedEvent event(static_cast<MouseCode>(button));
+            MouseButtonPressedEvent event(button);
             data.eventCallback(event);
             break;
         }
         case GLFW_RELEASE: {
-            MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
+            MouseButtonReleasedEvent event(button);
             data.eventCallback(event);
             break;
         }
