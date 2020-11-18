@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "PepperMint/Scene/SceneCamera.h"
+#include "PepperMint/Scene/ScriptableEntity.h"
 
 namespace PepperMint {
 
@@ -40,5 +41,29 @@ struct CameraComponent {
 
     CameraComponent()                       = default;
     CameraComponent(const CameraComponent&) = default;
+};
+
+struct NativeScriptComponent {
+    ScriptableEntity* instance = nullptr;
+
+    std::function<void()> createInstanceFunc;
+    std::function<void()> destroyInstanceFunc;
+
+    std::function<void(ScriptableEntity*)>           onCreateFunc;
+    std::function<void(ScriptableEntity*)>           onDestroyFunc;
+    std::function<void(ScriptableEntity*, Timestep)> onUpdateFunc;
+
+    template <typename Script>
+    void bind() {
+        createInstanceFunc  = [&]() { instance = new Script(); };
+        destroyInstanceFunc = [&]() {
+            delete (Script*)instance;
+            instance = nullptr;
+        };
+
+        onCreateFunc  = [](ScriptableEntity* script) { ((Script*)script)->onCreate(); };
+        onDestroyFunc = [](ScriptableEntity* script) { ((Script*)script)->onDestroy(); };
+        onUpdateFunc  = [](ScriptableEntity* script, Timestep timestep) { ((Script*)script)->onUpdate(timestep); };
+    }
 };
 }

@@ -30,6 +30,29 @@ void EditorLayer::onAttach() {
     _secondCamera                 = _activeScene->createEntity("Clip-Space");
     auto&& secondCameraComponent  = _secondCamera.add<CameraComponent>();
     secondCameraComponent.primary = false;
+
+    class CameraController : public ScriptableEntity {
+      public:
+        void onCreate() {}
+        void onDestroy() {}
+        void onUpdate(Timestep iTimestep) {
+            auto&& transform = get<TransformComponent>().transform;
+            float  speed     = 5.0f;
+
+            if (Input::IsKeyPressed(PM_KEY_A)) {
+                transform[3][0] += speed * iTimestep;
+            } else if (Input::IsKeyPressed(PM_KEY_D)) {
+                transform[3][0] -= speed * iTimestep;
+            }
+
+            if (Input::IsKeyPressed(PM_KEY_S)) {
+                transform[3][1] += speed * iTimestep;
+            } else if (Input::IsKeyPressed(PM_KEY_W)) {
+                transform[3][1] -= speed * iTimestep;
+            }
+        }
+    };
+    _mainCamera.add<NativeScriptComponent>().bind<CameraController>();
 }
 
 void EditorLayer::onDetach() { PM_PROFILE_FUNCTION(); }

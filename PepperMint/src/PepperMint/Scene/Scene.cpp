@@ -18,12 +18,32 @@ Entity Scene::createEntity(const std::string& iName) {
 }
 
 void Scene::onUpdate(Timestep iTimestep) {
+    // Update scripts
+    auto&& scriptView = _registry.view<NativeScriptComponent>();
+    for (auto&& entity : scriptView) {
+        auto&& nativeScriptComponent = scriptView.get<NativeScriptComponent>(entity);
+
+        if (!nativeScriptComponent.instance) {
+            nativeScriptComponent.createInstanceFunc();
+            nativeScriptComponent.instance->_entity = Entity(entity, this);
+
+            if (nativeScriptComponent.onCreateFunc) {
+                nativeScriptComponent.onCreateFunc(nativeScriptComponent.instance);
+            }
+        }
+
+        if (nativeScriptComponent.onUpdateFunc) {
+            nativeScriptComponent.onUpdateFunc(nativeScriptComponent.instance, iTimestep);
+        }
+    }
+
+    // Render 2D
     Camera*    mainCamera      = nullptr;
     glm::mat4* cameraTransform = nullptr;
 
-    auto&& view = _registry.view<TransformComponent, CameraComponent>();
-    for (auto&& entity : view) {
-        auto&& [transformComponent, cameraComponent] = view.get<TransformComponent, CameraComponent>(entity);
+    auto&& renderView = _registry.view<TransformComponent, CameraComponent>();
+    for (auto&& entity : renderView) {
+        auto&& [transformComponent, cameraComponent] = renderView.get<TransformComponent, CameraComponent>(entity);
 
         if (cameraComponent.primary) {
             mainCamera      = &cameraComponent.camera;

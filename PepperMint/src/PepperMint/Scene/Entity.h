@@ -25,7 +25,7 @@ class Entity {
 
     template <typename Component>
     Component& get() {
-        PM_CORE_ASSERT(has<Component>(), "Entity already does not have component!");
+        PM_CORE_ASSERT(has<Component>(), "Entity does not have component!");
         return _scene->_registry.get<Component>(_entityHandle);
     }
 
@@ -36,7 +36,7 @@ class Entity {
 
     template <typename Component>
     void remove() {
-        PM_CORE_ASSERT(has<Component>(), "Entity already does not have component!");
+        PM_CORE_ASSERT(has<Component>(), "Entity does not have component!");
         return _scene->_registry.remove<Component>(_entityHandle);
     }
 
