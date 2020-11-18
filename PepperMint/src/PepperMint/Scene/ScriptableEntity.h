@@ -8,8 +8,8 @@ class ScriptableEntity {
     friend class Scene;
 
   public:
-    ScriptableEntity()  = default;
-    ~ScriptableEntity() = default;
+    ScriptableEntity()          = default;
+    virtual ~ScriptableEntity() = default;
 
     //////////////////////
     // Entity functions //
@@ -18,6 +18,11 @@ class ScriptableEntity {
     Component& get() {
         return _entity.get<Component>();
     }
+
+  protected:
+    virtual void onCreate() {}
+    virtual void onDestroy() {}
+    virtual void onUpdate(Timestep) {}
 
   private:
     Entity _entity;

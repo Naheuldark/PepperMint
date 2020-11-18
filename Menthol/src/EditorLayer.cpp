@@ -33,8 +33,11 @@ void EditorLayer::onAttach() {
 
     class CameraController : public ScriptableEntity {
       public:
-        void onCreate() {}
-        void onDestroy() {}
+        void onCreate() {
+            auto&& transform = get<TransformComponent>().transform;
+            transform[3][0]  = rand() % 10 - 5.0f;
+        }
+
         void onUpdate(Timestep iTimestep) {
             auto&& transform = get<TransformComponent>().transform;
             float  speed     = 5.0f;
@@ -53,6 +56,7 @@ void EditorLayer::onAttach() {
         }
     };
     _mainCamera.add<NativeScriptComponent>().bind<CameraController>();
+    _secondCamera.add<NativeScriptComponent>().bind<CameraController>();
 }
 
 void EditorLayer::onDetach() { PM_PROFILE_FUNCTION(); }

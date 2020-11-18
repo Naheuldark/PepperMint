@@ -7,9 +7,6 @@
 
 namespace PepperMint {
 
-static void DoMath(const glm::mat4& iTransform) {}
-static void OnTransformConstruct(entt::registry& iRegistry, entt::entity iEntity) {}
-
 Entity Scene::createEntity(const std::string& iName) {
     Entity entity(_registry.create(), this);
     entity.add<TransformComponent>();
@@ -21,20 +18,16 @@ void Scene::onUpdate(Timestep iTimestep) {
     // Update scripts
     auto&& scriptView = _registry.view<NativeScriptComponent>();
     for (auto&& entity : scriptView) {
-        auto&& nativeScriptComponent = scriptView.get<NativeScriptComponent>(entity);
+        auto&& scriptComponent = scriptView.get<NativeScriptComponent>(entity);
 
-        if (!nativeScriptComponent.instance) {
-            nativeScriptComponent.createInstanceFunc();
-            nativeScriptComponent.instance->_entity = Entity(entity, this);
-
-            if (nativeScriptComponent.onCreateFunc) {
-                nativeScriptComponent.onCreateFunc(nativeScriptComponent.instance);
-            }
+        // TODO: Move to Scene onScenePlay
+        if (!scriptComponent.script) {
+            scriptComponent.script          = scriptComponent.instantiateScript();
+            scriptComponent.script->_entity = Entity(entity, this);
+            scriptComponent.script->onCreate();
         }
 
-        if (nativeScriptComponent.onUpdateFunc) {
-            nativeScriptComponent.onUpdateFunc(nativeScriptComponent.instance, iTimestep);
-        }
+        scriptComponent.script->onUpdate(iTimestep);
     }
 
     // Render 2D
