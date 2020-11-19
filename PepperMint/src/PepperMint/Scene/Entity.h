@@ -2,6 +2,7 @@
 
 #include <entt.hpp>
 
+#include "PepperMint/Core/Log.h"
 #include "PepperMint/Scene/Scene.h"
 
 namespace PepperMint {
@@ -42,6 +43,10 @@ class Entity {
 
     // Other functions
     operator bool() const { return _entityHandle != entt::null; }
+    operator uint32_t() const { return (uint32_t)_entityHandle; }
+
+    bool operator==(const Entity& iOther) const { return (_entityHandle == iOther._entityHandle) && (_scene == iOther._scene); }
+    bool operator!=(const Entity& iOther) const { return !(*this == iOther); }
 
   private:
     entt::entity _entityHandle{entt::null};

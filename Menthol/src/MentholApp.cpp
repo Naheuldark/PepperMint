@@ -3,9 +3,7 @@
 
 #include "EditorLayer.h"
 
-using namespace PepperMint;
-
-namespace Menthol {
+namespace PepperMint {
 
 class Menthol : public Application {
   public:
@@ -14,4 +12,4 @@ class Menthol : public Application {
 };
 }
 
-Application* PepperMint::CreateApplication() { return new Menthol::Menthol(); }
+PepperMint::Application* PepperMint::CreateApplication() { return new PepperMint::Menthol(); }

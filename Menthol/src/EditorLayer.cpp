@@ -5,9 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace PepperMint;
-
-namespace Menthol {
+namespace PepperMint {
 
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
@@ -57,6 +55,8 @@ void EditorLayer::onAttach() {
     };
     _mainCamera.add<NativeScriptComponent>().bind<CameraController>();
     _secondCamera.add<NativeScriptComponent>().bind<CameraController>();
+
+    _sceneHierarchyPanel.setContext(_activeScene);
 }
 
 void EditorLayer::onDetach() { PM_PROFILE_FUNCTION(); }
@@ -161,6 +161,8 @@ void EditorLayer::onImGuiRender() {
         ImGui::EndMenuBar();
     }
 
+    _sceneHierarchyPanel.onImGuiRender();
+
     ImGui::Begin("Settings");
     {
         auto&& stats = Renderer2D::Stats();
@@ -219,5 +221,4 @@ void EditorLayer::onImGuiRender() {
 }
 
 void EditorLayer::onEvent(Event& iEvent) { _cameraController.onEvent(iEvent); }
-
 }

@@ -2,9 +2,9 @@
 
 #include <PepperMint.h>
 
-using namespace PepperMint;
+#include "Panels/SceneHierarchyPanel.h"
 
-namespace Menthol {
+namespace PepperMint {
 
 class EditorLayer : public Layer {
   public:
@@ -38,6 +38,8 @@ class EditorLayer : public Layer {
     bool      _viewportHovered = false;
 
     glm::vec4 _squareColor = {0.2f, 0.3f, 0.8f, 1.0};
-};
 
+    // Panels
+    SceneHierarchyPanel _sceneHierarchyPanel;
+};
 }

@@ -10,6 +10,7 @@ class Entity;
 
 class Scene {
     friend class Entity;
+    friend class SceneHierarchyPanel;
 
   public:
     Scene()  = default;
