@@ -31,12 +31,12 @@ void EditorLayer::onAttach() {
 
     class CameraController : public ScriptableEntity {
       public:
-        void onCreate() {
+        void onCreate() override {
             auto&& transform = get<TransformComponent>().transform;
             transform[3][0]  = rand() % 10 - 5.0f;
         }
 
-        void onUpdate(Timestep iTimestep) {
+        void onUpdate(Timestep iTimestep) override {
             auto&& transform = get<TransformComponent>().transform;
             float  speed     = 5.0f;
 

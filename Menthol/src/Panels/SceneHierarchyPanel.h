@@ -19,6 +19,7 @@ class SceneHierarchyPanel {
 
   private:
     void drawEntityNode(Entity iEntity);
+    void drawComponents(Entity iEntity);
 
   private:
     Ref<Scene> _context;
