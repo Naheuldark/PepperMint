@@ -49,7 +49,8 @@ class Renderer2D {
     static Statistics Stats();
 
   private:
-    static void FlushAndReset();
+    static void StartBatch();
+    static void NextBatch();
 };
 
 }

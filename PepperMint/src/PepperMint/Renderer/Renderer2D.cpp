@@ -133,10 +133,7 @@ void Renderer2D::BeginScene(const Camera& iCamera, const glm::mat4& iTransform) 
     sData.textureShader->bind();
     sData.textureShader->setMat4("uViewProjection", viewProjectionMatrix);
 
-    sData.quadIndexCount      = 0;
-    sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
-
-    sData.textureSlotIndex = 1;
+    StartBatch();
 }
 
 void Renderer2D::BeginScene(const OrthographicCamera& iCamera) {
@@ -145,24 +142,22 @@ void Renderer2D::BeginScene(const OrthographicCamera& iCamera) {
     sData.textureShader->bind();
     sData.textureShader->setMat4("uViewProjection", iCamera.viewProjectionMatrix());
 
-    sData.quadIndexCount      = 0;
-    sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
-
-    sData.textureSlotIndex = 1;
+    StartBatch();
 }
 
 void Renderer2D::EndScene() {
     PM_PROFILE_FUNCTION();
 
-    uint32_t dataSize = (uint32_t)((uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
-    sData.quadVertexBuffer->setData(sData.quadVertexBufferBase, dataSize);
-
     Flush();
 }
 
 void Renderer2D::Flush() {
-    if (sData.quadIndexCount == 0)
+    if (sData.quadIndexCount == 0) {
         return; // Nothing to draw
+    }
+
+    uint32_t dataSize = (uint32_t)((uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
+    sData.quadVertexBuffer->setData(sData.quadVertexBufferBase, dataSize);
 
     // Bind textures
     for (uint32_t i = 0; i < sData.textureSlotIndex; ++i) {
@@ -174,13 +169,16 @@ void Renderer2D::Flush() {
     sData.stats.drawCalls++;
 }
 
-void Renderer2D::FlushAndReset() {
-    EndScene();
-
+void Renderer2D::StartBatch() {
     sData.quadIndexCount      = 0;
     sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
 
-    sData.textureSlotIndex = 0;
+    sData.textureSlotIndex = 1;
+}
+
+void Renderer2D::NextBatch() {
+    Flush();
+    StartBatch();
 }
 
 void Renderer2D::ResetStats() { memset(&sData.stats, 0, sizeof(Statistics)); }
@@ -214,7 +212,7 @@ void Renderer2D::DrawQuad(const glm::mat4& iTransform, const float iTilingFactor
     constexpr glm::vec2 textureCoords[] = {{0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}};
 
     if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES) {
-        FlushAndReset();
+        NextBatch();
     }
 
     float textureIndex = 0.0f; // White texture (default)
@@ -229,7 +227,7 @@ void Renderer2D::DrawQuad(const glm::mat4& iTransform, const float iTilingFactor
         // Add the new texture if it does not exist yet
         if (textureIndex == 0.0f) {
             if (sData.textureSlotIndex >= Renderer2DData::MAX_TEXTURE_SLOTS) {
-                FlushAndReset();
+                NextBatch();
             }
 
             textureIndex                               = (float)sData.textureSlotIndex;
