@@ -2,8 +2,10 @@
 
 #include "PepperMint/Core/Base.h"
 
+#pragma warning(push, 0)
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#pragma warning(pop)
 
 namespace PepperMint {
 

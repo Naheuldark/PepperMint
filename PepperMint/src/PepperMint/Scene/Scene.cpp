@@ -46,7 +46,7 @@ void Scene::onUpdate(Timestep iTimestep) {
     }
 
     if (mainCamera) {
-        Renderer2D::BeginScene(mainCamera->projection(), *cameraTransform);
+        Renderer2D::BeginScene(*mainCamera, *cameraTransform);
         {
             auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
             for (auto&& entity : group) {

@@ -10,6 +10,7 @@ class SceneCamera : public Camera {
 
   public:
     SceneCamera();
+    ~SceneCamera() override = default;
 
     void setPerspective(float iVerticalFOV, float iNearClip, float iFarClip);
     void setOrthographic(float iSize, float iNearClip, float iFarClip);

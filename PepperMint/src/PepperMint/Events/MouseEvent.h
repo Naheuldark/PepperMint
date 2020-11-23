@@ -53,7 +53,7 @@ class MouseButtonEvent : public Event {
 
     inline MouseCode mouseButton() const { return _button; }
 
-    EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
+    EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT | EVENT_CATEGORY_MOUSE_BUTTON)
 
   protected:
     MouseButtonEvent(const MouseCode iButton) : _button(iButton) {}

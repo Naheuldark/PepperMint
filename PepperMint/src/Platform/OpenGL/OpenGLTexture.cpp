@@ -32,7 +32,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& iPath) : _path(iPath) {
 
     stbi_uc* data = nullptr;
     {
-        PM_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std:string&)");
+        PM_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
         data = stbi_load(iPath.c_str(), &width, &height, &channels, 0);
     }
     PM_CORE_ASSERT(data, "Failed to load the image");
