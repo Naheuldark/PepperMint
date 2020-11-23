@@ -1,13 +1,16 @@
-# PepperMint
+# PepperMint [![License](https://img.shields.io/github/license/Naheuldark/PepperMint.svg)](https://github.com/Naheuldark/PepperMint/blob/master/LICENSE)
 
 ![PepperMint](/Resources/Branding/PepperMintLogo.png?raw=true "PepperMint") ![Menthol](/Resources/Branding/MentholLogo.png?raw=true "Menthol")
 
+## Getting started
 PepperMint is primarily an early-stage interactive application and rendering engine for Windows.<br>
 It is based on the [_TheCherno_](https://www.youtube.com/channel/UCQ-W1KE9EYfdxhL6S4twUNw)'s project called [Hazel](https://github.com/TheCherno/Hazel).
 
+Start by cloning the repository with `git clone --recursive https://github.com/Naheuldark/PepperMint`.
+If the repository was cloned non-recursively previously, use `git submodule update --init` to clone the necessary submodules.
+
 ### Main features to come:
 - Fast 2D rendering (UI, particles, sprites, etc.)
-- High-fidelity Physically-Based 3D rendering (this will be expanded later, 2D to come first)
 - Support for Mac, Linux, Android and iOS
     - Native rendering API support (DirectX, Vulkan, Metal)
 - Fully featured viewer and editor applications
