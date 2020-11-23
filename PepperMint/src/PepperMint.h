@@ -5,6 +5,7 @@
 #include "PepperMint/Core/Base.h"
 
 #include "PepperMint/Core/Application.h"
+#include "PepperMint/Core/Assert.h"
 #include "PepperMint/Core/Layer.h"
 #include "PepperMint/Core/Log.h"
 
