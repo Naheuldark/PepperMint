@@ -30,17 +30,16 @@ void SceneHierarchyPanel::onImGuiRender() {
 void SceneHierarchyPanel::drawEntityNode(Entity iEntity) {
     auto&& tag = iEntity.get<TagComponent>().tag;
 
-    ImGuiTreeNodeFlags flags  = ((_selectionContext == iEntity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-    bool               opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)iEntity, flags, tag.c_str());
+    bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)iEntity,
+                                    ((_selectionContext == iEntity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow,
+                                    tag.c_str());
 
     if (ImGui::IsItemClicked()) {
         _selectionContext = iEntity;
     }
 
     if (opened) {
-        ImGuiTreeNodeFlags flags  = ImGuiTreeNodeFlags_OpenOnArrow;
-        bool               opened = ImGui::TreeNodeEx((void*)9817239, flags, tag.c_str());
-        if (opened) {
+        if (ImGui::TreeNodeEx((void*)9817239, ImGuiTreeNodeFlags_OpenOnArrow, tag.c_str())) {
             ImGui::TreePop();
         }
         ImGui::TreePop();
@@ -131,6 +130,14 @@ void SceneHierarchyPanel::drawComponents(Entity iEntity) {
                 PM_CORE_ERROR("Unknown Camera ProjectionType!")
             }
 
+            ImGui::TreePop();
+        }
+    }
+
+    if (iEntity.has<SpriteRendererComponent>()) {
+        if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer")) {
+            auto&& color = iEntity.get<SpriteRendererComponent>().color;
+            ImGui::ColorEdit4("Color", glm::value_ptr(color));
             ImGui::TreePop();
         }
     }

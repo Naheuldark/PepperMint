@@ -25,10 +25,10 @@ void EditorLayer::onAttach() {
     auto&& redSquare = _activeScene->createEntity("Red Square");
     redSquare.add<SpriteRendererComponent>(glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
 
-    _mainCamera = _activeScene->createEntity("Camera");
+    _mainCamera = _activeScene->createEntity("Camera A");
     _mainCamera.add<CameraComponent>();
 
-    _secondCamera                 = _activeScene->createEntity("Clip-Space");
+    _secondCamera                 = _activeScene->createEntity("Camera B");
     auto&& secondCameraComponent  = _secondCamera.add<CameraComponent>();
     secondCameraComponent.primary = false;
 
@@ -166,7 +166,7 @@ void EditorLayer::onImGuiRender() {
 
     _sceneHierarchyPanel.onImGuiRender();
 
-    ImGui::Begin("Settings");
+    ImGui::Begin("Statistics");
     {
         auto&& stats = Renderer2D::Stats();
         ImGui::Text("Renderer2D Stats:");
@@ -174,33 +174,6 @@ void EditorLayer::onImGuiRender() {
         ImGui::Text("Quads: %d", stats.quadCount);
         ImGui::Text("Vertices: %d", stats.totalVertexCount());
         ImGui::Text("Indices: %d", stats.totalIndexCount());
-
-        if (_squareEntity) {
-            ImGui::Separator();
-
-            auto&& tag = _squareEntity.get<TagComponent>().tag;
-            ImGui::Text("%s", tag.c_str());
-
-            auto&& squareColor = _squareEntity.get<SpriteRendererComponent>().color;
-            ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
-
-            ImGui::Separator();
-        }
-
-        ImGui::DragFloat3("Camera Transform", glm::value_ptr(_mainCamera.get<TransformComponent>().transform[3]));
-
-        if (ImGui::Checkbox("Camera A", &_primaryCamera)) {
-            _mainCamera.get<CameraComponent>().primary   = _primaryCamera;
-            _secondCamera.get<CameraComponent>().primary = !_primaryCamera;
-        }
-
-        ImGui::Separator();
-
-        auto&& secondCamera = _secondCamera.get<CameraComponent>().camera;
-        float  orthoSize    = secondCamera.orthographicSize();
-        if (ImGui::DragFloat("Second Camera Orthographic Size", &orthoSize)) {
-            secondCamera.setOrthographicSize(orthoSize);
-        }
     }
     ImGui::End();
 
