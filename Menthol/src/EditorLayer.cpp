@@ -22,6 +22,9 @@ void EditorLayer::onAttach() {
     _squareEntity = _activeScene->createEntity("Green Square");
     _squareEntity.add<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 
+    auto&& redSquare = _activeScene->createEntity("Red Square");
+    redSquare.add<SpriteRendererComponent>(glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
+
     _mainCamera = _activeScene->createEntity("Camera");
     _mainCamera.add<CameraComponent>();
 
