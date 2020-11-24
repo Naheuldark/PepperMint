@@ -14,6 +14,8 @@ Entity Scene::createEntity(const std::string& iName) {
     return entity;
 }
 
+void Scene::destroyEntity(Entity iEntity) { _registry.destroy(iEntity); }
+
 void Scene::onUpdate(Timestep iTimestep) {
     // Update scripts
     auto&& scriptView = _registry.view<NativeScriptComponent>();
@@ -71,4 +73,30 @@ void Scene::onViewportResize(uint32_t iWidth, uint32_t iHeight) {
         }
     }
 }
+
+///////////////////////////////////////
+// Behavior for each added component //
+///////////////////////////////////////
+template <typename Component>
+void Scene::onAddComponent(Entity iEntity, Component& ioComponent) {
+    static_assert(false);
+}
+
+template <>
+void Scene::onAddComponent<TagComponent>(Entity iEntity, TagComponent& ioComponent) {}
+
+template <>
+void Scene::onAddComponent<TransformComponent>(Entity iEntity, TransformComponent& ioComponent) {}
+
+template <>
+void Scene::onAddComponent<SpriteRendererComponent>(Entity iEntity, SpriteRendererComponent& ioComponent) {}
+
+template <>
+void Scene::onAddComponent<CameraComponent>(Entity iEntity, CameraComponent& ioComponent) {
+    ioComponent.camera.setViewportSize(_viewportWidth, _viewportHeight);
+}
+
+template <>
+void Scene::onAddComponent<NativeScriptComponent>(Entity iEntity, NativeScriptComponent& ioComponent) {}
+
 }

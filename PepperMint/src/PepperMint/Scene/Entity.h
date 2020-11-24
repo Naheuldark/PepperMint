@@ -21,7 +21,9 @@ class Entity {
     template <typename Component, typename... Args>
     Component& add(Args&&... args) {
         PM_CORE_ASSERT(!has<Component>(), "Entity already has component!");
-        return _scene->_registry.emplace<Component>(_entityHandle, std::forward<Args>(args)...);
+        auto&& component = _scene->_registry.emplace<Component>(_entityHandle, std::forward<Args>(args)...);
+        _scene->onAddComponent(*this, component);
+        return component;
     }
 
     template <typename Component>
@@ -43,6 +45,7 @@ class Entity {
 
     // Other functions
     operator bool() const { return _entityHandle != entt::null; }
+    operator entt::entity() const { return _entityHandle; }
     operator uint32_t() const { return (uint32_t)_entityHandle; }
 
     bool operator==(const Entity& iOther) const { return (_entityHandle == iOther._entityHandle) && (_scene == iOther._scene); }

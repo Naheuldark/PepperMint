@@ -17,9 +17,14 @@ class Scene {
     ~Scene() = default;
 
     Entity createEntity(const std::string& iName = "Entity");
+    void   destroyEntity(Entity iEntity);
 
     void onUpdate(Timestep iTimestep);
     void onViewportResize(uint32_t iWidth, uint32_t iHeight);
+
+  private:
+    template <typename Component>
+    void onAddComponent(Entity iEntity, Component& ioComponent);
 
   private:
     entt::registry _registry;
