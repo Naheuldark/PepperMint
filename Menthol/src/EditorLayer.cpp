@@ -35,24 +35,24 @@ void EditorLayer::onAttach() {
     class CameraController : public ScriptableEntity {
       public:
         void onCreate() override {
-            auto&& transform = get<TransformComponent>().transform;
-            transform[3][0]  = rand() % 10 - 5.0f;
+            auto&& translation = get<TransformComponent>().translation;
+            translation.x      = rand() % 10 - 5.0f;
         }
 
         void onUpdate(Timestep iTimestep) override {
-            auto&& transform = get<TransformComponent>().transform;
-            float  speed     = 5.0f;
+            auto&& translation = get<TransformComponent>().translation;
+            float  speed       = 5.0f;
 
             if (Input::IsKeyPressed(Key::A)) {
-                transform[3][0] += speed * iTimestep;
+                translation.x -= speed * iTimestep;
             } else if (Input::IsKeyPressed(Key::D)) {
-                transform[3][0] -= speed * iTimestep;
+                translation.x += speed * iTimestep;
             }
 
             if (Input::IsKeyPressed(Key::S)) {
-                transform[3][1] += speed * iTimestep;
+                translation.y -= speed * iTimestep;
             } else if (Input::IsKeyPressed(Key::W)) {
-                transform[3][1] -= speed * iTimestep;
+                translation.y += speed * iTimestep;
             }
         }
     };

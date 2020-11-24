@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "PepperMint/Scene/SceneCamera.h"
 #include "PepperMint/Scene/ScriptableEntity.h"
@@ -16,14 +17,23 @@ struct TagComponent {
 };
 
 struct TransformComponent {
-    glm::mat4 transform{1.0f};
+    glm::vec3 translation = {0.0f, 0.0f, 0.0f};
+    glm::vec3 rotation    = {0.0f, 0.0f, 0.0f};
+    glm::vec3 scale       = {1.0f, 1.0f, 1.0f};
 
     TransformComponent()                          = default;
     TransformComponent(const TransformComponent&) = default;
-    TransformComponent(const glm::mat4& iTransform) : transform(iTransform) {}
+    TransformComponent(const glm::vec3& iTranslation, const glm::vec3& iRotation = {0.0f, 0.0f, 0.0f}, const glm::vec3& iScale = {1.0f, 1.0f, 1.0f})
+        : translation(iTranslation), rotation(iRotation), scale(iScale) {}
 
-    operator glm::mat4&() { return transform; }
-    operator const glm::mat4&() const { return transform; }
+    glm::mat4 transform() const {
+        auto&& translate = glm::translate(glm::mat4(1.0f), translation);
+        auto&& rotate    = glm::rotate(glm::mat4(1.0f), rotation.x, {1, 0, 0}) * glm::rotate(glm::mat4(1.0f), rotation.y, {0, 1, 0}) *
+                        glm::rotate(glm::mat4(1.0f), rotation.z, {0, 0, 1});
+        auto&& rescale = glm::scale(glm::mat4(1.0f), scale);
+
+        return translate * rotate * rescale;
+    }
 };
 
 struct SpriteRendererComponent {

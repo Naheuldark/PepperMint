@@ -31,8 +31,8 @@ void Scene::onUpdate(Timestep iTimestep) {
     }
 
     // Render 2D
-    Camera*    mainCamera      = nullptr;
-    glm::mat4* cameraTransform = nullptr;
+    Camera*   mainCamera = nullptr;
+    glm::mat4 cameraTransform;
 
     auto&& renderView = _registry.view<TransformComponent, CameraComponent>();
     for (auto&& entity : renderView) {
@@ -40,18 +40,18 @@ void Scene::onUpdate(Timestep iTimestep) {
 
         if (cameraComponent.primary) {
             mainCamera      = &cameraComponent.camera;
-            cameraTransform = &transformComponent.transform;
+            cameraTransform = transformComponent.transform();
             break;
         }
     }
 
     if (mainCamera) {
-        Renderer2D::BeginScene(*mainCamera, *cameraTransform);
+        Renderer2D::BeginScene(*mainCamera, cameraTransform);
         {
             auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
             for (auto&& entity : group) {
                 auto&& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-                Renderer2D::DrawQuad(transformComponent, 1.0f, nullptr, spriteComponent.color);
+                Renderer2D::DrawQuad(transformComponent.transform(), 1.0f, nullptr, spriteComponent.color);
             }
         }
         Renderer2D::EndScene();
