@@ -7,6 +7,9 @@
 
 namespace PepperMint {
 
+// Enum used to get specific font style in the ImGui::Font array
+enum class FontStyle : int { BOLD = 0, REGULAR = 1 };
+
 class ImGuiLayer : public Layer {
   public:
     ImGuiLayer() : Layer("ImGuiLayer") {}

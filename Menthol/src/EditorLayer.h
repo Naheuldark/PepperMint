@@ -3,6 +3,7 @@
 #include <PepperMint.h>
 
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/StatisticsPanel.h"
 
 namespace PepperMint {
 
@@ -41,5 +42,6 @@ class EditorLayer : public Layer {
 
     // Panels
     SceneHierarchyPanel _sceneHierarchyPanel;
+    StatisticsPanel     _statisticsPanel;
 };
 }

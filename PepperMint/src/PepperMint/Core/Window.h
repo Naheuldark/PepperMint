@@ -9,9 +9,7 @@ struct WindowProperties {
     std::string title;
     uint32_t    width, height;
 
-    WindowProperties(const std::string& iTitle  = "PepperMint Engine",
-                     uint32_t           iWidth  = 1280,
-                     uint32_t           iHeight = 720)
+    WindowProperties(const std::string& iTitle = "PepperMint Engine", uint32_t iWidth = 1600, uint32_t iHeight = 900)
         : title(iTitle), width(iWidth), height(iHeight) {}
 };
 

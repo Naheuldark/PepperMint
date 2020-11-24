@@ -1,6 +1,7 @@
 #pragma once
 
 #include <PepperMint/Core/Base.h>
+#include <PepperMint/ImGui/ImGuiLayer.h>
 #include <PepperMint/Scene/Entity.h>
 #include <PepperMint/Scene/Scene.h>
 
