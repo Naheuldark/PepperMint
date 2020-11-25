@@ -5,6 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <PepperMint/Scene/SceneSerializer.h>
+
 namespace PepperMint {
 
 // Constants
@@ -22,6 +24,7 @@ void EditorLayer::onAttach() {
 
     _activeScene = CreateRef<Scene>();
 
+#if 0
     _squareEntity = _activeScene->createEntity("Green Square");
     _squareEntity.add<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 
@@ -56,6 +59,7 @@ void EditorLayer::onAttach() {
     };
     _mainCamera.add<NativeScriptComponent>().bind<CameraController>();
     _secondCamera.add<NativeScriptComponent>().bind<CameraController>();
+#endif
 
     _sceneHierarchyPanel.setContext(_activeScene);
 }
@@ -151,6 +155,16 @@ void EditorLayer::onImGuiRender() {
     // Menu Bar
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Serialize")) {
+                SceneSerializer serializer(_activeScene);
+                serializer.serialize("assets/Example.pm");
+            }
+
+            if (ImGui::MenuItem("Deserialize")) {
+                SceneSerializer serializer(_activeScene);
+                serializer.deserialize("assets/Example.pm");
+            }
+
             if (ImGui::MenuItem("Exit")) {
                 Application::Get().close();
             }

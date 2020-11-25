@@ -26,8 +26,8 @@ class SceneCamera : public Camera {
     ///////////////////////////////////
     // Perspective camera properties //
     ///////////////////////////////////
-    float perspectiveVerticalFOC() const { return _perspectiveFOV; }
-    void  setPerspectiveVerticalFOC(float iVerticalFOV) {
+    float perspectiveVerticalFOV() const { return _perspectiveFOV; }
+    void  setPerspectiveVerticalFOV(float iVerticalFOV) {
         _perspectiveFOV = iVerticalFOV;
         computeProjection();
     }

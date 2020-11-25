@@ -246,9 +246,9 @@ void SceneHierarchyPanel::drawComponents(Entity iEntity) {
 
         if (camera.projectionType() == SceneCamera::ProjectionType::PERSPECTIVE) {
             drawTwoColumnsWithLabel("Vertical FOV", columnWidth, [&]() {
-                float verticalFOV = glm::degrees(camera.perspectiveVerticalFOC());
+                float verticalFOV = glm::degrees(camera.perspectiveVerticalFOV());
                 if (ImGui::DragFloat("##VerticalFOV", &verticalFOV)) {
-                    camera.setPerspectiveVerticalFOC(glm::radians(verticalFOV));
+                    camera.setPerspectiveVerticalFOV(glm::radians(verticalFOV));
                 }
             });
 

@@ -17,7 +17,8 @@ project "Menthol"
 		"%{wks.location}/PepperMint/src",
 		"%{wks.location}/PepperMint/vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 
 	links {

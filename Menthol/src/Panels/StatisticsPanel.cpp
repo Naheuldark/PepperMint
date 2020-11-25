@@ -11,10 +11,10 @@ void StatisticsPanel::onImGuiRender() {
     {
         auto&& stats = Renderer2D::Stats();
         ImGui::Text("Renderer2D:");
-        ImGui::Text("\tDraw Calls: %d", stats.drawCalls);
-        ImGui::Text("\tQuads: %d", stats.quadCount);
-        ImGui::Text("\tVertices: %d", stats.totalVertexCount());
-        ImGui::Text("\tIndices: %d", stats.totalIndexCount());
+        ImGui::Text("\t\tDraw Calls: %d", stats.drawCalls);
+        ImGui::Text("\t\tQuads: %d", stats.quadCount);
+        ImGui::Text("\t\tVertices: %d", stats.totalVertexCount());
+        ImGui::Text("\t\tIndices: %d", stats.totalIndexCount());
     }
     ImGui::End();
 }
