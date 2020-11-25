@@ -3,8 +3,8 @@
 !vendor/premake/bin/
 bin-int/
 
-# Hazel files
-*.log
+# PepperMint files
+**.log
 
 # Visual Studio files and folder
 .vs/
