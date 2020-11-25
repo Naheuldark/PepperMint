@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace PepperMint {
 
 class StatisticsPanel {
@@ -7,6 +9,6 @@ class StatisticsPanel {
     StatisticsPanel() = default;
     ~StatisticsPanel() = default;
 
-    void onImGuiRender();
+    void onImGuiRender(const std::string& iCurrentFile);
 };
 }

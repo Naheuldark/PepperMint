@@ -19,6 +19,14 @@ class EditorLayer : public Layer {
     void onEvent(Event& iEvent) override;
 
   private:
+    bool onKeyPressed(KeyPressedEvent& iEvent);
+
+    void newScene();
+    void openScene();
+    void saveScene();
+    void saveSceneAs();
+
+  private:
     OrthographicCameraController _cameraController;
 
     Ref<VertexArray> _squareVA;
@@ -43,5 +51,8 @@ class EditorLayer : public Layer {
     // Panels
     SceneHierarchyPanel _sceneHierarchyPanel;
     StatisticsPanel     _statisticsPanel;
+
+    // File
+    std::string _currentFile;
 };
 }

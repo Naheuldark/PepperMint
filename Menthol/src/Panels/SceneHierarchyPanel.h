@@ -14,7 +14,10 @@ class SceneHierarchyPanel {
 
     ~SceneHierarchyPanel() = default;
 
-    void setContext(const Ref<Scene>& iScene) { _context = iScene; }
+    void setContext(const Ref<Scene>& iScene) {
+        _context          = iScene;
+        _selectionContext = {};
+    }
 
     void onImGuiRender();
 

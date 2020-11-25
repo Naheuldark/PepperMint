@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <PepperMint/Scene/SceneSerializer.h>
+#include <PepperMint/Utils/PlatformUtils.h>
 
 namespace PepperMint {
 
@@ -155,14 +156,20 @@ void EditorLayer::onImGuiRender() {
     // Menu Bar
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Serialize")) {
-                SceneSerializer serializer(_activeScene);
-                serializer.serialize("assets/Example.pm");
+            if (ImGui::MenuItem("New", "Ctrl+N")) {
+                newScene();
             }
 
-            if (ImGui::MenuItem("Deserialize")) {
-                SceneSerializer serializer(_activeScene);
-                serializer.deserialize("assets/Example.pm");
+            if (ImGui::MenuItem("Open...", "Ctrl+O")) {
+                openScene();
+            }
+
+            if (ImGui::MenuItem("Save", "Ctrl+S")) {
+                saveScene();
+            }
+
+            if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) {
+                saveSceneAs();
             }
 
             if (ImGui::MenuItem("Exit")) {
@@ -177,7 +184,7 @@ void EditorLayer::onImGuiRender() {
     _sceneHierarchyPanel.onImGuiRender();
 
     // Statistics Panel
-    _statisticsPanel.onImGuiRender();
+    _statisticsPanel.onImGuiRender(_currentFile);
 
     // Viewport
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
@@ -199,5 +206,79 @@ void EditorLayer::onImGuiRender() {
     ImGui::End();
 }
 
-void EditorLayer::onEvent(Event& iEvent) { _cameraController.onEvent(iEvent); }
+void EditorLayer::onEvent(Event& iEvent) {
+    _cameraController.onEvent(iEvent);
+
+    EventDispatcher dispatcher(iEvent);
+    dispatcher.dispatch<KeyPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onKeyPressed));
+}
+
+bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
+    // Shorcuts
+    if (iEvent.repeatCount() > 0) {
+        return false;
+    }
+
+    bool control = Input::IsKeyPressed(Key::LEFT_CONTROL) || Input::IsKeyPressed(Key::RIGHT_CONTROL);
+    bool shift   = Input::IsKeyPressed(Key::LEFT_SHIFT) || Input::IsKeyPressed(Key::RIGHT_SHIFT);
+
+    switch (iEvent.keyCode()) {
+    case Key::N: {
+        if (control) {
+            newScene();
+        }
+        break;
+    }
+    case Key::O: {
+        if (control) {
+            openScene();
+        }
+        break;
+    }
+    case Key::S: {
+        if (control) {
+            if (shift) {
+                saveSceneAs();
+            } else {
+                saveScene();
+            }
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void EditorLayer::newScene() {
+    _activeScene = CreateRef<Scene>();
+    _activeScene->onViewportResize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
+    _sceneHierarchyPanel.setContext(_activeScene);
+    _currentFile = "";
+}
+
+void EditorLayer::openScene() {
+    auto&& filepath = FileDialogs::OpenFile("PepperMint Scene (*.pm)\0*.pm\0");
+    if (!filepath.empty()) {
+        newScene();
+        SceneSerializer(_activeScene).deserialize(filepath);
+        _currentFile = filepath;
+    }
+}
+
+void EditorLayer::saveScene() {
+    if (_currentFile.empty()) {
+        saveSceneAs();
+    } else {
+        SceneSerializer(_activeScene).serialize(_currentFile);
+    }
+}
+
+void EditorLayer::saveSceneAs() {
+    auto&& filepath = FileDialogs::SaveFile("PepperMint Scene (*.pm)\0*.pm\0");
+    if (!filepath.empty()) {
+        SceneSerializer(_activeScene).serialize(filepath);
+        _currentFile = filepath;
+    }
+}
 }
