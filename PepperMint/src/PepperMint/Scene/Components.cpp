@@ -11,6 +11,7 @@ struct convert<glm::vec3> {
         node.push_back(rhs.x);
         node.push_back(rhs.y);
         node.push_back(rhs.z);
+        node.SetStyle(EmitterStyle::Flow);
         return node;
     }
 
@@ -33,6 +34,7 @@ struct convert<glm::vec4> {
         node.push_back(rhs.y);
         node.push_back(rhs.z);
         node.push_back(rhs.w);
+        node.SetStyle(EmitterStyle::Flow);
         return node;
     }
 

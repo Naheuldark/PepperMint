@@ -53,11 +53,7 @@ void SceneSerializer::serialize(const std::string& iFilepath) {
 }
 
 bool SceneSerializer::deserialize(const std::string& iFilepath) {
-    std::ifstream     file(iFilepath);
-    std::stringstream ss;
-    ss << file.rdbuf();
-
-    YAML::Node data = YAML::Load(ss.str());
+    YAML::Node data = YAML::LoadFile(iFilepath);
     if (!data["Scene"]) {
         return false;
     }
