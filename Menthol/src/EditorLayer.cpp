@@ -37,11 +37,6 @@ void EditorLayer::onAttach() {
 
     class CameraController : public ScriptableEntity {
       public:
-        void onCreate() override {
-            auto&& translation = get<TransformComponent>().translation;
-            translation.x      = rand() % 10 - 5.0f;
-        }
-
         void onUpdate(Timestep iTimestep) override {
             auto&& translation = get<TransformComponent>().translation;
             float  speed       = 5.0f;

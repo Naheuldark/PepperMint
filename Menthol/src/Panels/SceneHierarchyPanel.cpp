@@ -138,18 +138,16 @@ void drawComponent(const std::string& iName, Entity iEntity, const ImGuiTreeNode
 
         ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
 
-        if (ImGui::Button("+", ImVec2{lineHeight, lineHeight})) {
+        if (ImGui::Button("...", ImVec2{lineHeight, lineHeight})) {
             ImGui::OpenPopup("##ComponentSettings");
         }
 
         bool removeComponent = false;
-        if (iRemovable) {
-            if (ImGui::BeginPopup("##ComponentSettings")) {
-                if (ImGui::MenuItem("Remove Component")) {
-                    removeComponent = true;
-                }
-                ImGui::EndPopup();
+        if (ImGui::BeginPopup("##ComponentSettings")) {
+            if (iRemovable && ImGui::MenuItem("Remove Component")) {
+                removeComponent = true;
             }
+            ImGui::EndPopup();
         }
 
         if (isOpened) {
@@ -187,12 +185,12 @@ void SceneHierarchyPanel::drawComponents(Entity iEntity) {
     }
 
     if (ImGui::BeginPopup("##AddComponent")) {
-        if (ImGui::MenuItem("Camera")) {
+        if (!iEntity.has<CameraComponent>() && ImGui::MenuItem("Camera")) {
             _selectionContext.add<CameraComponent>();
             ImGui::CloseCurrentPopup();
         }
 
-        if (ImGui::MenuItem("Sprite Renderer")) {
+        if (!iEntity.has<SpriteRendererComponent>() && ImGui::MenuItem("Sprite Renderer")) {
             _selectionContext.add<SpriteRendererComponent>();
             ImGui::CloseCurrentPopup();
         }
