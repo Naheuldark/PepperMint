@@ -29,6 +29,7 @@ IncludeDir["ImGui"] = "%{wks.location}/PepperMint/vendor/imgui"
 IncludeDir["glm"] = "%{wks.location}/PepperMint/vendor/glm"
 IncludeDir["stb_image"] = "%{wks.location}/PepperMint/vendor/stb_image"
 IncludeDir["entt"] = "%{wks.location}/PepperMint/vendor/entt/include"
+IncludeDir["yaml_cpp"] = "%{wks.location}/PepperMint/vendor/yaml-cpp/include"
 
 -- Include external premake files
 group "Dependencies"
@@ -36,6 +37,7 @@ group "Dependencies"
 	include "PepperMint/vendor/GLFW"
 	include "PepperMint/vendor/Glad"
 	include "PepperMint/vendor/imgui"
+	include "PepperMint/vendor/yaml-cpp"
 group ""
 
 include "PepperMint"
