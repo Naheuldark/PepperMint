@@ -17,3 +17,6 @@
 [submodule "PepperMint/vendor/yaml-cpp"]
 	path = PepperMint/vendor/yaml-cpp
 	url = ../../Naheuldark/yaml-cpp.git
+[submodule "PepperMint/vendor/ImGuizmo"]
+	path = PepperMint/vendor/ImGuizmo
+	url = https://github.com/Naheuldark/ImGuizmo
