@@ -25,6 +25,7 @@ void Scene::onUpdate(Timestep iTimestep) {
         // TODO: Move to Scene onScenePlay
         if (!scriptComponent.script) {
             scriptComponent.script          = scriptComponent.instantiateScript();
+            PM_CORE_ASSERT(scriptComponent.script, "Error while instantiating script!");
             scriptComponent.script->_entity = Entity(entity, this);
             scriptComponent.script->onCreate();
         }

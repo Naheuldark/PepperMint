@@ -4,13 +4,6 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
-// The Microsoft C++ compiler is non-compliant with the C++ standard and needs the following definition to disable a security warning on
-// std::strncpy().
-#include <cstring>
-#ifdef _MSVC_LANG
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 #include <PepperMint/Scene/Components.h>
 
 namespace PepperMint {
@@ -176,7 +169,7 @@ void SceneHierarchyPanel::drawComponents(Entity iEntity) {
 
         char buffer[256];
         memset(buffer, 0, sizeof(buffer));
-        std::strncpy(buffer, tag.c_str(), sizeof(buffer));
+        strncpy_s(buffer, sizeof(buffer), tag.c_str(), sizeof(tag.c_str()));
         if (ImGui::InputText("##Tag", buffer, sizeof(buffer))) {
             tag = std::string(buffer);
         }

@@ -248,6 +248,8 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
     default:
         break;
     }
+
+	return true;
 }
 
 void EditorLayer::newScene() {

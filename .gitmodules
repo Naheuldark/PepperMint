@@ -19,4 +19,4 @@
 	url = ../../Naheuldark/yaml-cpp.git
 [submodule "PepperMint/vendor/ImGuizmo"]
 	path = PepperMint/vendor/ImGuizmo
-	url = https://github.com/Naheuldark/ImGuizmo
+	url = ../../Naheuldark/ImGuizmo.git
