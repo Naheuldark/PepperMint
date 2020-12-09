@@ -1,5 +1,8 @@
 #include "pmpch.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+
 #include "PepperMint/Scene/Components.h"
 
 namespace YAML {
@@ -92,9 +95,8 @@ void TagComponent::Deserialize(const YAML::Node& iSerializedEntity, Entity ioDes
 // Transform Component
 glm::mat4 TransformComponent::transform() const {
     auto&& translate = glm::translate(glm::mat4(1.0f), translation);
-    auto&& rotate    = glm::rotate(glm::mat4(1.0f), rotation.x, {1, 0, 0}) * glm::rotate(glm::mat4(1.0f), rotation.y, {0, 1, 0}) *
-                    glm::rotate(glm::mat4(1.0f), rotation.z, {0, 0, 1});
-    auto&& rescale = glm::scale(glm::mat4(1.0f), scale);
+    auto&& rotate    = glm::toMat4(glm::quat(rotation));
+    auto&& rescale   = glm::scale(glm::mat4(1.0f), scale);
 
     return translate * rotate * rescale;
 }

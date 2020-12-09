@@ -23,6 +23,8 @@ class Scene {
     void onUpdate(Timestep iTimestep);
     void onViewportResize(uint32_t iWidth, uint32_t iHeight);
 
+	Entity primaryCameraEntity();
+
   private:
     template <typename Component>
     void onAddComponent(Entity iEntity, Component& ioComponent);

@@ -24,7 +24,7 @@ void Scene::onUpdate(Timestep iTimestep) {
 
         // TODO: Move to Scene onScenePlay
         if (!scriptComponent.script) {
-            scriptComponent.script          = scriptComponent.instantiateScript();
+            scriptComponent.script = scriptComponent.instantiateScript();
             PM_CORE_ASSERT(scriptComponent.script, "Error while instantiating script!");
             scriptComponent.script->_entity = Entity(entity, this);
             scriptComponent.script->onCreate();
@@ -73,6 +73,17 @@ void Scene::onViewportResize(uint32_t iWidth, uint32_t iHeight) {
             cameraComponent.camera.setViewportSize(iWidth, iHeight);
         }
     }
+}
+
+Entity Scene::primaryCameraEntity() {
+    auto&& view = _registry.view<CameraComponent>();
+    for (auto&& entity : view) {
+        auto&& cameraComponent = view.get<CameraComponent>(entity);
+        if (cameraComponent.primary) {
+            return Entity(entity, this);
+        }
+    }
+    return {};
 }
 
 ///////////////////////////////////////

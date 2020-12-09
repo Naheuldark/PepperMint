@@ -14,7 +14,8 @@ class SceneHierarchyPanel {
 
     ~SceneHierarchyPanel() = default;
 
-    void setContext(const Ref<Scene>& iScene) {
+    Entity selectionContext() const { return _selectionContext; }
+    void   setContext(const Ref<Scene>& iScene) {
         _context          = iScene;
         _selectionContext = {};
     }

@@ -48,6 +48,9 @@ class EditorLayer : public Layer {
 
     glm::vec4 _squareColor = {0.2f, 0.3f, 0.8f, 1.0};
 
+    // Gizmos
+    int _gizmoType = -1;
+
     // Panels
     SceneHierarchyPanel _sceneHierarchyPanel;
     StatisticsPanel     _statisticsPanel;
