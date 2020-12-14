@@ -3,6 +3,7 @@
 #include <entt.hpp>
 
 #include "PepperMint/Core/Timestep.h"
+#include "PepperMint/Renderer/EditorCamera.h"
 
 namespace PepperMint {
 
@@ -20,10 +21,12 @@ class Scene {
     Entity createEntity(const std::string& iName = "Entity");
     void   destroyEntity(Entity iEntity);
 
-    void onUpdate(Timestep iTimestep);
+    void onUpdateRuntime(Timestep iTimestep);
+    void onUpdateEditor(Timestep iTimestep, EditorCamera& iCamera);
+
     void onViewportResize(uint32_t iWidth, uint32_t iHeight);
 
-	Entity primaryCameraEntity();
+    Entity primaryCameraEntity();
 
   private:
     template <typename Component>

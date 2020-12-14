@@ -15,12 +15,15 @@ class SceneCamera : public Camera {
     void setPerspective(float iVerticalFOV, float iNearClip, float iFarClip);
     void setOrthographic(float iSize, float iNearClip, float iFarClip);
 
-    void setViewportSize(uint32_t iWidth, uint32_t iHeight);
+    void setViewportSize(uint32_t iWidth, uint32_t iHeight) {
+        _aspectRatio = (float)iWidth / (float)iHeight;
+        updateProjection();
+    }
 
     ProjectionType projectionType() const { return _projectionType; }
     void           setProjectionType(ProjectionType iType) {
         _projectionType = iType;
-        computeProjection();
+        updateProjection();
     }
 
     ///////////////////////////////////
@@ -29,19 +32,19 @@ class SceneCamera : public Camera {
     float perspectiveVerticalFOV() const { return _perspectiveFOV; }
     void  setPerspectiveVerticalFOV(float iVerticalFOV) {
         _perspectiveFOV = iVerticalFOV;
-        computeProjection();
+        updateProjection();
     }
 
     float perspectiveNearClip() const { return _perspectiveNear; }
     void  setPerspectiveNearClip(float iNearClip) {
         _perspectiveNear = iNearClip;
-        computeProjection();
+        updateProjection();
     }
 
     float perspectiveFarClip() const { return _perspectiveFar; }
     void  setPerspectiveFarClip(float iFarClip) {
         _perspectiveFar = iFarClip;
-        computeProjection();
+        updateProjection();
     }
 
     ////////////////////////////////////
@@ -50,23 +53,23 @@ class SceneCamera : public Camera {
     float orthographicSize() const { return _orthographicSize; }
     void  setOrthographicSize(float iSize) {
         _orthographicSize = iSize;
-        computeProjection();
+        updateProjection();
     }
 
     float orthographicNearClip() const { return _orthographicNear; }
     void  setOrthographicNearClip(float iNearClip) {
         _orthographicNear = iNearClip;
-        computeProjection();
+        updateProjection();
     }
 
     float orthographicFarClip() const { return _orthographicFar; }
     void  setOrthographicFarClip(float iFarClip) {
         _orthographicFar = iFarClip;
-        computeProjection();
+        updateProjection();
     }
 
   private:
-    void computeProjection();
+    void updateProjection();
 
   private:
     ProjectionType _projectionType = ProjectionType::ORTHOGRAPHIC;

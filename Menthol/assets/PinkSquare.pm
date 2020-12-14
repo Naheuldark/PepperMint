@@ -44,7 +44,7 @@ Entities:
       Rotation: [1.57079613, 0.785398245, -4.21468478e-08]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [0.876447856, 0, 0.834712803, 1]
+      Color: [0.874509811, 0, 0.835294127, 0.490196079]
   - Entity: 12837192831273
     TagComponent:
       Tag: Blob
@@ -53,4 +53,4 @@ Entities:
       Rotation: [0, -0.438734114, 0]
       Scale: [1.52949655, 0.25, 0.999999523]
     SpriteRendererComponent:
-      Color: [0.298039228, 0.411764711, 0.498039216, 1]
+      Color: [0.298039228, 0.411764711, 0.498039216, 0.490196079]

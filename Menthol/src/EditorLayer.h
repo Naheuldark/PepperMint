@@ -4,6 +4,7 @@
 
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/StatisticsPanel.h"
+#include "PepperMint/Renderer/EditorCamera.h"
 
 namespace PepperMint {
 
@@ -39,6 +40,8 @@ class EditorLayer : public Layer {
     Entity _mainCamera;
     Entity _secondCamera;
     bool   _primaryCamera = true;
+
+	EditorCamera _editorCamera;
 
     Ref<Texture2D> _checkerboardTexture;
 

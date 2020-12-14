@@ -6,14 +6,14 @@
 
 namespace PepperMint {
 
-SceneCamera::SceneCamera() { computeProjection(); }
+SceneCamera::SceneCamera() { updateProjection(); }
 
 void SceneCamera::setPerspective(float iVerticalFOV, float iNearClip, float iFarClip) {
     _projectionType  = ProjectionType::PERSPECTIVE;
     _perspectiveFOV  = iVerticalFOV;
     _perspectiveNear = iNearClip;
     _perspectiveFar  = iFarClip;
-    computeProjection();
+    updateProjection();
 }
 
 void SceneCamera::setOrthographic(float iSize, float iNearClip, float iFarClip) {
@@ -21,15 +21,10 @@ void SceneCamera::setOrthographic(float iSize, float iNearClip, float iFarClip) 
     _orthographicSize = iSize;
     _orthographicNear = iNearClip;
     _orthographicFar  = iFarClip;
-    computeProjection();
+    updateProjection();
 }
 
-void SceneCamera::setViewportSize(uint32_t iWidth, uint32_t iHeight) {
-    _aspectRatio = (float)iWidth / (float)iHeight;
-    computeProjection();
-}
-
-void SceneCamera::computeProjection() {
+void SceneCamera::updateProjection() {
     if (_projectionType == ProjectionType::PERSPECTIVE) {
         _projection = glm::perspective(_perspectiveFOV, _aspectRatio, _perspectiveNear, _perspectiveFar);
     } else {

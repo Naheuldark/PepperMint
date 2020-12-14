@@ -26,7 +26,8 @@ void EditorLayer::onAttach() {
     frameBufferProperties.height = 720;
     _frameBuffer                 = FrameBuffer::Create(frameBufferProperties);
 
-    _activeScene = CreateRef<Scene>();
+    _activeScene  = CreateRef<Scene>();
+    _editorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 #if 0
     _squareEntity = _activeScene->createEntity("Green Square");
@@ -79,6 +80,7 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
         (spec.width != _viewportSize.x || spec.height != _viewportSize.y)) {
         _frameBuffer->resize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
         _cameraController.onResize(_viewportSize.x, _viewportSize.y);
+        _editorCamera.setViewportSize(_viewportSize.x, -_viewportSize.y);
         _activeScene->onViewportResize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
     }
 
@@ -86,6 +88,7 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
     if (_viewportFocused) {
         _cameraController.onUpdate(iTimestep);
     }
+    _editorCamera.onUpdate(iTimestep);
 
     // Statistics
     Renderer2D::ResetStats();
@@ -102,7 +105,7 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
     {
         PM_PROFILE_SCOPE("Renderer Draw");
 
-        _activeScene->onUpdate(iTimestep);
+        _activeScene->onUpdateEditor(iTimestep, _editorCamera);
 
         _frameBuffer->unbind();
     }
@@ -213,10 +216,14 @@ void EditorLayer::onImGuiRender() {
             float windowHeight = (float)ImGui::GetWindowHeight();
             ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-            // Camera
-            auto&& primaryCamera    = _activeScene->primaryCameraEntity();
-            auto&& cameraProjection = primaryCamera.get<CameraComponent>().camera.projection();
-            auto&& cameraView       = glm::inverse(primaryCamera.get<TransformComponent>().transform());
+            // Runtime Camera
+            // auto&& primaryCamera    = _activeScene->primaryCameraEntity();
+            // auto&& cameraProjection = primaryCamera.get<CameraComponent>().camera.projection();
+            // auto&& cameraView       = glm::inverse(primaryCamera.get<TransformComponent>().transform());
+
+            // Editor Camera
+            auto&& cameraProjection = _editorCamera.projection();
+            auto&& cameraView       = _editorCamera.viewMatrix();
 
             // Entity transform
             auto&&    transformComponent = selectedEntity.get<TransformComponent>();
@@ -258,6 +265,7 @@ void EditorLayer::onImGuiRender() {
 
 void EditorLayer::onEvent(Event& iEvent) {
     _cameraController.onEvent(iEvent);
+    _editorCamera.onEvent(iEvent);
 
     EventDispatcher dispatcher(iEvent);
     dispatcher.dispatch<KeyPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onKeyPressed));

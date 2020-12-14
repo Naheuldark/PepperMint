@@ -16,7 +16,7 @@ Entity Scene::createEntity(const std::string& iName) {
 
 void Scene::destroyEntity(Entity iEntity) { _registry.destroy(iEntity); }
 
-void Scene::onUpdate(Timestep iTimestep) {
+void Scene::onUpdateRuntime(Timestep iTimestep) {
     // Update scripts
     auto&& scriptView = _registry.view<NativeScriptComponent>();
     for (auto&& entity : scriptView) {
@@ -59,6 +59,18 @@ void Scene::onUpdate(Timestep iTimestep) {
         }
         Renderer2D::EndScene();
     }
+}
+
+void Scene::onUpdateEditor(Timestep iTimestep, EditorCamera& iCamera) {
+    Renderer2D::BeginScene(iCamera);
+    {
+        auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+        for (auto&& entity : group) {
+            auto&& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+            Renderer2D::DrawQuad(transformComponent.transform(), 1.0f, nullptr, spriteComponent.color);
+		}
+    }
+    Renderer2D::EndScene();
 }
 
 void Scene::onViewportResize(uint32_t iWidth, uint32_t iHeight) {

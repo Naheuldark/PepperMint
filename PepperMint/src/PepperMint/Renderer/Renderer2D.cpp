@@ -136,6 +136,17 @@ void Renderer2D::BeginScene(const Camera& iCamera, const glm::mat4& iTransform) 
     StartBatch();
 }
 
+void Renderer2D::BeginScene(const EditorCamera& iCamera) {
+    PM_PROFILE_FUNCTION();
+
+    glm::mat4 viewProjectionMatrix = iCamera.viewProjection();
+
+    sData.textureShader->bind();
+    sData.textureShader->setMat4("uViewProjection", viewProjectionMatrix);
+
+    StartBatch();
+}
+
 void Renderer2D::BeginScene(const OrthographicCamera& iCamera) {
     PM_PROFILE_FUNCTION();
 
