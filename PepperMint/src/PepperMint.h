@@ -31,6 +31,3 @@
 #include "PepperMint/Renderer/Shader.h"
 #include "PepperMint/Renderer/Texture.h"
 #include "PepperMint/Renderer/VertexArray.h"
-
-#include "PepperMint/Renderer/OrthographicCamera.h"
-#include "PepperMint/Renderer/OrthographicCameraController.h"

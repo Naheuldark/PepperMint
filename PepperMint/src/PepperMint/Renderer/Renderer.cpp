@@ -16,24 +16,5 @@ void Renderer::Init() {
 
 void Renderer::Shutdown() { Renderer2D::Shutdown(); }
 
-void Renderer::OnWindowResize(uint32_t iWidth, uint32_t iHeight) {
-    RenderCommand::SetViewport(0, 0, iWidth, iHeight);
-}
-
-void Renderer::BeginScene(OrthographicCamera& ioCamera) {
-    sSceneData->viewProjectionMatrix = ioCamera.viewProjectionMatrix();
-}
-
-void Renderer::EndScene() {}
-
-void Renderer::Submit(Ref<Shader>      iShader,
-                      Ref<VertexArray> iVertexArray,
-                      const glm::mat4& iTransform) {
-    iShader->bind();
-    iShader->setMat4("uViewProjection", sSceneData->viewProjectionMatrix);
-    iShader->setMat4("uTransform", iTransform);
-
-    iVertexArray->bind();
-    RenderCommand::DrawIndexed(iVertexArray);
-}
+void Renderer::OnWindowResize(uint32_t iWidth, uint32_t iHeight) { RenderCommand::SetViewport(0, 0, iWidth, iHeight); }
 }

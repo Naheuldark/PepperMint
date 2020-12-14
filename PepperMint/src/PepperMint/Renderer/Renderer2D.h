@@ -2,7 +2,6 @@
 
 #include "PepperMint/Renderer/Camera.h"
 #include "PepperMint/Renderer/EditorCamera.h"
-#include "PepperMint/Renderer/OrthographicCamera.h"
 #include "PepperMint/Renderer/Texture.h"
 
 namespace PepperMint {
@@ -14,7 +13,6 @@ class Renderer2D {
 
     static void BeginScene(const Camera& iCamera, const glm::mat4& iTransform);
     static void BeginScene(const EditorCamera& iCamera);
-    static void BeginScene(const OrthographicCamera& iCamera); // TODO TO REMOVE
     static void EndScene();
     static void Flush();
 
