@@ -13,12 +13,16 @@ namespace PepperMint {
 
 std::string FileDialogs::OpenFile(const char* iFilter) {
     OPENFILENAMEA ofn;
-    CHAR          szFile[260] = {0};
+    CHAR          szFile[260]     = {0};
+    CHAR          currentDir[256] = {0};
     ZeroMemory(&ofn, sizeof(OPENFILENAME));
-    ofn.lStructSize  = sizeof(OPENFILENAME);
-    ofn.hwndOwner    = glfwGetWin32Window((GLFWwindow*)Application::Get().window().nativeWindow());
-    ofn.lpstrFile    = szFile;
-    ofn.nMaxFile     = sizeof(szFile);
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner   = glfwGetWin32Window((GLFWwindow*)Application::Get().window().nativeWindow());
+    ofn.lpstrFile   = szFile;
+    ofn.nMaxFile    = sizeof(szFile);
+    if (GetCurrentDirectoryA(256, currentDir)) {
+        ofn.lpstrInitialDir = currentDir;
+    }
     ofn.lpstrFilter  = iFilter;
     ofn.nFilterIndex = 1;
     ofn.Flags        = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
@@ -30,17 +34,21 @@ std::string FileDialogs::OpenFile(const char* iFilter) {
 
 std::string FileDialogs::SaveFile(const char* iFilter) {
     OPENFILENAMEA ofn;
-    CHAR          szFile[260] = {0};
+    CHAR          szFile[260]     = {0};
+    CHAR          currentDir[256] = {0};
     ZeroMemory(&ofn, sizeof(OPENFILENAME));
-    ofn.lStructSize  = sizeof(OPENFILENAME);
-    ofn.hwndOwner    = glfwGetWin32Window((GLFWwindow*)Application::Get().window().nativeWindow());
-    ofn.lpstrFile    = szFile;
-    ofn.nMaxFile     = sizeof(szFile);
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner   = glfwGetWin32Window((GLFWwindow*)Application::Get().window().nativeWindow());
+    ofn.lpstrFile   = szFile;
+    ofn.nMaxFile    = sizeof(szFile);
+    if (GetCurrentDirectoryA(256, currentDir)) {
+        ofn.lpstrInitialDir = currentDir;
+    }
     ofn.lpstrFilter  = iFilter;
     ofn.nFilterIndex = 1;
-    ofn.Flags        = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+    ofn.Flags        = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
 
-	// Sets the default extension by extracting it from the filter
+    // Sets the default extension by extracting it from the filter
     ofn.lpstrDefExt = std::strchr(iFilter, '\0') + 1;
 
     if (GetSaveFileNameA(&ofn) == TRUE) {

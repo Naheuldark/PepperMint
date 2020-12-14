@@ -1,7 +1,7 @@
 // Basic texture shader
 
 #type vertex
-#version 330 core
+#version 450
 			
 layout(location = 0) in vec3 iPosition;
 layout(location = 1) in vec4 iColor;
@@ -13,7 +13,7 @@ uniform mat4 uViewProjection;
 
 out vec4 vColor;
 out vec2 vTexCoord;
-out float vTexIndex;
+out flat float vTexIndex;
 out float vTilingFactor;
 
 void main() {
@@ -25,13 +25,13 @@ void main() {
 }
 
 #type fragment
-#version 330 core
+#version 450
 			
 layout(location = 0) out vec4 oColor;
 
 in vec4 vColor;
 in vec2 vTexCoord;
-in float vTexIndex;
+in flat float vTexIndex;
 in float vTilingFactor;
 
 uniform sampler2D uTextures[32];
