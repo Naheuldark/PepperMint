@@ -14,8 +14,8 @@ class OpenGLFrameBuffer : public FrameBuffer {
 
     void resize(uint32_t iWidth, uint32_t iHeight) override;
 
-    inline uint32_t colorAttachmentRendererId() const override { return _colorAttachment; }
-    inline const FrameBufferProperties& properties() const override { return _properties; }
+    uint32_t                     colorAttachmentRendererId() const override { return _colorAttachment; }
+    const FrameBufferProperties& properties() const override { return _properties; }
 
     void invalidate();
 

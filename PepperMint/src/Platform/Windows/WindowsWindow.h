@@ -15,18 +15,16 @@ class WindowsWindow : public Window {
 
     void onUpdate() override;
 
-    inline unsigned int width() const override { return _data.width; }
-    inline unsigned int height() const override { return _data.height; }
+    unsigned int width() const override { return _data.width; }
+    unsigned int height() const override { return _data.height; }
 
     // Window attributes
-    inline void setEventCallback(const EventCallbackFn& iCallback) override {
-        _data.eventCallback = iCallback;
-    }
+    void setEventCallback(const EventCallbackFn& iCallback) override { _data.eventCallback = iCallback; }
     void setVSync(bool iEnabled) override;
     bool isVSync() const override { return _data.vsync; }
 
     // Get the native Window pointer
-    inline void* nativeWindow() const override { return _window; }
+    void* nativeWindow() const override { return _window; }
 
   private:
     virtual void init(const WindowProperties& iProperties);

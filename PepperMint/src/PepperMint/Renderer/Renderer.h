@@ -19,11 +19,9 @@ class Renderer {
     static void BeginScene(OrthographicCamera& ioCamera);
     static void EndScene();
 
-    static void Submit(Ref<Shader>      iShader,
-                       Ref<VertexArray> iVertexArray,
-                       const glm::mat4& iTransform = glm::mat4(1.0f));
+    static void Submit(Ref<Shader> iShader, Ref<VertexArray> iVertexArray, const glm::mat4& iTransform = glm::mat4(1.0f));
 
-    inline static RendererAPI::API API() { return RendererAPI::GetAPI(); }
+    static RendererAPI::API API() { return RendererAPI::GetAPI(); }
 
   private:
     struct SceneData {

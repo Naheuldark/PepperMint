@@ -60,10 +60,10 @@ class Event {
 
     virtual std::string toString() const { return name(); }
 
-    inline bool isInCategory(EventCategory iCategory) { return categoryFlags() & iCategory; }
+    bool isInCategory(EventCategory iCategory) { return categoryFlags() & iCategory; }
 
-    inline void setHandled(bool iHandled) { _handled = iHandled; }
-    inline bool handled() const { return _handled; }
+    void setHandled(bool iHandled) { _handled = iHandled; }
+    bool handled() const { return _handled; }
 
   private:
     bool _handled = false;

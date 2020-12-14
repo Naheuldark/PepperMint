@@ -15,8 +15,8 @@ class OpenGLVertexBuffer : public VertexBuffer {
 
     void setData(void* iData, uint32_t iSize) override;
 
-    inline const BufferLayout& layout() const override { return _layout; }
-    inline void setLayout(const BufferLayout& iLayout) override { _layout = iLayout; }
+    const BufferLayout& layout() const override { return _layout; }
+    void                setLayout(const BufferLayout& iLayout) override { _layout = iLayout; }
 
   private:
     uint32_t     _rendererId;
@@ -31,7 +31,7 @@ class OpenGLIndexBuffer : public IndexBuffer {
     void bind() const override;
     void unbind() const override;
 
-    inline uint32_t count() const override { return _count; }
+    uint32_t count() const override { return _count; }
 
   private:
     uint32_t _rendererId;

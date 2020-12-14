@@ -17,11 +17,11 @@ class OrthographicCameraController {
 
     void onResize(float iWidth, float iHeight);
 
-    inline OrthographicCamera&       camera() { return _camera; }
-    inline const OrthographicCamera& camera() const { return _camera; }
+    OrthographicCamera&       camera() { return _camera; }
+    const OrthographicCamera& camera() const { return _camera; }
 
-    inline float zoomLevel() const { return _zoomLevel; }
-    inline void  setZoomLevel(float iZoomLevel) { _zoomLevel = iZoomLevel; }
+    float zoomLevel() const { return _zoomLevel; }
+    void  setZoomLevel(float iZoomLevel) { _zoomLevel = iZoomLevel; }
 
   private:
     bool onMouseScrolled(MouseScrolledEvent& iEvent);

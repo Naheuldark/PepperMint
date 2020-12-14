@@ -15,10 +15,8 @@ class OpenGLVertexArray : public VertexArray {
     void addVertexBuffer(Ref<VertexBuffer> iVertexBuffer) override;
     void setIndexBuffer(Ref<IndexBuffer> iIndexBuffer) override;
 
-    inline const std::vector<Ref<VertexBuffer>>& vertexBuffers() const override {
-        return _vertexBuffers;
-    }
-    inline Ref<IndexBuffer> indexBuffer() const override { return _indexBuffer; }
+    const std::vector<Ref<VertexBuffer>>& vertexBuffers() const override { return _vertexBuffers; }
+    Ref<IndexBuffer>                      indexBuffer() const override { return _indexBuffer; }
 
   private:
     uint32_t                       _rendererId;

@@ -19,7 +19,7 @@ class ImGuiLayer : public Layer {
     void onDetach() override;
     void onEvent(Event& iEvent) override;
 
-    inline void setBlockEvents(bool iBlockEvents) { _blockEvents = iBlockEvents; }
+    void setBlockEvents(bool iBlockEvents) { _blockEvents = iBlockEvents; }
 
     void begin();
     void end();

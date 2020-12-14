@@ -9,21 +9,21 @@ class OrthographicCamera {
     OrthographicCamera(float iLeft = 0.0f, float iRight = 0.0f, float iBottom = 0.0f, float iTop = 0.0f);
     ~OrthographicCamera() = default;
 
-    inline const glm::vec3& position() const { return _position; }
-    inline void             setPosition(const glm::vec3& iPosition) {
+    const glm::vec3& position() const { return _position; }
+    void             setPosition(const glm::vec3& iPosition) {
         _position = iPosition;
         computeViewMatrix();
     }
 
-    inline float rotation() const { return _rotation; }
-    inline void  setRotation(float iRotation) {
+    float rotation() const { return _rotation; }
+    void  setRotation(float iRotation) {
         _rotation = iRotation;
         computeViewMatrix();
     }
 
-    inline const glm::mat4& projectionMatrix() const { return _projectionMatrix; }
-    inline const glm::mat4& viewMatrix() const { return _viewMatrix; }
-    inline const glm::mat4& viewProjectionMatrix() const { return _viewProjectionMatrix; }
+    const glm::mat4& projectionMatrix() const { return _projectionMatrix; }
+    const glm::mat4& viewMatrix() const { return _viewMatrix; }
+    const glm::mat4& viewProjectionMatrix() const { return _viewProjectionMatrix; }
 
     void setProjection(float iLeft, float iRight, float iBottom, float iTop);
 

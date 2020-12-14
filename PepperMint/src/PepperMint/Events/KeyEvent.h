@@ -9,7 +9,7 @@ class KeyEvent : public Event {
   public:
     ~KeyEvent() override = default;
 
-    inline KeyCode keyCode() const { return _keyCode; }
+    KeyCode keyCode() const { return _keyCode; }
 
     EVENT_CATEGORY(EVENT_CATEGORY_KEYBOARD | EVENT_CATEGORY_INPUT)
 
@@ -24,7 +24,7 @@ class KeyPressedEvent : public KeyEvent {
     KeyPressedEvent(const KeyCode iKeyCode, const uint16_t iRepeatCount) : KeyEvent(iKeyCode), _repeatCount(iRepeatCount) {}
     ~KeyPressedEvent() override = default;
 
-    inline uint16_t repeatCount() const { return _repeatCount; }
+    uint16_t repeatCount() const { return _repeatCount; }
 
     std::string toString() const override {
         std::ostringstream ss;

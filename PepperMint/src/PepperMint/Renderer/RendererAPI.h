@@ -22,7 +22,7 @@ class RendererAPI {
 
     virtual void drawIndexed(Ref<VertexArray> iVertexArray, uint32_t iIndexCount = 0) = 0;
 
-    inline static API GetAPI() { return sAPI; }
+    static API GetAPI() { return sAPI; }
 
     static Scope<RendererAPI> Create();
 

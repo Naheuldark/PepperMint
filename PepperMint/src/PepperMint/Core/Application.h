@@ -23,9 +23,9 @@ class Application {
 
     void close();
 
-    inline static Application& Get() { return *sInstance; }
-    inline Window&             window() { return *_window; }
-    inline Ref<ImGuiLayer>     imguiLayer() { return _imguiLayer; }
+    static Application& Get() { return *sInstance; }
+    Window&             window() { return *_window; }
+    Ref<ImGuiLayer>     imguiLayer() { return _imguiLayer; }
 
   private:
     void run();

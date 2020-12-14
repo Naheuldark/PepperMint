@@ -17,7 +17,7 @@ class OpenGLShader : public Shader {
     void bind() const override;
     void unbind() const override;
 
-    inline std::string name() const override { return _name; }
+    std::string name() const override { return _name; }
 
     void setInt(const std::string& iName, int iValue) override;
     void setIntArray(const std::string& iName, int* iValues, uint32_t iCount) override;
@@ -40,7 +40,7 @@ class OpenGLShader : public Shader {
 
     std::string                             readFile(const std::string& iShaderFile);
     std::unordered_map<GLenum, std::string> preProcess(const std::string& iSource);
-    void compile(const std::unordered_map<GLenum, std::string>& iShaderSources);
+    void                                    compile(const std::unordered_map<GLenum, std::string>& iShaderSources);
 
   private:
     uint32_t    _rendererId;

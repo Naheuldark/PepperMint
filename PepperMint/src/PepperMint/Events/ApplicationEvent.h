@@ -15,8 +15,7 @@ class WindowCloseEvent : public Event {
 
 class WindowResizeEvent : public Event {
   public:
-    WindowResizeEvent(unsigned int iWidth, unsigned int iHeight)
-        : _width(iWidth), _height(iHeight) {}
+    WindowResizeEvent(unsigned int iWidth, unsigned int iHeight) : _width(iWidth), _height(iHeight) {}
     ~WindowResizeEvent() override = default;
 
     std::string toString() const override {
@@ -25,8 +24,8 @@ class WindowResizeEvent : public Event {
         return ss.str();
     }
 
-    inline unsigned int width() const { return _width; }
-    inline unsigned int height() const { return _height; }
+    unsigned int width() const { return _width; }
+    unsigned int height() const { return _height; }
 
     EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
     EVENT_TYPE(WINDOW_RESIZE)

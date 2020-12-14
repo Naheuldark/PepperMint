@@ -17,9 +17,9 @@ class Player {
 
     void reset();
 
-    inline uint32_t         score() const { return (uint32_t)(_position.x + 10.0f) / 10.0f; }
-    inline float            rotation() const { return _velocity.y * 4.0f - 90.0f; }
-    inline const glm::vec2& position() const { return _position; }
+    uint32_t         score() const { return (uint32_t)(_position.x + 10.0f) / 10.0f; }
+    float            rotation() const { return _velocity.y * 4.0f - 90.0f; }
+    const glm::vec2& position() const { return _position; }
 
   private:
     glm::vec2 _position = {-10.0f, 0.0f};

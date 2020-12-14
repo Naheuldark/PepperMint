@@ -10,8 +10,8 @@ class MouseMovedEvent : public Event {
     MouseMovedEvent(const float iMouseX, const float iMouseY) : _mouseX(iMouseX), _mouseY(iMouseY) {}
     ~MouseMovedEvent() override = default;
 
-    inline float x() const { return _mouseX; }
-    inline float y() const { return _mouseY; }
+    float x() const { return _mouseX; }
+    float y() const { return _mouseY; }
 
     std::string toString() const override {
         std::ostringstream ss;
@@ -31,8 +31,8 @@ class MouseScrolledEvent : public Event {
     MouseScrolledEvent(const float iXOffset, const float iYOffset) : _xOffset(iXOffset), _yOffset(iYOffset) {}
     ~MouseScrolledEvent() override = default;
 
-    inline float xOffset() const { return _xOffset; }
-    inline float yOffset() const { return _yOffset; }
+    float xOffset() const { return _xOffset; }
+    float yOffset() const { return _yOffset; }
 
     std::string toString() const override {
         std::ostringstream ss;
@@ -51,7 +51,7 @@ class MouseButtonEvent : public Event {
   public:
     ~MouseButtonEvent() override = default;
 
-    inline MouseCode mouseButton() const { return _button; }
+    MouseCode mouseButton() const { return _button; }
 
     EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT | EVENT_CATEGORY_MOUSE_BUTTON)
 

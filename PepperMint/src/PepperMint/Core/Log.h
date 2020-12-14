@@ -16,8 +16,8 @@ class Log {
 
     static void Init();
 
-    inline static Ref<spdlog::logger>& CoreLogger() { return _coreLogger; }
-    inline static Ref<spdlog::logger>& ClientLogger() { return _clientLogger; }
+    static Ref<spdlog::logger>& CoreLogger() { return _coreLogger; }
+    static Ref<spdlog::logger>& ClientLogger() { return _clientLogger; }
 
   private:
     static Ref<spdlog::logger> _coreLogger;

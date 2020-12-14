@@ -23,8 +23,8 @@ class Level {
 
     void reset();
 
-    inline Player& player() { return _player; }
-    inline bool    gameOver() const { return _gameOver; }
+    Player& player() { return _player; }
+    bool    gameOver() const { return _gameOver; }
 
   private:
     void resetPillars();

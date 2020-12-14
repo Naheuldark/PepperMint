@@ -17,7 +17,7 @@ class Layer {
     virtual void onImGuiRender() {}
     virtual void onEvent(Event& iEvent) {}
 
-    inline const std::string& name() const { return _debugName; }
+    const std::string& name() const { return _debugName; }
 
   protected:
     std::string _debugName;
