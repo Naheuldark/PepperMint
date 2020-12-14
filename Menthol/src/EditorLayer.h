@@ -2,15 +2,16 @@
 
 #include <PepperMint.h>
 
+#include "Panels/PropertiesPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/StatisticsPanel.h"
-#include "PepperMint/Renderer/EditorCamera.h"
+#include "Panels/ViewportPanel.h"
 
 namespace PepperMint {
 
 class EditorLayer : public Layer {
   public:
-    EditorLayer() : Layer("Menthol"), _cameraController(1280.0f / 720.0f, true) {}
+    EditorLayer() : Layer("Menthol") {}
     ~EditorLayer() override = default;
 
     void onAttach() override;
@@ -28,37 +29,16 @@ class EditorLayer : public Layer {
     void saveSceneAs();
 
   private:
-    OrthographicCameraController _cameraController;
-
-    Ref<VertexArray> _squareVA;
-    Ref<Shader>      _flatColorShader;
+    // Scene
+    Ref<Scene>       _activeScene;
     Ref<FrameBuffer> _frameBuffer;
 
-    Ref<Scene> _activeScene;
-    Entity     _squareEntity;
-
-    Entity _mainCamera;
-    Entity _secondCamera;
-    bool   _primaryCamera = true;
-
-	EditorCamera _editorCamera;
-
-    Ref<Texture2D> _checkerboardTexture;
-
-    glm::vec2 _viewportSize    = {0.0f, 0.0f};
-    bool      _viewportFocused = false;
-    bool      _viewportHovered = false;
-
-    glm::vec4 _squareColor = {0.2f, 0.3f, 0.8f, 1.0};
-
-    // Gizmos
-    int _gizmoType = -1;
+    bool _playing = false;
 
     // Panels
     SceneHierarchyPanel _sceneHierarchyPanel;
+    PropertiesPanel     _propertiesPanel;
+    ViewportPanel       _viewportPanel;
     StatisticsPanel     _statisticsPanel;
-
-    // File
-    std::string _currentFile;
 };
 }

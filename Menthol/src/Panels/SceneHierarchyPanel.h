@@ -14,20 +14,19 @@ class SceneHierarchyPanel {
 
     ~SceneHierarchyPanel() = default;
 
-    Entity selectionContext() const { return _selectionContext; }
-    void   setContext(const Ref<Scene>& iScene) {
-        _context          = iScene;
-        _selectionContext = {};
-    }
-
     void onImGuiRender();
+
+    Entity selectedEntity() const { return _selectedEntity; }
+    void   setContext(const Ref<Scene>& iScene) {
+        _context        = iScene;
+        _selectedEntity = {};
+    }
 
   private:
     void drawEntityNode(Entity iEntity);
-    void drawComponents(Entity iEntity);
 
   private:
     Ref<Scene> _context;
-    Entity     _selectionContext;
+    Entity     _selectedEntity;
 };
 }

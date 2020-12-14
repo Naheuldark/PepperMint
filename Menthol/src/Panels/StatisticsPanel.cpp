@@ -6,15 +6,15 @@
 
 namespace PepperMint {
 
-void StatisticsPanel::onImGuiRender(const std::string& iCurrentFile) {
+void StatisticsPanel::onImGuiRender() {
     ImGui::Begin("Statistics");
     {
         std::string currentFile("Current File: ");
-        if (iCurrentFile.empty()) {
+        if (_currentFile.empty()) {
             currentFile += "New File";
         } else {
-            auto&& pos = (iCurrentFile.find_last_of('/') != std::string::npos ? iCurrentFile.find_last_of('/') : iCurrentFile.find_last_of('\\'));
-            currentFile += iCurrentFile.substr(pos + 1);
+            auto&& pos = (_currentFile.find_last_of('/') != std::string::npos ? _currentFile.find_last_of('/') : _currentFile.find_last_of('\\'));
+            currentFile += _currentFile.substr(pos + 1);
         }
         ImGui::Text(currentFile.c_str());
 

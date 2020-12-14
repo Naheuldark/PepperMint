@@ -19,53 +19,10 @@ const float kMIN_PANEL_WIDTH = 370.0f;
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
 
-    _checkerboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
+    _activeScene = CreateRef<Scene>();
+    _frameBuffer = FrameBuffer::Create(FrameBufferProperties(1280, 720));
 
-    FrameBufferProperties frameBufferProperties;
-    frameBufferProperties.width  = 1280;
-    frameBufferProperties.height = 720;
-    _frameBuffer                 = FrameBuffer::Create(frameBufferProperties);
-
-    _activeScene  = CreateRef<Scene>();
-    _editorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-
-#if 0
-    _squareEntity = _activeScene->createEntity("Green Square");
-    _squareEntity.add<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
-
-    auto&& redSquare = _activeScene->createEntity("Red Square");
-    redSquare.add<SpriteRendererComponent>(glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
-
-    _mainCamera = _activeScene->createEntity("Camera A");
-    _mainCamera.add<CameraComponent>();
-
-    _secondCamera                 = _activeScene->createEntity("Camera B");
-    auto&& secondCameraComponent  = _secondCamera.add<CameraComponent>();
-    secondCameraComponent.primary = false;
-
-    class CameraController : public ScriptableEntity {
-      public:
-        void onUpdate(Timestep iTimestep) override {
-            auto&& translation = get<TransformComponent>().translation;
-            float  speed       = 5.0f;
-
-            if (Input::IsKeyPressed(Key::A)) {
-                translation.x -= speed * iTimestep;
-            } else if (Input::IsKeyPressed(Key::D)) {
-                translation.x += speed * iTimestep;
-            }
-
-            if (Input::IsKeyPressed(Key::S)) {
-                translation.y -= speed * iTimestep;
-            } else if (Input::IsKeyPressed(Key::W)) {
-                translation.y += speed * iTimestep;
-            }
-        }
-    };
-    _mainCamera.add<NativeScriptComponent>().bind<CameraController>();
-    _secondCamera.add<NativeScriptComponent>().bind<CameraController>();
-#endif
-
+    _viewportPanel.editorCamera() = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
     _sceneHierarchyPanel.setContext(_activeScene);
 }
 
@@ -75,20 +32,19 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
     PM_PROFILE_FUNCTION();
 
     // Resize
-    FrameBufferProperties spec = _frameBuffer->properties();
-    if (_viewportSize.x > 0.0f && _viewportSize.y > 0.0f && // zero sized framebuffer is invalid
-        (spec.width != _viewportSize.x || spec.height != _viewportSize.y)) {
-        _frameBuffer->resize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
-        _cameraController.onResize(_viewportSize.x, _viewportSize.y);
-        _editorCamera.setViewportSize(_viewportSize.x, -_viewportSize.y);
-        _activeScene->onViewportResize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
+    FrameBufferProperties spec         = _frameBuffer->properties();
+    auto&&                viewportSize = _viewportPanel.viewportSize();
+    if (viewportSize.x > 0.0f && viewportSize.y > 0.0f && // zero sized framebuffer is invalid
+        (spec.width != viewportSize.x || spec.height != viewportSize.y)) {
+        _frameBuffer->resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+        _viewportPanel.editorCamera().setViewportSize(viewportSize.x, -viewportSize.y);
+        _activeScene->onViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
     }
 
     // Update
-    if (_viewportFocused) {
-        _cameraController.onUpdate(iTimestep);
+    if (!_playing) {
+        _viewportPanel.editorCamera().onUpdate(iTimestep);
     }
-    _editorCamera.onUpdate(iTimestep);
 
     // Statistics
     Renderer2D::ResetStats();
@@ -105,8 +61,11 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
     {
         PM_PROFILE_SCOPE("Renderer Draw");
 
-        _activeScene->onUpdateEditor(iTimestep, _editorCamera);
-
+        if (_playing) {
+            _activeScene->onUpdateRuntime(iTimestep);
+        } else {
+            _activeScene->onUpdateEditor(iTimestep, _viewportPanel.editorCamera());
+        }
         _frameBuffer->unbind();
     }
 }
@@ -189,83 +148,24 @@ void EditorLayer::onImGuiRender() {
     // Scene Hierarchy Panel
     _sceneHierarchyPanel.onImGuiRender();
 
+    // Properties Panel
+    _propertiesPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
+    _propertiesPanel.onImGuiRender();
+
     // Statistics Panel
-    _statisticsPanel.onImGuiRender(_currentFile);
+    _statisticsPanel.onImGuiRender();
 
     // Viewport
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
-    ImGui::Begin("Viewport");
-    {
-        _viewportFocused = ImGui::IsWindowFocused();
-        _viewportHovered = ImGui::IsWindowHovered();
-        Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused && !_viewportHovered);
-
-        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-        _viewportSize            = {viewportPanelSize.x, viewportPanelSize.y};
-
-        uint64_t textureID = _frameBuffer->colorAttachmentRendererId();
-        ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{_viewportSize.x, _viewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
-
-        // Gizmos
-        Entity selectedEntity = _sceneHierarchyPanel.selectionContext();
-        if (selectedEntity && _gizmoType != -1) {
-            ImGuizmo::SetOrthographic(false);
-            ImGuizmo::SetDrawlist();
-
-            float windowWidth  = (float)ImGui::GetWindowWidth();
-            float windowHeight = (float)ImGui::GetWindowHeight();
-            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-            // Runtime Camera
-            // auto&& primaryCamera    = _activeScene->primaryCameraEntity();
-            // auto&& cameraProjection = primaryCamera.get<CameraComponent>().camera.projection();
-            // auto&& cameraView       = glm::inverse(primaryCamera.get<TransformComponent>().transform());
-
-            // Editor Camera
-            auto&& cameraProjection = _editorCamera.projection();
-            auto&& cameraView       = _editorCamera.viewMatrix();
-
-            // Entity transform
-            auto&&    transformComponent = selectedEntity.get<TransformComponent>();
-            glm::mat4 transform          = transformComponent.transform();
-
-            // Snapping (0.5m for translation/scale - 45 degrees for rotation)
-            bool  snap      = Input::IsKeyPressed(Key::LEFT_CONTROL);
-            float snapValue = 0.5f;
-            if (_gizmoType == ImGuizmo::OPERATION::ROTATE) {
-                snapValue = 45.0f;
-            }
-
-            float snapValues[3] = {snapValue, snapValue, snapValue};
-
-            ImGuizmo::Manipulate(glm::value_ptr(cameraView),
-                                 glm::value_ptr(cameraProjection),
-                                 (ImGuizmo::OPERATION)_gizmoType,
-                                 ImGuizmo::LOCAL,
-                                 glm::value_ptr(transform),
-                                 nullptr,
-                                 snap ? snapValues : nullptr);
-
-            if (ImGuizmo::IsUsing()) {
-                glm::vec3 translation, rotation, scale;
-                Math::decompose(transform, translation, rotation, scale);
-
-                auto&& deltaRotation           = rotation - transformComponent.rotation;
-                transformComponent.translation = translation;
-                transformComponent.rotation += deltaRotation;
-                transformComponent.scale = scale;
-            }
-        }
-    }
-    ImGui::End();
-    ImGui::PopStyleVar();
+    _viewportPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
+    _viewportPanel.setTextureId(_frameBuffer->colorAttachmentRendererId());
+    _viewportPanel.setEditorMode(!_playing);
+    _viewportPanel.onImGuiRender();
 
     ImGui::End();
 }
 
 void EditorLayer::onEvent(Event& iEvent) {
-    _cameraController.onEvent(iEvent);
-    _editorCamera.onEvent(iEvent);
+    _viewportPanel.editorCamera().onEvent(iEvent);
 
     EventDispatcher dispatcher(iEvent);
     dispatcher.dispatch<KeyPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onKeyPressed));
@@ -304,44 +204,28 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
             break;
         }
 
-        // Gizmos
-        case Key::Q: {
-            if (!ImGuizmo::IsUsing()) {
-                _gizmoType = -1;
-            }
+        // Switch between Runtime and Editor cameras
+        case Key::P:
+            _playing = !_playing;
             break;
-        }
-        case Key::W: {
-            if (!ImGuizmo::IsUsing()) {
-                _gizmoType = ImGuizmo::OPERATION::TRANSLATE;
-            }
-            break;
-        }
-        case Key::E: {
-            if (!ImGuizmo::IsUsing()) {
-                _gizmoType = ImGuizmo::OPERATION::ROTATE;
-            }
-            break;
-        }
-        case Key::R: {
-            if (!ImGuizmo::IsUsing()) {
-                _gizmoType = ImGuizmo::OPERATION::SCALE;
-            }
-            break;
-        }
 
         default:
             break;
     }
+
+    _viewportPanel.onKeyPressed(iEvent);
 
     return true;
 }
 
 void EditorLayer::newScene() {
     _activeScene = CreateRef<Scene>();
-    _activeScene->onViewportResize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
+
+    auto&& viewportsize = _viewportPanel.viewportSize();
+    _activeScene->onViewportResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
+
     _sceneHierarchyPanel.setContext(_activeScene);
-    _currentFile = "";
+    _statisticsPanel.setCurrentFile("");
 }
 
 void EditorLayer::openScene() {
@@ -349,15 +233,15 @@ void EditorLayer::openScene() {
     if (!filepath.empty()) {
         newScene();
         SceneSerializer(_activeScene).deserialize(filepath);
-        _currentFile = filepath;
+        _statisticsPanel.setCurrentFile(filepath);
     }
 }
 
 void EditorLayer::saveScene() {
-    if (_currentFile.empty()) {
+    if (_statisticsPanel.currentFile().empty()) {
         saveSceneAs();
     } else {
-        SceneSerializer(_activeScene).serialize(_currentFile);
+        SceneSerializer(_activeScene).serialize(_statisticsPanel.currentFile());
     }
 }
 
@@ -365,7 +249,7 @@ void EditorLayer::saveSceneAs() {
     auto&& filepath = FileDialogs::SaveFile("PepperMint Scene (*.pm)\0*.pm\0");
     if (!filepath.empty()) {
         SceneSerializer(_activeScene).serialize(filepath);
-        _currentFile = filepath;
+        _statisticsPanel.setCurrentFile(filepath);
     }
 }
 }

@@ -10,6 +10,9 @@ struct FrameBufferProperties {
     uint32_t samples = 1;
 
     bool swapChainTarget = false;
+
+    FrameBufferProperties(uint32_t width = 0, uint32_t height = 0, uint32_t samples = 1, bool swapChainTarget = false)
+        : width(width), height(height), samples(samples), swapChainTarget(swapChainTarget) {}
 };
 
 class FrameBuffer {
