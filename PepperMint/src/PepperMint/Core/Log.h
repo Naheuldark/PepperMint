@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/gtx/string_cast.hpp>
+
 #include "PepperMint/Core/Base.h"
 
 #pragma warning(push, 0)
@@ -23,6 +25,23 @@ class Log {
     static Ref<spdlog::logger> _coreLogger;
     static Ref<spdlog::logger> _clientLogger;
 };
+}
+
+// Custom Log Functions
+template <typename OStream, glm::length_t L, typename T, glm::qualifier Q>
+inline OStream& operator<<(OStream& os, const glm::vec<L, T, Q>& vector) {
+    return os << glm::to_string(vector);
+}
+
+template <typename OStream, glm::length_t C, glm::length_t R, typename T, glm::qualifier Q>
+inline OStream& operator<<(OStream& os, const glm::mat<C, R, T, Q>& matrix) {
+    return os << glm::to_string(matrix);
+}
+
+template <typename OStream, typename T, glm::qualifier Q>
+inline OStream& operator<<(OStream& os, glm::qua<T, Q> quat) {
+    os << glm::to_string(quat);
+    return os;
 }
 
 // Core Log Macros

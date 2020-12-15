@@ -53,7 +53,14 @@ void SceneSerializer::serialize(const std::string& iFilepath) {
 }
 
 bool SceneSerializer::deserialize(const std::string& iFilepath) {
-    YAML::Node data = YAML::LoadFile(iFilepath);
+    YAML::Node data;
+    try {
+        data = YAML::LoadFile(iFilepath);
+    } catch (const YAML::ParserException& e) {
+        PM_CORE_ERROR("Failed to deserialize scene '{0}'\n\t{1}", iFilepath, e.what());
+        return false;
+    }
+
     if (!data["Scene"]) {
         return false;
     }
