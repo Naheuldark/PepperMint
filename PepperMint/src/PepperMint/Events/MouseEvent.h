@@ -19,7 +19,7 @@ class MouseMovedEvent : public Event {
         return ss.str();
     }
 
-    EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
+    EVENT_CATEGORY(EventCategory::MOUSE | EventCategory::INPUT)
     EVENT_TYPE(MOUSE_MOVE)
 
   private:
@@ -40,7 +40,7 @@ class MouseScrolledEvent : public Event {
         return ss.str();
     }
 
-    EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
+    EVENT_CATEGORY(EventCategory::MOUSE | EventCategory::INPUT)
     EVENT_TYPE(MOUSE_SCROLL)
 
   private:
@@ -53,7 +53,7 @@ class MouseButtonEvent : public Event {
 
     MouseCode mouseButton() const { return _button; }
 
-    EVENT_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT | EVENT_CATEGORY_MOUSE_BUTTON)
+    EVENT_CATEGORY(EventCategory::MOUSE | EventCategory::INPUT | EventCategory::MOUSE_BUTTON)
 
   protected:
     MouseButtonEvent(const MouseCode iButton) : _button(iButton) {}

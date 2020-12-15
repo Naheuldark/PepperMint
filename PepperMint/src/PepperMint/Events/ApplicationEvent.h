@@ -9,7 +9,7 @@ class WindowCloseEvent : public Event {
     WindowCloseEvent()           = default;
     ~WindowCloseEvent() override = default;
 
-    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_CATEGORY(EventCategory::APPLICATION)
     EVENT_TYPE(WINDOW_CLOSE)
 };
 
@@ -27,7 +27,7 @@ class WindowResizeEvent : public Event {
     unsigned int width() const { return _width; }
     unsigned int height() const { return _height; }
 
-    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_CATEGORY(EventCategory::APPLICATION)
     EVENT_TYPE(WINDOW_RESIZE)
 
   private:
@@ -39,7 +39,7 @@ class AppTickEvent : public Event {
     AppTickEvent()           = default;
     ~AppTickEvent() override = default;
 
-    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_CATEGORY(EventCategory::APPLICATION)
     EVENT_TYPE(APP_TICK)
 };
 
@@ -48,7 +48,7 @@ class AppUpdateEvent : public Event {
     AppUpdateEvent()           = default;
     ~AppUpdateEvent() override = default;
 
-    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_CATEGORY(EventCategory::APPLICATION)
     EVENT_TYPE(APP_UPDATE)
 };
 
@@ -57,7 +57,7 @@ class AppRenderEvent : public Event {
     AppRenderEvent()           = default;
     ~AppRenderEvent() override = default;
 
-    EVENT_CATEGORY(EVENT_CATEGORY_APPLICATION)
+    EVENT_CATEGORY(EventCategory::APPLICATION)
     EVENT_TYPE(APP_RENDER)
 };
 }

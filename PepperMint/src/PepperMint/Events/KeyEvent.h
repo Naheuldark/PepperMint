@@ -11,7 +11,7 @@ class KeyEvent : public Event {
 
     KeyCode keyCode() const { return _keyCode; }
 
-    EVENT_CATEGORY(EVENT_CATEGORY_KEYBOARD | EVENT_CATEGORY_INPUT)
+    EVENT_CATEGORY(EventCategory::KEYBOARD | EventCategory::INPUT)
 
   protected:
     KeyEvent(const KeyCode iKeyCode) : _keyCode(iKeyCode) {}

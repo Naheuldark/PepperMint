@@ -8,11 +8,12 @@
 namespace PepperMint {
 
 /*
-Events in PepperMint are currently blocking, meaning when an event occurs it immediately gets
-dispatched and must be dealt with right then and there. For the future, a better strategy might be
-to buffer events in an event bus and process them during the "event" part of the update stage
-*/
+ * Events in PepperMint are currently blocking, meaning when an event occurs it immediately gets
+ * dispatched and must be dealt with right then and there. For the future, a better strategy might be
+ * to buffer events in an event bus and process them during the "event" part of the update stage
+ */
 
+// Event Type
 enum class EventType {
     NONE = 0,
     WINDOW_CLOSE,
@@ -32,35 +33,37 @@ enum class EventType {
     MOUSE_SCROLL
 };
 
-#define EVENT_TYPE(type)                                                    \
-    static EventType    StaticType() { return EventType::type; }            \
-    virtual EventType   eventType() const override { return StaticType(); } \
-    virtual const char* name() const override { return #type; }
+#define EVENT_TYPE(type)                                                 \
+    static EventType StaticType() { return EventType::type; }            \
+    EventType        eventType() const override { return StaticType(); } \
+    const char*      name() const override { return #type; }
 
-enum EventCategory {
-    EVENT_CATEGORY_NONE         = 0,
-    EVENT_CATEGORY_APPLICATION  = BIT(0),
-    EVENT_CATEGORY_INPUT        = BIT(1),
-    EVENT_CATEGORY_KEYBOARD     = BIT(2),
-    EVENT_CATEGORY_MOUSE        = BIT(3),
-    EVENT_CATEGORY_MOUSE_BUTTON = BIT(4)
-};
+// Event Category
+enum class EventCategory { NONE = 0, APPLICATION = BIT(0), INPUT = BIT(1), KEYBOARD = BIT(2), MOUSE = BIT(3), MOUSE_BUTTON = BIT(4) };
+
+EventCategory  operator|(EventCategory lhs, EventCategory rhs);
+EventCategory  operator&(EventCategory lhs, EventCategory rhs);
+EventCategory  operator^(EventCategory lhs, EventCategory rhs);
+EventCategory  operator~(EventCategory rhs);
+EventCategory& operator|=(EventCategory& lhs, EventCategory rhs);
+EventCategory& operator&=(EventCategory& lhs, EventCategory rhs);
+EventCategory& operator^=(EventCategory& lhs, EventCategory rhs);
 
 #define EVENT_CATEGORY(category) \
-    virtual int categoryFlags() const override { return category; }
+    EventCategory categoryFlags() const override { return (category); }
 
 class Event {
   public:
     Event()          = default;
     virtual ~Event() = default;
 
-    virtual EventType   eventType() const     = 0;
-    virtual const char* name() const          = 0;
-    virtual int         categoryFlags() const = 0;
+    virtual EventType     eventType() const     = 0;
+    virtual const char*   name() const          = 0;
+    virtual EventCategory categoryFlags() const = 0;
 
     virtual std::string toString() const { return name(); }
 
-    bool isInCategory(EventCategory iCategory) { return categoryFlags() & iCategory; }
+    bool isInCategory(EventCategory iCategory) { return static_cast<bool>(categoryFlags() & iCategory); }
 
     void setHandled(bool iHandled) { _handled = iHandled; }
     bool handled() const { return _handled; }

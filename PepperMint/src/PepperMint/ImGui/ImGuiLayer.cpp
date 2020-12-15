@@ -107,8 +107,8 @@ void ImGuiLayer::onEvent(Event& iEvent) {
     if (_blockEvents) {
         ImGuiIO& io      = ImGui::GetIO();
         bool     handled = iEvent.handled();
-        handled |= iEvent.isInCategory(EVENT_CATEGORY_MOUSE) & io.WantCaptureMouse;
-        handled |= iEvent.isInCategory(EVENT_CATEGORY_KEYBOARD) & io.WantCaptureKeyboard;
+        handled |= iEvent.isInCategory(EventCategory::MOUSE) & io.WantCaptureMouse;
+        handled |= iEvent.isInCategory(EventCategory::KEYBOARD) & io.WantCaptureKeyboard;
         iEvent.setHandled(handled);
     }
 }

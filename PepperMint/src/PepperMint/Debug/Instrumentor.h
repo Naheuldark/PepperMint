@@ -38,9 +38,8 @@ class Instrumentor {
         std::lock_guard lock(_mutex);
         if (_currentSession) {
             // If there is already a current session, then close it before beginning new one.
-            // Subsequent profiling output meant for the original session will end up in the
-            // newly opened session instead.  That's better than having badly formatted profiling
-            // output.
+            // Subsequent profiling output meant for the original session will end up in the newly opened session instead.  That's better than having
+            // badly formatted profiling output.
             if (Log::CoreLogger()) { // Edge case: BeginSession() might be before Log::Init()
                 PM_CORE_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", iName, _currentSession->name);
             }
@@ -63,8 +62,8 @@ class Instrumentor {
         internalEndSession();
     }
 
-    void writeProfile(const ProfileResult& iResult) {
-        std::stringstream json;
+    void writeProfile(const ProfileResult& iResult) {       
+		std::stringstream json;
 
         json << std::setprecision(3) << std::fixed;
         json << ",{";
@@ -77,7 +76,6 @@ class Instrumentor {
         json << "\"ts\":" << iResult.start.count();
         json << "}";
 
-        std::lock_guard lock(_mutex);
         if (_currentSession) {
             _outputStream << json.str();
             _outputStream.flush();
@@ -103,7 +101,7 @@ class Instrumentor {
         _outputStream.flush();
     }
 
-    // Note: you must already own lock on m_Mutex before calling InternalEndSession()
+    // Note: you must already own lock on _mutex before calling InternalEndSession()
     void internalEndSession() {
         if (_currentSession) {
             writeFooter();
