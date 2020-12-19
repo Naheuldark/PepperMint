@@ -19,3 +19,6 @@ If the repository was cloned non-recursively previously, use `git submodule upda
 - Procedural terrain and world generation
 - Artificial Intelligence
 - Audio system
+
+## Documentation
+For more information, refer to the [official PepperMint documentation](https://naheuldark.github.io/PepperMint/).
