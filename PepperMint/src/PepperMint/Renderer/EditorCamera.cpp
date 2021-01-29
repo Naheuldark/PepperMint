@@ -41,10 +41,9 @@ void EditorCamera::onEvent(Event& iEvent) {
     dispatcher.dispatch<MouseScrolledEvent>(PM_BIND_EVENT_FN(EditorCamera::onMouseScroll));
 }
 
+// TODO Remove minus sign if necessary for up and right direction
 glm::vec3 EditorCamera::upDirection() const { return -glm::rotate(orientation(), glm::vec3(0.0f, 1.0f, 0.0f)); }
-
 glm::vec3 EditorCamera::rightDirection() const { return -glm::rotate(orientation(), glm::vec3(1.0f, 0.0f, 0.0f)); }
-
 glm::vec3 EditorCamera::forwardDirection() const { return glm::rotate(orientation(), glm::vec3(0.0f, 0.0f, -1.0f)); }
 
 glm::quat EditorCamera::orientation() const { return glm::quat(glm::vec3(-_pitch, -_yaw, 0.0f)); }

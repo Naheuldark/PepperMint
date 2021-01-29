@@ -14,17 +14,24 @@ class OpenGLFrameBuffer : public FrameBuffer {
 
     void resize(uint32_t iWidth, uint32_t iHeight) override;
 
-    uint32_t                     colorAttachmentRendererId() const override { return _colorAttachment; }
+    uint32_t colorAttachmentRendererId(uint32_t iIndex = 0) const override {
+        PM_CORE_ASSERT(iIndex < _colorAttachments.size());
+        return _colorAttachments[iIndex];
+    }
     const FrameBufferProperties& properties() const override { return _properties; }
 
     void invalidate();
 
   private:
-    uint32_t _rendererId      = 0;
-    uint32_t _colorAttachment = 0;
-    uint32_t _depthAttachment = 0;
+    uint32_t _rendererId = 0;
 
     FrameBufferProperties _properties;
+
+    std::vector<FrameBufferTextureProperties> _colorAttachmentProperties;
+    FrameBufferTextureProperties              _depthAttachmentProperties = FrameBufferTextureFormat::NONE;
+
+    std::vector<uint32_t> _colorAttachments;
+    uint32_t              _depthAttachment = 0;
 };
 
 }

@@ -20,7 +20,12 @@ void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
 
     _activeScene = CreateRef<Scene>();
-    _frameBuffer = FrameBuffer::Create(FrameBufferProperties(1280, 720));
+
+    FrameBufferProperties properties;
+    properties.width       = 1280;
+    properties.height      = 720;
+    properties.attachments = {FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::DEPTH};
+    _frameBuffer           = FrameBuffer::Create(properties);
 
     _viewportPanel.editorCamera() = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
     _sceneHierarchyPanel.setContext(_activeScene);
