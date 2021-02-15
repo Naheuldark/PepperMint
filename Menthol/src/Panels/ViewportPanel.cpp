@@ -11,10 +11,29 @@
 
 namespace PepperMint {
 
+void ViewportPanel::onUpdate(Timestep iTimestep) {
+    // Mouse picking
+    //	(0,0) is the bottom left corner
+    //	(_viewportSize.x, _viewportSize.y) is the top right corner
+    auto&& [mx, my] = ImGui::GetMousePos();
+    mx -= _viewportBounds[0].x;
+    my -= _viewportBounds[0].y;
+    my         = _viewportSize.y - my;
+    int mouseX = (int)mx;
+    int mouseY = (int)my;
+
+    if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)_viewportSize.x && mouseY < (int)_viewportSize.y) {
+        int pixelData = _frameBuffer->readPixel(1, mouseX, mouseY);
+        PM_CORE_WARN("Pixel data = {0}", pixelData);
+    }
+}
+
 void ViewportPanel::onImGuiRender() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
     ImGui::Begin("Viewport");
     {
+        auto&& viewportOffset = ImGui::GetCursorPos(); // Includes tab bar
+
         _viewportFocused = ImGui::IsWindowFocused();
         _viewportHovered = ImGui::IsWindowHovered();
         Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused && !_viewportHovered);
@@ -22,7 +41,14 @@ void ViewportPanel::onImGuiRender() {
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         _viewportSize            = {viewportPanelSize.x, viewportPanelSize.y};
 
-        ImGui::Image(reinterpret_cast<void*>(_textureId), ImVec2{_viewportSize.x, _viewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+        auto&& textureId = _frameBuffer->colorAttachmentRendererId();
+        ImGui::Image(reinterpret_cast<void*>(textureId), ImVec2{_viewportSize.x, _viewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+
+        // Bounds
+        auto&& windowSize  = ImGui::GetWindowSize();
+        auto&& windowPos   = ImGui::GetWindowPos();
+        _viewportBounds[0] = {windowPos.x + viewportOffset.x, windowPos.y + viewportOffset.y};                 // Top left corner
+        _viewportBounds[1] = {_viewportBounds[0].x + _viewportSize.x, _viewportBounds[0].y + _viewportSize.y}; // Bottom right corner
 
         // Gizmos
         if (_editorMode && _selectedEntity && _gizmoType != -1) {

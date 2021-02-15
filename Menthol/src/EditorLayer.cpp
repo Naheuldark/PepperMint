@@ -24,9 +24,10 @@ void EditorLayer::onAttach() {
     FrameBufferProperties properties;
     properties.width       = 1280;
     properties.height      = 720;
-    properties.attachments = {FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::DEPTH};
+    properties.attachments = {FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::RED_INTEGER, FrameBufferTextureFormat::DEPTH};
     _frameBuffer           = FrameBuffer::Create(properties);
 
+    _viewportPanel.setFrameBuffer(_frameBuffer);
     _viewportPanel.editorCamera() = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
     _sceneHierarchyPanel.setContext(_activeScene);
 }
@@ -71,6 +72,9 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
         } else {
             _activeScene->onUpdateEditor(iTimestep, _viewportPanel.editorCamera());
         }
+
+        _viewportPanel.onUpdate(iTimestep);
+
         _frameBuffer->unbind();
     }
 }
@@ -162,7 +166,6 @@ void EditorLayer::onImGuiRender() {
 
     // Viewport
     _viewportPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
-    _viewportPanel.setTextureId(_frameBuffer->colorAttachmentRendererId());
     _viewportPanel.setEditorMode(!_playing);
     _viewportPanel.onImGuiRender();
 

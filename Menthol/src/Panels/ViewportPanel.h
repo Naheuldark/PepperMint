@@ -9,6 +9,7 @@ class ViewportPanel {
     ViewportPanel()  = default;
     ~ViewportPanel() = default;
 
+    void onUpdate(Timestep iTimestep);
     void onImGuiRender();
     bool onKeyPressed(KeyPressedEvent& iEvent);
 
@@ -19,18 +20,20 @@ class ViewportPanel {
 
     void setEditorMode(bool iEditorMode) { _editorMode = iEditorMode; }
     void setSelectedEntity(Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
-    void setTextureId(uint64_t iTextureId) { _textureId = iTextureId; }
+    void setFrameBuffer(Ref<FrameBuffer> ioFrameBuffer) { _frameBuffer = ioFrameBuffer; }
 
   private:
     Entity       _selectedEntity{};
     EditorCamera _editorCamera;
 
-    uint64_t _textureId = 0;
+    Ref<FrameBuffer> _frameBuffer;
 
     // Viewport
-    glm::vec2 _viewportSize    = {0.0f, 0.0f};
-    bool      _viewportFocused = false;
-    bool      _viewportHovered = false;
+    glm::vec2 _viewportSize = {0.0f, 0.0f};
+    glm::vec2 _viewportBounds[2];
+
+    bool _viewportFocused = false;
+    bool _viewportHovered = false;
 
     // Gizmos
     bool _editorMode = true;

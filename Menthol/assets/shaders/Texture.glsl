@@ -2,7 +2,7 @@
 
 #type vertex
 #version 450
-			
+
 layout(location = 0) in vec3 iPosition;
 layout(location = 1) in vec4 iColor;
 layout(location = 2) in vec2 iTexCoord;
@@ -26,8 +26,9 @@ void main() {
 
 #type fragment
 #version 450
-			
+
 layout(location = 0) out vec4 oColor;
+layout(location = 1) out int oEntityId;
 
 in vec4 vColor;
 in vec2 vTexCoord;
@@ -38,8 +39,7 @@ uniform sampler2D uTextures[32];
 
 void main() {
 	vec4 texColor = vColor;
-	switch(int(vTexIndex))
-	{
+	switch(int(vTexIndex)) {
 		case 0: texColor *= texture(uTextures[0], vTexCoord * vTilingFactor); break;
 		case 1: texColor *= texture(uTextures[1], vTexCoord * vTilingFactor); break;
 		case 2: texColor *= texture(uTextures[2], vTexCoord * vTilingFactor); break;
@@ -74,4 +74,5 @@ void main() {
 		case 31: texColor *= texture(uTextures[31], vTexCoord * vTilingFactor); break;
 	}
 	oColor = texColor;
+	oEntityId = 50; // TODO
 }

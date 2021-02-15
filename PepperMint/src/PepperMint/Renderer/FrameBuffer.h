@@ -9,6 +9,7 @@ enum class FrameBufferTextureFormat {
 
     // Color
     RGBA8,
+    RED_INTEGER,
 
     // Depth / Stencil
     DEPTH24STENCIL8,
@@ -52,7 +53,8 @@ class FrameBuffer {
     virtual void bind()   = 0;
     virtual void unbind() = 0;
 
-    virtual void resize(uint32_t iWidth, uint32_t iHeight) = 0;
+    virtual void resize(uint32_t iWidth, uint32_t iHeight)                  = 0;
+    virtual int  readPixel(uint32_t iAttachmentIndex, int iPosX, int iPosY) = 0;
 
     virtual uint32_t                     colorAttachmentRendererId(uint32_t iIndex = 0) const = 0;
     virtual const FrameBufferProperties& properties() const                                   = 0;
