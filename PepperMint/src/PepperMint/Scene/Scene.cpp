@@ -54,7 +54,7 @@ void Scene::onUpdateRuntime(Timestep iTimestep) {
             auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
             for (auto&& entity : group) {
                 auto&& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-                Renderer2D::DrawQuad(transformComponent.transform(), 1.0f, nullptr, spriteComponent.color);
+                Renderer2D::DrawSprite(transformComponent, spriteComponent, (int)entity);
             }
         }
         Renderer2D::EndScene();
@@ -67,8 +67,8 @@ void Scene::onUpdateEditor(Timestep iTimestep, EditorCamera& iCamera) {
         auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
         for (auto&& entity : group) {
             auto&& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-            Renderer2D::DrawQuad(transformComponent.transform(), 1.0f, nullptr, spriteComponent.color);
-		}
+            Renderer2D::DrawSprite(transformComponent, spriteComponent, (int)entity);
+        }
     }
     Renderer2D::EndScene();
 }

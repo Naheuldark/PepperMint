@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <PepperMint.h>
 
 namespace PepperMint {
 
@@ -14,7 +14,10 @@ class StatisticsPanel {
     std::string currentFile() const { return _currentFile; }
     void        setCurrentFile(const std::string& iFile) { _currentFile = iFile; }
 
+    void setHoveredEntity(const Entity& iHoveredEntity) { _hoveredEntity = iHoveredEntity; }
+
   private:
     std::string _currentFile;
+    Entity      _hoveredEntity{};
 };
 }

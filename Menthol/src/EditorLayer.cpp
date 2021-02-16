@@ -24,11 +24,16 @@ void EditorLayer::onAttach() {
     FrameBufferProperties properties;
     properties.width       = 1280;
     properties.height      = 720;
-    properties.attachments = {FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::RED_INTEGER, FrameBufferTextureFormat::DEPTH};
-    _frameBuffer           = FrameBuffer::Create(properties);
+    properties.attachments = {
+        FrameBufferTextureFormat::RGBA8,       // Color
+        FrameBufferTextureFormat::RED_INTEGER, // Entity Id
+        FrameBufferTextureFormat::DEPTH        // Depth
+    };
+    _frameBuffer = FrameBuffer::Create(properties);
 
-    _viewportPanel.setFrameBuffer(_frameBuffer);
     _viewportPanel.editorCamera() = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+    _viewportPanel.setFrameBuffer(_frameBuffer);
+    _viewportPanel.setActiveScene(_activeScene);
     _sceneHierarchyPanel.setContext(_activeScene);
 }
 
@@ -62,6 +67,9 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
         _frameBuffer->bind();
         RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         RenderCommand::Clear();
+
+        // Clear Entity Id attachment to -1
+        _frameBuffer->clearAttachment(1, -1);
     }
 
     {
@@ -155,6 +163,7 @@ void EditorLayer::onImGuiRender() {
     }
 
     // Scene Hierarchy Panel
+    _sceneHierarchyPanel.setHoveredEntity(_viewportPanel.hoveredEntity());
     _sceneHierarchyPanel.onImGuiRender();
 
     // Properties Panel
@@ -162,6 +171,7 @@ void EditorLayer::onImGuiRender() {
     _propertiesPanel.onImGuiRender();
 
     // Statistics Panel
+    _statisticsPanel.setHoveredEntity(_viewportPanel.hoveredEntity());
     _statisticsPanel.onImGuiRender();
 
     // Viewport
@@ -232,6 +242,7 @@ void EditorLayer::newScene() {
     auto&& viewportsize = _viewportPanel.viewportSize();
     _activeScene->onViewportResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
 
+    _viewportPanel.setActiveScene(_activeScene);
     _sceneHierarchyPanel.setContext(_activeScene);
     _statisticsPanel.setCurrentFile("");
 }

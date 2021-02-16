@@ -55,6 +55,18 @@ bool isDepthFormat(FrameBufferTextureFormat iFormat) {
     }
     return false;
 }
+
+GLenum frameBufferTextureFormatToOpenGL(FrameBufferTextureFormat iFormat) {
+    switch (iFormat) {
+        case FrameBufferTextureFormat::RGBA8:
+            return GL_RGBA8;
+        case FrameBufferTextureFormat::RED_INTEGER:
+            return GL_RED_INTEGER;
+        default:
+            PM_CORE_ASSERT(false, "Unknown color FrameBufferTextureFormat");
+            return 0;
+    }
+}
 }
 
 static const uint32_t kMAX_FRAMEBUFFER_SIZE = 8192;
@@ -103,6 +115,13 @@ int OpenGLFrameBuffer::readPixel(uint32_t iAttachmentIndex, int iPosX, int iPosY
     glReadPixels(iPosX, iPosY, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
 
     return pixelData;
+}
+
+void OpenGLFrameBuffer::clearAttachment(uint32_t iAttachmentIndex, int iValue) {
+    PM_CORE_ASSERT(iAttachmentIndex < _colorAttachments.size());
+
+    auto&& properties = _colorAttachmentProperties[iAttachmentIndex];
+    glClearTexImage(_colorAttachments[iAttachmentIndex], 0, frameBufferTextureFormatToOpenGL(properties.textureFormat), GL_INT, &iValue);
 }
 
 void OpenGLFrameBuffer::invalidate() {

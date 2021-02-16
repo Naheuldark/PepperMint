@@ -15,6 +15,9 @@ struct QuadVertex {
     glm::vec2 texCoord;
     float     texIndex;
     float     tilingFactor;
+
+    // Editor only
+    int entityId;
 };
 
 struct Renderer2DData {
@@ -60,6 +63,7 @@ void Renderer2D::Init() {
         {ShaderDataType::FLOAT2, "iTexCoord"},
         {ShaderDataType::FLOAT, "iTexIndex"},
         {ShaderDataType::FLOAT, "iTilingFactor"},
+        {ShaderDataType::INT, "iEntityId"},
     });
     sData.quadVertexArray->addVertexBuffer(sData.quadVertexBuffer);
 
@@ -187,27 +191,32 @@ void Renderer2D::ResetStats() { memset(&sData.stats, 0, sizeof(Statistics)); }
 
 Renderer2D::Statistics Renderer2D::Stats() { return sData.stats; }
 
+////////////////
+// Primitives //
+////////////////
 void Renderer2D::DrawQuad(const glm::vec2& iPosition,
-                          const float      iRotation,
+                          float            iRotation,
                           const glm::vec2& iScale,
-                          const float      iTilingFactor,
+                          float            iTilingFactor,
                           Ref<Texture2D>   iTexture,
-                          const glm::vec4& iColor) {
-    DrawQuad({iPosition.x, iPosition.y, 0.0f}, iRotation, iScale, iTilingFactor, iTexture, iColor);
+                          const glm::vec4& iColor,
+                          int              iEntityId) {
+    DrawQuad({iPosition.x, iPosition.y, 0.0f}, iRotation, iScale, iTilingFactor, iTexture, iColor, iEntityId);
 }
 
 void Renderer2D::DrawQuad(const glm::vec3& iPosition,
-                          const float      iRotation,
+                          float            iRotation,
                           const glm::vec2& iScale,
-                          const float      iTilingFactor,
+                          float            iTilingFactor,
                           Ref<Texture2D>   iTexture,
-                          const glm::vec4& iColor) {
+                          const glm::vec4& iColor,
+                          int              iEntityId) {
     auto&& transform = glm::translate(glm::mat4(1.0f), iPosition) * glm::rotate(glm::mat4(1.0f), glm::radians(iRotation), {0.0f, 0.0f, 1.0f}) *
                        glm::scale(glm::mat4(1.0f), {iScale.x, iScale.y, 1.0f});
-    DrawQuad(transform, iTilingFactor, iTexture, iColor);
+    DrawQuad(transform, iTilingFactor, iTexture, iColor, iEntityId);
 }
 
-void Renderer2D::DrawQuad(const glm::mat4& iTransform, const float iTilingFactor, Ref<Texture2D> iTexture, const glm::vec4& iColor) {
+void Renderer2D::DrawQuad(const glm::mat4& iTransform, float iTilingFactor, Ref<Texture2D> iTexture, const glm::vec4& iColor, int iEntityId) {
     PM_PROFILE_FUNCTION();
 
     constexpr size_t    quadVertexCount = 4;
@@ -244,11 +253,19 @@ void Renderer2D::DrawQuad(const glm::mat4& iTransform, const float iTilingFactor
         sData.quadVertexBufferPtr->texCoord     = textureCoords[i];
         sData.quadVertexBufferPtr->texIndex     = textureIndex;
         sData.quadVertexBufferPtr->tilingFactor = iTilingFactor;
+        sData.quadVertexBufferPtr->entityId     = iEntityId;
         sData.quadVertexBufferPtr++;
     }
 
     sData.quadIndexCount += 6;
 
     sData.stats.quadCount++;
+}
+
+////////////////
+// Components //
+////////////////
+void Renderer2D::DrawSprite(const TransformComponent& iTransformComponent, const SpriteRendererComponent& iSpriteComponent, int iEntityId) {
+    DrawQuad(iTransformComponent.transform(), 1.0f, nullptr, iSpriteComponent.color, iEntityId);
 }
 }

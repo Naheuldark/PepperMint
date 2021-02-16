@@ -14,6 +14,7 @@ class OpenGLFrameBuffer : public FrameBuffer {
 
     void resize(uint32_t iWidth, uint32_t iHeight) override;
     int  readPixel(uint32_t iAttachmentIndex, int iPosX, int iPosY) override;
+    void clearAttachment(uint32_t iAttachmentIndex, int iValue) override;
 
     uint32_t colorAttachmentRendererId(uint32_t iIndex = 0) const override {
         PM_CORE_ASSERT(iIndex < _colorAttachments.size());

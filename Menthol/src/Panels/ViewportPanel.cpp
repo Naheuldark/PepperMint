@@ -23,8 +23,8 @@ void ViewportPanel::onUpdate(Timestep iTimestep) {
     int mouseY = (int)my;
 
     if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)_viewportSize.x && mouseY < (int)_viewportSize.y) {
-        int pixelData = _frameBuffer->readPixel(1, mouseX, mouseY);
-        PM_CORE_WARN("Pixel data = {0}", pixelData);
+        int pixelData  = _frameBuffer->readPixel(1, mouseX, mouseY);
+        _hoveredEntity = (pixelData == -1) ? Entity() : Entity((entt::entity)pixelData, _activeScene.get());
     }
 }
 

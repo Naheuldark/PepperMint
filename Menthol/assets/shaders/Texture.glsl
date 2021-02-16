@@ -8,6 +8,7 @@ layout(location = 1) in vec4 iColor;
 layout(location = 2) in vec2 iTexCoord;
 layout(location = 3) in float iTexIndex;
 layout(location = 4) in float iTilingFactor;
+layout(location = 5) in int iEntityId;
 
 uniform mat4 uViewProjection;
 
@@ -15,12 +16,14 @@ out vec4 vColor;
 out vec2 vTexCoord;
 out flat float vTexIndex;
 out float vTilingFactor;
+out flat int vEntityId;
 
 void main() {
 	vColor = iColor;
 	vTexCoord = iTexCoord;
 	vTexIndex = iTexIndex;
 	vTilingFactor = iTilingFactor;
+	vEntityId = iEntityId;
 	gl_Position = uViewProjection * vec4(iPosition, 1.0);	
 }
 
@@ -34,6 +37,7 @@ in vec4 vColor;
 in vec2 vTexCoord;
 in flat float vTexIndex;
 in float vTilingFactor;
+in flat int vEntityId;
 
 uniform sampler2D uTextures[32];
 
@@ -74,5 +78,5 @@ void main() {
 		case 31: texColor *= texture(uTextures[31], vTexCoord * vTilingFactor); break;
 	}
 	oColor = texColor;
-	oEntityId = 50; // TODO
+	oEntityId = vEntityId;
 }

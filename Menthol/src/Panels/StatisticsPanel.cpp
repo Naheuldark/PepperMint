@@ -2,8 +2,6 @@
 
 #include <imgui/imgui.h>
 
-#include <PepperMint.h>
-
 namespace PepperMint {
 
 void StatisticsPanel::onImGuiRender() {
@@ -17,6 +15,14 @@ void StatisticsPanel::onImGuiRender() {
             currentFile += _currentFile.substr(pos + 1);
         }
         ImGui::Text(currentFile.c_str());
+
+        ImGui::Separator();
+
+        std::string hoveredEntity("None");
+        if (_hoveredEntity) {
+            hoveredEntity = _hoveredEntity.get<TagComponent>().tag;
+        }
+        ImGui::Text("Hovered Entity: %s", hoveredEntity.c_str());
 
         ImGui::Separator();
 

@@ -2,6 +2,9 @@
 
 #include <imgui/imgui.h>
 
+#include <ImGuizmo.h>
+
+#include <PepperMint/Core/Input.h>
 #include <PepperMint/Scene/Components.h>
 
 namespace PepperMint {
@@ -11,8 +14,14 @@ void SceneHierarchyPanel::onImGuiRender() {
     {
         _context->_registry.each([&](auto&& entity) { drawEntityNode({entity, _context.get()}); });
 
-        if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered()) {
+        // Left-click on blank space
+        if (Input::IsMouseButtonPressed(Mouse::BUTTON_LEFT) && ImGui::IsWindowHovered()) {
             _selectedEntity = {};
+        }
+
+        // Left-click with a hovered entity in the viewport
+        if (Input::IsMouseButtonPressed(Mouse::BUTTON_LEFT) && _hoveredEntity && (!ImGuizmo::IsOver())) {
+            _selectedEntity = _hoveredEntity;
         }
 
         // Right-click on blank space
