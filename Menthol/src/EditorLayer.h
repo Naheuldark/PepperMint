@@ -22,6 +22,7 @@ class EditorLayer : public Layer {
 
   private:
     bool onKeyPressed(KeyPressedEvent& iEvent);
+    bool onMouseButtonPressed(MouseButtonPressedEvent& iEvent);
 
     void newScene();
     void openScene();

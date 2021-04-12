@@ -12,11 +12,13 @@ class ViewportPanel {
     void onUpdate(Timestep iTimestep);
     void onImGuiRender();
     bool onKeyPressed(KeyPressedEvent& iEvent);
+    bool onMouseButtonPressed(MouseButtonPressedEvent& iEvent);
 
     EditorCamera& editorCamera() { return _editorCamera; }
     glm::vec2     viewportSize() const { return _viewportSize; }
     bool          viewportFocused() const { return _viewportFocused; }
     bool          viewportHovered() const { return _viewportHovered; }
+    Entity        selectedEntity() const { return _selectedEntity; }
     Entity        hoveredEntity() const { return _hoveredEntity; }
 
     void setEditorMode(bool iEditorMode) { _editorMode = iEditorMode; }

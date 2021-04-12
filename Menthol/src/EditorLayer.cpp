@@ -163,7 +163,7 @@ void EditorLayer::onImGuiRender() {
     }
 
     // Scene Hierarchy Panel
-    _sceneHierarchyPanel.setHoveredEntity(_viewportPanel.hoveredEntity());
+    _sceneHierarchyPanel.setSelectedEntity(_viewportPanel.selectedEntity());
     _sceneHierarchyPanel.onImGuiRender();
 
     // Properties Panel
@@ -187,6 +187,7 @@ void EditorLayer::onEvent(Event& iEvent) {
 
     EventDispatcher dispatcher(iEvent);
     dispatcher.dispatch<KeyPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onKeyPressed));
+    dispatcher.dispatch<MouseButtonPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onMouseButtonPressed));
 }
 
 bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
@@ -232,6 +233,12 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
     }
 
     _viewportPanel.onKeyPressed(iEvent);
+
+    return true;
+}
+
+bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& iEvent) {
+    _viewportPanel.onMouseButtonPressed(iEvent);
 
     return true;
 }

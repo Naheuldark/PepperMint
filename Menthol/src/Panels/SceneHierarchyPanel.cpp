@@ -19,11 +19,6 @@ void SceneHierarchyPanel::onImGuiRender() {
             _selectedEntity = {};
         }
 
-        // Left-click with a hovered entity in the viewport
-        if (Input::IsMouseButtonPressed(Mouse::BUTTON_LEFT) && _hoveredEntity && (!ImGuizmo::IsOver())) {
-            _selectedEntity = _hoveredEntity;
-        }
-
         // Right-click on blank space
         if (ImGui::BeginPopupContextWindow(0, 1, false)) {
             if (ImGui::MenuItem("Create Empty Entity")) {

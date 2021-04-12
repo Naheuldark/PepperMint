@@ -17,8 +17,9 @@ class SceneHierarchyPanel {
     void onImGuiRender();
 
     Entity selectedEntity() const { return _selectedEntity; }
-    void   setHoveredEntity(Entity iHoveredEntity) { _hoveredEntity = iHoveredEntity; }
-    void   setContext(const Ref<Scene>& iScene) {
+    void   setSelectedEntity(Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
+
+    void setContext(const Ref<Scene>& iScene) {
         _context        = iScene;
         _selectedEntity = {};
     }
@@ -29,6 +30,5 @@ class SceneHierarchyPanel {
   private:
     Ref<Scene> _context;
     Entity     _selectedEntity;
-    Entity     _hoveredEntity;
 };
 }

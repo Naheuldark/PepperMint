@@ -18,11 +18,12 @@ void ViewportPanel::onUpdate(Timestep iTimestep) {
     auto&& [mx, my] = ImGui::GetMousePos();
     mx -= _viewportBounds[0].x;
     my -= _viewportBounds[0].y;
-    my         = _viewportSize.y - my;
-    int mouseX = (int)mx;
-    int mouseY = (int)my;
+    auto&& viewportSize = _viewportBounds[1] - _viewportBounds[0];
+    my                  = viewportSize.y - my;
+    int mouseX          = (int)mx;
+    int mouseY          = (int)my;
 
-    if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)_viewportSize.x && mouseY < (int)_viewportSize.y) {
+    if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y) {
         int pixelData  = _frameBuffer->readPixel(1, mouseX, mouseY);
         _hoveredEntity = (pixelData == -1) ? Entity() : Entity((entt::entity)pixelData, _activeScene.get());
     }
@@ -32,32 +33,33 @@ void ViewportPanel::onImGuiRender() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
     ImGui::Begin("Viewport");
     {
-        auto&& viewportOffset = ImGui::GetCursorPos(); // Includes tab bar
+        // Bounds (with/without tab)
+        auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+        auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+        auto viewportOffset    = ImGui::GetWindowPos();
+        _viewportBounds[0]     = {viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y};
+        _viewportBounds[1]     = {viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y};
 
+        // Focus
         _viewportFocused = ImGui::IsWindowFocused();
         _viewportHovered = ImGui::IsWindowHovered();
         Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused && !_viewportHovered);
 
+        // Size
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         _viewportSize            = {viewportPanelSize.x, viewportPanelSize.y};
 
+        // Viewport rendered image
         auto&& textureId = _frameBuffer->colorAttachmentRendererId();
         ImGui::Image(reinterpret_cast<void*>(textureId), ImVec2{_viewportSize.x, _viewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
-
-        // Bounds
-        auto&& windowSize  = ImGui::GetWindowSize();
-        auto&& windowPos   = ImGui::GetWindowPos();
-        _viewportBounds[0] = {windowPos.x + viewportOffset.x, windowPos.y + viewportOffset.y};                 // Top left corner
-        _viewportBounds[1] = {_viewportBounds[0].x + _viewportSize.x, _viewportBounds[0].y + _viewportSize.y}; // Bottom right corner
 
         // Gizmos
         if (_editorMode && _selectedEntity && _gizmoType != -1) {
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
 
-            float windowWidth  = (float)ImGui::GetWindowWidth();
-            float windowHeight = (float)ImGui::GetWindowHeight();
-            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+            ImGuizmo::SetRect(
+                _viewportBounds[0].x, _viewportBounds[0].y, _viewportBounds[1].x - _viewportBounds[0].x, _viewportBounds[1].y - _viewportBounds[0].y);
 
             // Editor Camera
             auto&& cameraProjection = _editorCamera.projection();
@@ -129,6 +131,16 @@ bool ViewportPanel::onKeyPressed(KeyPressedEvent& iEvent) {
 
         default:
             break;
+    }
+
+    return true;
+}
+
+bool ViewportPanel::onMouseButtonPressed(MouseButtonPressedEvent& iEvent) {
+    if (iEvent.mouseButton() == Mouse::BUTTON_LEFT) {
+        if (_viewportHovered && (!ImGuizmo::IsOver()) && (!Input::IsKeyPressed(Key::LEFT_ALT))) {
+            _selectedEntity = _hoveredEntity;
+		}
     }
 
     return true;
