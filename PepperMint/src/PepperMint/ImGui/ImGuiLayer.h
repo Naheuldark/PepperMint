@@ -25,8 +25,7 @@ class ImGuiLayer : public Layer {
     void end();
 
   private:
-    float _time        = 0.0f;
-    bool  _blockEvents = true;
+    bool _blockEvents = true;
 };
 
 }

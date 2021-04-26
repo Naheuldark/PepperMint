@@ -35,7 +35,7 @@ void serializeEntity(YAML::Emitter& out, Entity iEntityToSerialize) {
 void SceneSerializer::serialize(const std::string& iFilepath) {
     YAML::Emitter out;
     out << YAML::BeginMap;
-    out << YAML::Key << "Scene" << YAML::Value << "Untitled"; // TODO
+    out << YAML::Key << "Scene" << YAML::Value << _scene->name();
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
     _scene->_registry.each([&](auto&& entity) {
         Entity entityToSerialize = {entity, _scene.get()};

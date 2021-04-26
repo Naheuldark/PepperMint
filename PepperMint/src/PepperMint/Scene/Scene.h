@@ -15,8 +15,10 @@ class Scene {
     friend class SceneSerializer;
 
   public:
-    Scene()  = default;
+    Scene(const std::string& iName = "Untitled") : _name(iName) {}
     ~Scene() = default;
+
+    std::string name() const { return _name; }
 
     Entity createEntity(const std::string& iName = "Entity");
     void   destroyEntity(Entity iEntity);
@@ -33,6 +35,8 @@ class Scene {
     void onAddComponent(Entity iEntity, Component& ioComponent);
 
   private:
+    std::string _name;
+
     entt::registry _registry;
 
     uint32_t _viewportWidth  = 0;
