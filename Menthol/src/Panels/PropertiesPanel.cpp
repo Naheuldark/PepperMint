@@ -103,7 +103,7 @@ void drawComponents(Entity ioSelectedEntity) {
 
         char buffer[256];
         memset(buffer, 0, sizeof(buffer));
-        strncpy_s(buffer, sizeof(buffer), tag.c_str(), sizeof(tag.c_str()));
+        strncpy_s(buffer, sizeof(buffer), tag.c_str(), tag.length());
         if (ImGui::InputText("##Tag", buffer, sizeof(buffer))) {
             tag = std::string(buffer);
         }

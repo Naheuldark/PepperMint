@@ -22,7 +22,13 @@ void SceneHierarchyPanel::onImGuiRender() {
         // Right-click on blank space
         if (ImGui::BeginPopupContextWindow(0, 1, false)) {
             if (ImGui::MenuItem("Create Empty Entity")) {
-                _context->createEntity("Empty Entity");
+                _selectedEntity = _context->createEntity("Empty Entity");
+            } else if (ImGui::MenuItem("Create Camera")) {
+                _selectedEntity = _context->createEntity("Camera");
+                _selectedEntity.add<CameraComponent>();
+            } else if (ImGui::MenuItem("Create Sprite")) {
+                _selectedEntity = _context->createEntity("Sprite");
+                _selectedEntity.add<SpriteRendererComponent>();
             }
             ImGui::EndPopup();
         }
