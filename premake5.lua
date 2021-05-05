@@ -1,4 +1,9 @@
+--
+-- PepperMint Project
+--
+
 include "./vendor/premake/premake_custom/solution_items.lua"
+include "./dependencies.lua"
 
 workspace "PepperMint"
 	architecture "x86_64"
@@ -20,17 +25,6 @@ workspace "PepperMint"
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-
--- Include directories relative to root folder (solution directory)
-IncludeDir = {}
-IncludeDir["GLFW"] = "%{wks.location}/PepperMint/vendor/GLFW/include"
-IncludeDir["Glad"] = "%{wks.location}/PepperMint/vendor/Glad/include"
-IncludeDir["ImGui"] = "%{wks.location}/PepperMint/vendor/imgui"
-IncludeDir["glm"] = "%{wks.location}/PepperMint/vendor/glm"
-IncludeDir["stb_image"] = "%{wks.location}/PepperMint/vendor/stb_image"
-IncludeDir["entt"] = "%{wks.location}/PepperMint/vendor/entt/include"
-IncludeDir["yaml_cpp"] = "%{wks.location}/PepperMint/vendor/yaml-cpp/include"
-IncludeDir["ImGuizmo"] = "%{wks.location}/PepperMint/vendor/ImGuizmo"
 
 -- Include external premake files
 group "Dependencies"
