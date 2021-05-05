@@ -1,7 +1,7 @@
 # Binaries
 **/bin/
-!vendor/premake/bin/
 bin-int/
+!vendor/premake/bin/
 
 # PepperMint files
 **.log
@@ -15,3 +15,8 @@ bin-int/
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
+
+# Directories
+PepperMint/vendor/VulkanSDK
+Menthol/assets/cache
+scripts/__pycache__
