@@ -1,3 +1,7 @@
+---
+--- Menthol
+---
+
 project "Menthol"
 	kind "ConsoleApp"
 	language "C++"
@@ -18,7 +22,6 @@ project "Menthol"
 		"%{wks.location}/PepperMint/vendor",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.entt}",
-		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}"
 	}
 
