@@ -1,3 +1,7 @@
+---
+--- Sandbox
+---
+
 project "Sandbox"
 	kind "ConsoleApp"
 	language "C++"

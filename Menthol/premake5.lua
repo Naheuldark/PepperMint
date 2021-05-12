@@ -36,6 +36,9 @@ project "Menthol"
 		defines "PM_DEBUG"
 		runtime "Debug"
 		symbols "on"
+		debugenvs { 
+			"PATH=%{LibraryDir.VulkanSDK_Debug_DLL};%PATH%;"
+		}
 
 	filter "configurations:Release"
 		defines "PM_RELEASE"

@@ -20,8 +20,9 @@ IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 LibraryDir = {}
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
 LibraryDir["VulkanSDK_Debug"] = "%{wks.location}/PepperMint/vendor/VulkanSDK/Lib"
+LibraryDir["VulkanSDK_Debug_DLL"] = "%{wks.location}/PepperMint/vendor/VulkanSDK/Bin"
 
--- Library declarations
+-- Library declarations (.lib)
 Library = {}
 Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
 Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK}/VkLayer_utils.lib"
