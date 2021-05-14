@@ -1,5 +1,7 @@
 #include "pmpch.h"
 
+#include <yaml-cpp/yaml.h>
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 

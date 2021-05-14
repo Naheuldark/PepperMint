@@ -40,11 +40,22 @@ class OpenGLShader : public Shader {
 
     std::string                             readFile(const std::string& iShaderFile);
     std::unordered_map<GLenum, std::string> preProcess(const std::string& iSource);
-    void                                    compile(const std::unordered_map<GLenum, std::string>& iShaderSources);
+
+    void compileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& iShaderSources);
+    void compileOrGetOpenGLBinaries();
+    void createProgram();
+    void reflect(GLenum iStage, const std::vector<uint32_t>& iShaderData);
 
   private:
     uint32_t    _rendererId;
     std::string _name;
+
+    std::filesystem::path _shaderFile;
+
+    std::unordered_map<GLenum, std::vector<uint32_t>> _vulkanSPIRV;
+    std::unordered_map<GLenum, std::vector<uint32_t>> _openglSPIRV;
+
+    std::unordered_map<GLenum, std::string> _openglSourceCode;
 };
 
 }

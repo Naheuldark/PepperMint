@@ -2,10 +2,14 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <yaml-cpp/yaml.h>
 
 #include "PepperMint/Scene/SceneCamera.h"
 #include "PepperMint/Scene/ScriptableEntity.h"
+
+namespace YAML {
+class Emitter;
+class Node;
+}
 
 namespace PepperMint {
 

@@ -119,7 +119,7 @@ void OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> iVertexBuffer) {
             }
 
             default:
-                PM_CORE_ASSERT(false, "Unknown ShaderDataType!")
+                PM_CORE_ASSERT(false, "Unknown ShaderDataType!");
         }
     }
 

@@ -1,4 +1,5 @@
 import os
+import ssl
 import subprocess
 import sys
 from pathlib import Path
@@ -52,7 +53,7 @@ def CheckVulkanSDKDebugLibs():
     if (not shadercdLib.exists()):
         print(f"No Vulkan SDK debug libs found. (Checked {shadercdLib})")
         print("Downloading", VulkanSDKDebugLibsURL)
-        with urlopen(VulkanSDKDebugLibsURL) as zipresp:
+        with urlopen(VulkanSDKDebugLibsURL, context=ssl.SSLContext()) as zipresp:
             with ZipFile(BytesIO(zipresp.read())) as zfile:
                 zfile.extractall(OutputDirectory)
 

@@ -1,6 +1,6 @@
---
--- PepperMint Project
---
+---
+--- PepperMint Project
+---
 
 include "./vendor/premake/premake_custom/solution_items.lua"
 include "./dependencies.lua"

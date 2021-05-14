@@ -1,6 +1,6 @@
---
--- PepperMint
---
+---
+--- PepperMint
+---
 
 project "PepperMint"
 	kind "StaticLib"
