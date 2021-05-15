@@ -7,9 +7,9 @@ namespace PepperMint {
 
 class Menthol : public Application {
   public:
-    Menthol() : Application("Menthol") { pushLayer(CreateRef<EditorLayer>()); }
+    Menthol(PepperMint::ApplicationCommandLineArgs iArgs) : Application("Menthol", iArgs) { pushLayer(CreateRef<EditorLayer>()); }
     ~Menthol() = default;
 };
 }
 
-PepperMint::Application* PepperMint::CreateApplication() { return new PepperMint::Menthol(); }
+PepperMint::Application* PepperMint::CreateApplication(PepperMint::ApplicationCommandLineArgs iArgs) { return new PepperMint::Menthol(iArgs); }

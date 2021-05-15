@@ -10,7 +10,7 @@ namespace PepperMint {
 
 Application* Application::sInstance = nullptr;
 
-Application::Application(const std::string& iName) {
+Application::Application(const std::string& iName, ApplicationCommandLineArgs iArgs) : _commandLineArgs(iArgs) {
     PM_PROFILE_FUNCTION();
 
     PM_CORE_ASSERT(!sInstance, "Application already exists!")
