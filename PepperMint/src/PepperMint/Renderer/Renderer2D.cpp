@@ -1,10 +1,12 @@
 #include "pmpch.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "PepperMint/Renderer/RenderCommand.h"
 #include "PepperMint/Renderer/Renderer2D.h"
 #include "PepperMint/Renderer/Shader.h"
+#include "PepperMint/Renderer/UniformBuffer.h"
 #include "PepperMint/Renderer/VertexArray.h"
 
 namespace PepperMint {
@@ -41,6 +43,12 @@ struct Renderer2DData {
     glm::vec4 quadVertexPositions[4]{};
 
     Renderer2D::Statistics stats{};
+
+    struct CameraData {
+        glm::mat4 viewProjection;
+    };
+    CameraData         cameraBuffer;
+    Ref<UniformBuffer> cameraUniformBuffer;
 };
 
 static Renderer2DData sData;
@@ -118,9 +126,8 @@ void Renderer2D::Init() {
     // Shaders //
     /////////////
 
-    sData.textureShader = Shader::Create("assets/shaders/Texture.glsl");
-    sData.textureShader->bind();
-    sData.textureShader->setIntArray("uTextures", samplers, Renderer2DData::MAX_TEXTURE_SLOTS);
+    sData.textureShader       = Shader::Create("assets/shaders/Texture.glsl");
+    sData.cameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
 }
 
 void Renderer2D::Shutdown() {
@@ -132,10 +139,8 @@ void Renderer2D::Shutdown() {
 void Renderer2D::BeginScene(const Camera& iCamera, const glm::mat4& iTransform) {
     PM_PROFILE_FUNCTION();
 
-    glm::mat4 viewProjectionMatrix = iCamera.projection() * glm::inverse(iTransform);
-
-    sData.textureShader->bind();
-    sData.textureShader->setMat4("uViewProjection", viewProjectionMatrix);
+    sData.cameraBuffer.viewProjection = iCamera.projection() * glm::inverse(iTransform);
+    sData.cameraUniformBuffer->setData(&sData.cameraBuffer, sizeof(Renderer2DData::CameraData));
 
     StartBatch();
 }
@@ -143,10 +148,8 @@ void Renderer2D::BeginScene(const Camera& iCamera, const glm::mat4& iTransform) 
 void Renderer2D::BeginScene(const EditorCamera& iCamera) {
     PM_PROFILE_FUNCTION();
 
-    glm::mat4 viewProjectionMatrix = iCamera.viewProjection();
-
-    sData.textureShader->bind();
-    sData.textureShader->setMat4("uViewProjection", viewProjectionMatrix);
+    sData.cameraBuffer.viewProjection = iCamera.viewProjection();
+    sData.cameraUniformBuffer->setData(&sData.cameraBuffer, sizeof(Renderer2DData::CameraData));
 
     StartBatch();
 }
@@ -170,6 +173,7 @@ void Renderer2D::Flush() {
         sData.textureSlots[i]->bind(i);
     }
 
+    sData.textureShader->bind();
     RenderCommand::DrawIndexed(sData.quadVertexArray, sData.quadIndexCount);
 
     sData.stats.drawCalls++;

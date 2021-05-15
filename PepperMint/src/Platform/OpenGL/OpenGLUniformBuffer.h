@@ -5,6 +5,7 @@
 namespace PepperMint {
 
 class OpenGLUniformBuffer : public UniformBuffer {
+  public:
     OpenGLUniformBuffer(uint32_t iSize, uint32_t iBinding);
     ~OpenGLUniformBuffer() noexcept override;
 
