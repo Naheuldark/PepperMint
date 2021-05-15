@@ -1,10 +1,10 @@
 #include "pmpch.h"
 
+#include <GLFW/glfw3.h>
+
 #include "PepperMint/Core/Application.h"
 #include "PepperMint/Core/Input.h"
 #include "PepperMint/Renderer/Renderer.h"
-
-#include <GLFW/glfw3.h>
 
 namespace PepperMint {
 

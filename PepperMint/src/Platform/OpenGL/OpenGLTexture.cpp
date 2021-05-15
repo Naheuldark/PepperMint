@@ -6,8 +6,7 @@
 
 namespace PepperMint {
 
-OpenGLTexture2D::OpenGLTexture2D(uint32_t iWidth, uint32_t iHeight)
-    : _width(iWidth), _height(iHeight) {
+OpenGLTexture2D::OpenGLTexture2D(uint32_t iWidth, uint32_t iHeight) : _width(iWidth), _height(iHeight) {
     PM_PROFILE_FUNCTION();
 
     _internalFormat = GL_RGBA8;
@@ -81,8 +80,7 @@ void OpenGLTexture2D::setData(void* iData, uint32_t iSize) {
 
     uint32_t bpp = (_dataFormat == GL_RGBA ? 4 : 3);
     PM_CORE_ASSERT(iSize == _width * _height * bpp, "Data must be entire texture!");
-    glTextureSubImage2D(
-        _rendererId, 0, 0, 0, _width, _height, _dataFormat, GL_UNSIGNED_BYTE, iData);
+    glTextureSubImage2D(_rendererId, 0, 0, 0, _width, _height, _dataFormat, GL_UNSIGNED_BYTE, iData);
 }
 
 void OpenGLTexture2D::bind(uint32_t iSlot) const {

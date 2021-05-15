@@ -62,8 +62,8 @@ class Instrumentor {
         internalEndSession();
     }
 
-    void writeProfile(const ProfileResult& iResult) {       
-		std::stringstream json;
+    void writeProfile(const ProfileResult& iResult) {
+        std::stringstream json;
 
         json << std::setprecision(3) << std::fixed;
         json << ",{";

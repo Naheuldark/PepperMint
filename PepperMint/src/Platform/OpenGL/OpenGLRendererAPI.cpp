@@ -8,23 +8,22 @@ namespace PepperMint {
 
 namespace {
 
-void OpenGLMessageCallback(
-    unsigned, unsigned, unsigned, unsigned int iSeverity, int, const char* iMessage, const void*) {
+void OpenGLMessageCallback(unsigned, unsigned, unsigned, unsigned int iSeverity, int, const char* iMessage, const void*) {
     switch (iSeverity) {
-    case GL_DEBUG_SEVERITY_HIGH:
-        PM_CORE_FATAL(iMessage);
-        return;
-    case GL_DEBUG_SEVERITY_MEDIUM:
-        PM_CORE_ERROR(iMessage);
-        return;
-    case GL_DEBUG_SEVERITY_LOW:
-        PM_CORE_WARN(iMessage);
-        return;
-    case GL_DEBUG_SEVERITY_NOTIFICATION:
-        PM_CORE_TRACE(iMessage);
-        return;
-    default:
-        PM_CORE_ASSERT(false, "Unknown severity level!");
+        case GL_DEBUG_SEVERITY_HIGH:
+            PM_CORE_FATAL(iMessage);
+            return;
+        case GL_DEBUG_SEVERITY_MEDIUM:
+            PM_CORE_ERROR(iMessage);
+            return;
+        case GL_DEBUG_SEVERITY_LOW:
+            PM_CORE_WARN(iMessage);
+            return;
+        case GL_DEBUG_SEVERITY_NOTIFICATION:
+            PM_CORE_TRACE(iMessage);
+            return;
+        default:
+            PM_CORE_ASSERT(false, "Unknown severity level!");
     }
 }
 }
@@ -37,8 +36,7 @@ void OpenGLRendererAPI::init() {
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(OpenGLMessageCallback, nullptr);
 
-    glDebugMessageControl(
-        GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
+    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 #endif // PM_DEBUG
 
     glEnable(GL_BLEND);
@@ -47,13 +45,9 @@ void OpenGLRendererAPI::init() {
     glEnable(GL_DEPTH_TEST);
 }
 
-void OpenGLRendererAPI::setViewport(uint32_t iX, uint32_t iY, uint32_t iWidth, uint32_t iHeight) {
-    glViewport(iX, iY, iWidth, iHeight);
-}
+void OpenGLRendererAPI::setViewport(uint32_t iX, uint32_t iY, uint32_t iWidth, uint32_t iHeight) { glViewport(iX, iY, iWidth, iHeight); }
 
-void OpenGLRendererAPI::setClearColor(const glm::vec4& iColor) {
-    glClearColor(iColor.r, iColor.g, iColor.b, iColor.a);
-}
+void OpenGLRendererAPI::setClearColor(const glm::vec4& iColor) { glClearColor(iColor.r, iColor.g, iColor.b, iColor.a); }
 
 void OpenGLRendererAPI::clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 

@@ -8,11 +8,11 @@ namespace PepperMint {
 
 Ref<Shader> Shader::Create(const std::string& iShaderFile) {
     switch (Renderer::API()) {
-    case RendererAPI::API::OPENGL:
-        return CreateRef<OpenGLShader>(iShaderFile);
-    default:
-        PM_CORE_ASSERT(false, "Specified RendererAPI is currently not supported!");
-        return nullptr;
+        case RendererAPI::API::OPENGL:
+            return CreateRef<OpenGLShader>(iShaderFile);
+        default:
+            PM_CORE_ASSERT(false, "Specified RendererAPI is currently not supported!");
+            return nullptr;
     }
 }
 
@@ -33,7 +33,5 @@ Ref<Shader> ShaderLibrary::get(const std::string& iName) {
     return _shaders.at(iName);
 }
 
-bool ShaderLibrary::exists(const std::string& iName) const {
-    return _shaders.find(iName) != _shaders.end();
-}
+bool ShaderLibrary::exists(const std::string& iName) const { return _shaders.find(iName) != _shaders.end(); }
 }

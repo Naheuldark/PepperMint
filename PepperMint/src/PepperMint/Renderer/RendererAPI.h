@@ -1,8 +1,8 @@
 #pragma once
 
-#include "PepperMint/Renderer/VertexArray.h"
-
 #include <glm/glm.hpp>
+
+#include "PepperMint/Renderer/VertexArray.h"
 
 namespace PepperMint {
 

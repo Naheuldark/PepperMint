@@ -82,23 +82,23 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
         switch (action) {
-        case GLFW_PRESS: {
-            KeyPressedEvent event(key, 0);
-            data.eventCallback(event);
-            break;
-        }
-        case GLFW_RELEASE: {
-            KeyReleasedEvent event(key);
-            data.eventCallback(event);
-            break;
-        }
-        case GLFW_REPEAT: {
-            KeyPressedEvent event(key, 1);
-            data.eventCallback(event);
-            break;
-        }
-        default:
-            break;
+            case GLFW_PRESS: {
+                KeyPressedEvent event(key, 0);
+                data.eventCallback(event);
+                break;
+            }
+            case GLFW_RELEASE: {
+                KeyReleasedEvent event(key);
+                data.eventCallback(event);
+                break;
+            }
+            case GLFW_REPEAT: {
+                KeyPressedEvent event(key, 1);
+                data.eventCallback(event);
+                break;
+            }
+            default:
+                break;
         }
     });
 
@@ -113,18 +113,18 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
         switch (action) {
-        case GLFW_PRESS: {
-            MouseButtonPressedEvent event(button);
-            data.eventCallback(event);
-            break;
-        }
-        case GLFW_RELEASE: {
-            MouseButtonReleasedEvent event(button);
-            data.eventCallback(event);
-            break;
-        }
-        default:
-            break;
+            case GLFW_PRESS: {
+                MouseButtonPressedEvent event(button);
+                data.eventCallback(event);
+                break;
+            }
+            case GLFW_RELEASE: {
+                MouseButtonReleasedEvent event(button);
+                data.eventCallback(event);
+                break;
+            }
+            default:
+                break;
         }
     });
 

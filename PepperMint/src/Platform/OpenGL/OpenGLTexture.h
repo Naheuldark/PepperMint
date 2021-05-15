@@ -1,8 +1,8 @@
 #pragma once
 
-#include "PepperMint/Renderer/Texture.h"
-
 #include <glad/glad.h>
+
+#include "PepperMint/Renderer/Texture.h"
 
 namespace PepperMint {
 
