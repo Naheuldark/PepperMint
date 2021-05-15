@@ -117,7 +117,9 @@ void Scene::onAddComponent<SpriteRendererComponent>(Entity iEntity, SpriteRender
 
 template <>
 void Scene::onAddComponent<CameraComponent>(Entity iEntity, CameraComponent& ioComponent) {
-    ioComponent.camera.setViewportSize(_viewportWidth, _viewportHeight);
+    if (_viewportWidth > 0 && _viewportHeight > 0) {
+        ioComponent.camera.setViewportSize(_viewportWidth, _viewportHeight);
+    }
 }
 
 template <>

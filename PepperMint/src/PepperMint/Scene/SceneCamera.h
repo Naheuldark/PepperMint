@@ -16,6 +16,7 @@ class SceneCamera : public Camera {
     void setOrthographic(float iSize, float iNearClip, float iFarClip);
 
     void setViewportSize(uint32_t iWidth, uint32_t iHeight) {
+        PM_CORE_ASSERT(iWidth > 0 && iHeight > 0);
         _aspectRatio = (float)iWidth / (float)iHeight;
         updateProjection();
     }

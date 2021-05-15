@@ -21,6 +21,14 @@ void EditorLayer::onAttach() {
 
     _activeScene = CreateRef<Scene>();
 
+    auto&& commandLineArgs = Application::Get().commandLineArgs();
+    if (commandLineArgs.count > 1) {
+        auto&&          sceneFilePath = commandLineArgs[1];
+        SceneSerializer serializer(_activeScene);
+        serializer.deserialize(sceneFilePath);
+        _statisticsPanel.setCurrentFile(sceneFilePath);
+    }
+
     FrameBufferProperties properties;
     properties.width       = 1280;
     properties.height      = 720;
