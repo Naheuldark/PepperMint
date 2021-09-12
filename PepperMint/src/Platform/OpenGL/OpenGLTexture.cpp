@@ -16,7 +16,7 @@ OpenGLTexture2D::OpenGLTexture2D(uint32_t iWidth, uint32_t iHeight) : _width(iWi
     glTextureStorage2D(_rendererId, 1, _internalFormat, _width, _height);
 
     glTextureParameteri(_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(_rendererId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTextureParameteri(_rendererId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glTextureParameteri(_rendererId, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTextureParameteri(_rendererId, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -59,7 +59,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& iPath) : _path(iPath) {
     glTextureStorage2D(_rendererId, 1, internalFormat, _width, _height);
 
     glTextureParameteri(_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(_rendererId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTextureParameteri(_rendererId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glTextureParameteri(_rendererId, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTextureParameteri(_rendererId, GL_TEXTURE_WRAP_T, GL_REPEAT);

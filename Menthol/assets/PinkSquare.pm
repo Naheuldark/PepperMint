@@ -4,7 +4,7 @@ Entities:
     TagComponent:
       Tag: Blob
     TransformComponent:
-      Translation: [-0.0646292344, 0.518917561, 0.0507096238]
+      Translation: [0.0715551749, 0.0902891234, 0.579301536]
       Rotation: [-3.14159179, -0.252152413, -3.14159226]
       Scale: [1.52949631, 0.25, 1.00000012]
     SpriteRendererComponent:

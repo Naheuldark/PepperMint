@@ -265,6 +265,6 @@ void Renderer2D::DrawQuad(const glm::mat4& iTransform, float iTilingFactor, Ref<
 // Components //
 ////////////////
 void Renderer2D::DrawSprite(const TransformComponent& iTransformComponent, const SpriteRendererComponent& iSpriteComponent, int iEntityId) {
-    DrawQuad(iTransformComponent.transform(), 1.0f, nullptr, iSpriteComponent.color, iEntityId);
+    DrawQuad(iTransformComponent.transform(), iSpriteComponent.tilingFactor, iSpriteComponent.texture, iSpriteComponent.color, iEntityId);
 }
 }

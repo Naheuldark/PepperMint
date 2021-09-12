@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "PepperMint/Renderer/Texture.h"
 #include "PepperMint/Scene/SceneCamera.h"
 #include "PepperMint/Scene/ScriptableEntity.h"
 
@@ -41,7 +42,9 @@ struct TransformComponent {
 };
 
 struct SpriteRendererComponent {
-    glm::vec4 color{1.0f, 1.0f, 1.0f, 1.0f};
+    glm::vec4      color        = {1.0f, 1.0f, 1.0f, 1.0f};
+    Ref<Texture2D> texture      = nullptr;
+    float          tilingFactor = 1.0f;
 
     SpriteRendererComponent()                               = default;
     SpriteRendererComponent(const SpriteRendererComponent&) = default;
