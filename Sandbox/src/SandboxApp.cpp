@@ -8,7 +8,7 @@
 
 class Sandbox : public PepperMint::Application {
   public:
-    Sandbox() {
+    Sandbox(PepperMint::ApplicationCommandLineArgs iArgs) {
         // pushLayer(PepperMint::CreateRef<ExampleLayer>());
         pushLayer(PepperMint::CreateRef<Sandbox2D>());
 
@@ -19,4 +19,4 @@ class Sandbox : public PepperMint::Application {
     ~Sandbox() = default;
 };
 
-PepperMint::Application* PepperMint::CreateApplication() { return new Sandbox(); }
+PepperMint::Application* PepperMint::CreateApplication(PepperMint::ApplicationCommandLineArgs iArgs) { return new Sandbox(iArgs); }
