@@ -105,11 +105,6 @@ void Renderer2D::Init() {
     uint32_t whiteTextureData = 0xffffffff;
     sData.whiteTexture->setData(&whiteTextureData, sizeof(uint32_t));
 
-    int32_t samplers[Renderer2DData::MAX_TEXTURE_SLOTS];
-    for (uint32_t i = 0; i < Renderer2DData::MAX_TEXTURE_SLOTS; ++i) {
-        samplers[i] = i;
-    }
-
     // Set first texture slot to 0
     sData.textureSlots[0] = sData.whiteTexture;
 

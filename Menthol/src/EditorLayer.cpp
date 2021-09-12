@@ -56,7 +56,7 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
     if (viewportSize.x > 0.0f && viewportSize.y > 0.0f && // zero sized framebuffer is invalid
         (spec.width != viewportSize.x || spec.height != viewportSize.y)) {
         _frameBuffer->resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-        _viewportPanel.editorCamera().setViewportSize(viewportSize.x, -viewportSize.y);
+        _viewportPanel.editorCamera().setViewportSize(viewportSize.x, viewportSize.y);
         _activeScene->onViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
     }
 
