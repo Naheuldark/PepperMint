@@ -14,7 +14,8 @@
 namespace PepperMint {
 
 // Constants
-const float kMIN_PANEL_WIDTH = 370.0f;
+const float kMIN_PANEL_WIDTH  = 370.0f;
+const float kMIN_PANEL_HEIGHT = 230.0f;
 
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
@@ -61,7 +62,7 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
     }
 
     // Update
-    if (!_playing) {
+    if (!_playing && _viewportPanel.viewportHovered()) {
         _viewportPanel.editorCamera().onUpdate(iTimestep);
     }
 
@@ -121,77 +122,91 @@ void EditorLayer::onImGuiRender() {
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("Menthol Application", &dockspaceOpen, window_flags);
-    ImGui::PopStyleVar();
+    {
+        ImGui::PopStyleVar();
 
-    if (opt_fullscreen) {
-        ImGui::PopStyleVar(2);
-    }
-
-    ///////////////
-    // DockSpace //
-    ///////////////
-    ImGuiIO&    io    = ImGui::GetIO();
-    ImGuiStyle& style = ImGui::GetStyle();
-
-    float minWindowSizeX  = style.WindowMinSize.x;
-    style.WindowMinSize.x = kMIN_PANEL_WIDTH;
-
-    if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
-        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-    }
-
-    style.WindowMinSize.x = minWindowSizeX;
-
-    // Menu Bar
-    if (ImGui::BeginMenuBar()) {
-        if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("New", "Ctrl+N")) {
-                newScene();
-            }
-
-            if (ImGui::MenuItem("Open...", "Ctrl+O")) {
-                openScene();
-            }
-
-            if (ImGui::MenuItem("Save", "Ctrl+S")) {
-                saveScene();
-            }
-
-            if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) {
-                saveSceneAs();
-            }
-
-            if (ImGui::MenuItem("Exit")) {
-                Application::Get().close();
-            }
-            ImGui::EndMenu();
+        if (opt_fullscreen) {
+            ImGui::PopStyleVar(2);
         }
-        ImGui::EndMenuBar();
+
+        ///////////////
+        // DockSpace //
+        ///////////////
+        ImGuiIO&    io    = ImGui::GetIO();
+        ImGuiStyle& style = ImGui::GetStyle();
+
+        float minWindowSizeX  = style.WindowMinSize.x;
+        style.WindowMinSize.x = kMIN_PANEL_WIDTH;
+        float minWindowSizeY  = style.WindowMinSize.y;
+        style.WindowMinSize.y = kMIN_PANEL_HEIGHT;
+
+        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
+            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+        }
+
+        style.WindowMinSize.x = minWindowSizeX;
+        style.WindowMinSize.y = minWindowSizeY;
+
+        // Menu Bar
+        if (ImGui::BeginMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                if (ImGui::MenuItem("New", "Ctrl+N")) {
+                    newScene();
+                }
+
+                if (ImGui::MenuItem("Open...", "Ctrl+O")) {
+                    openScene();
+                }
+
+                if (ImGui::MenuItem("Save", "Ctrl+S")) {
+                    saveScene();
+                }
+
+                if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) {
+                    saveSceneAs();
+                }
+
+                if (ImGui::MenuItem("Exit")) {
+                    Application::Get().close();
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
+
+        // Scene Hierarchy Panel
+        _sceneHierarchyPanel.setSelectedEntity(_viewportPanel.selectedEntity());
+        _sceneHierarchyPanel.onImGuiRender();
+
+        // Properties Panel
+        _propertiesPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
+        _propertiesPanel.onImGuiRender();
+
+        // Statistics Panel
+        _statisticsPanel.setHoveredEntity(_viewportPanel.hoveredEntity());
+        _statisticsPanel.onImGuiRender();
+
+        // Viewport
+        _viewportPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
+        _viewportPanel.setEditorMode(!_playing);
+        _viewportPanel.onImGuiRender();
+
+        // Content Browser Panel
+        _contentBrowserPanel.onImGuiRender();
+
+        if (!_viewportPanel.sceneToOpen().empty()) {
+            openScene(_viewportPanel.sceneToOpen());
+            _viewportPanel.sceneToOpen().clear();
+        }
     }
-
-    // Scene Hierarchy Panel
-    _sceneHierarchyPanel.setSelectedEntity(_viewportPanel.selectedEntity());
-    _sceneHierarchyPanel.onImGuiRender();
-
-    // Properties Panel
-    _propertiesPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
-    _propertiesPanel.onImGuiRender();
-
-    // Statistics Panel
-    _statisticsPanel.setHoveredEntity(_viewportPanel.hoveredEntity());
-    _statisticsPanel.onImGuiRender();
-
-    // Viewport
-    _viewportPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
-    _viewportPanel.setEditorMode(!_playing);
-    _viewportPanel.onImGuiRender();
-
     ImGui::End();
 }
 
 void EditorLayer::onEvent(Event& iEvent) {
-    _viewportPanel.editorCamera().onEvent(iEvent);
+    if (!_playing && _viewportPanel.viewportHovered()) {
+        _viewportPanel.editorCamera().onEvent(iEvent);
+    }
 
     EventDispatcher dispatcher(iEvent);
     dispatcher.dispatch<KeyPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onKeyPressed));
@@ -265,10 +280,14 @@ void EditorLayer::newScene() {
 void EditorLayer::openScene() {
     auto&& filepath = FileDialogs::OpenFile("PepperMint Scene (*.pm)\0*.pm\0");
     if (!filepath.empty()) {
-        newScene();
-        SceneSerializer(_activeScene).deserialize(filepath);
-        _statisticsPanel.setCurrentFile(filepath);
+        openScene(filepath);
     }
+}
+
+void EditorLayer::openScene(const std::filesystem::path& iPath) {
+    newScene();
+    SceneSerializer(_activeScene).deserialize(iPath.string());
+    _statisticsPanel.setCurrentFile(iPath.string());
 }
 
 void EditorLayer::saveScene() {

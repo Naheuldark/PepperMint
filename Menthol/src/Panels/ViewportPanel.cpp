@@ -11,6 +11,9 @@
 
 namespace PepperMint {
 
+// External variables
+extern const std::filesystem::path xASSET_PATH; // defined in ContentBrowserPanel.cpp
+
 void ViewportPanel::onUpdate(Timestep iTimestep) {
     // Mouse picking
     //	(0,0) is the bottom left corner
@@ -52,6 +55,15 @@ void ViewportPanel::onImGuiRender() {
         // Viewport rendered image
         auto&& textureId = _frameBuffer->colorAttachmentRendererId();
         ImGui::Image(reinterpret_cast<void*>(textureId), ImVec2{_viewportSize.x, _viewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+
+        // Drag & Drop
+        if (ImGui::BeginDragDropTarget()) {
+            if (auto&& payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+                const wchar_t* path = (const wchar_t*)payload->Data;
+                _sceneToOpen        = std::filesystem::path(xASSET_PATH) / path;
+            }
+            ImGui::EndDragDropTarget();
+        }
 
         // Gizmos
         if (_editorMode && _selectedEntity && _gizmoType != -1) {
@@ -140,7 +152,7 @@ bool ViewportPanel::onMouseButtonPressed(MouseButtonPressedEvent& iEvent) {
     if (iEvent.mouseButton() == Mouse::BUTTON_LEFT) {
         if (_viewportHovered && (!ImGuizmo::IsOver()) && (!Input::IsKeyPressed(Key::LEFT_ALT))) {
             _selectedEntity = _hoveredEntity;
-		}
+        }
     }
 
     return true;

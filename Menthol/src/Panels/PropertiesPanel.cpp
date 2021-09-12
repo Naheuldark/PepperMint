@@ -6,6 +6,9 @@
 
 namespace PepperMint {
 
+// External variables
+extern const std::filesystem::path xASSET_PATH; // defined in ContentBrowserPanel.cpp
+
 namespace {
 
 void drawFloatControl(const std::string& iLabel, float& ioValue, float iResetValue, const ImVec2& iButtonSize, const ImVec4& iColor, ImFont* iFont) {
@@ -232,6 +235,19 @@ void drawComponents(Entity ioSelectedEntity) {
 
     drawComponent<SpriteRendererComponent>("Sprite Renderer", ioSelectedEntity, flags, true, [](auto&& spriteComponent) {
         drawTwoColumnsWithLabel("Color", 100.0f, [&]() { ImGui::ColorEdit4("##Color", glm::value_ptr(spriteComponent.color)); });
+        drawTwoColumnsWithLabel("Texture", 100.0f, [&]() {
+            ImGui::Button("##Texture", ImVec2(100.0f, 0.0f));
+            if (ImGui::BeginDragDropTarget()) {
+                if (auto&& payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+                    const wchar_t*        path        = (const wchar_t*)payload->Data;
+                    std::filesystem::path texturePath = std::filesystem::path(xASSET_PATH) / path;
+                    spriteComponent.texture           = Texture2D::Create(texturePath.string());
+                }
+                ImGui::EndDragDropTarget();
+            }
+        });
+        drawTwoColumnsWithLabel(
+            "Tiling Factor", 100.0f, [&]() { ImGui::DragFloat("##TilingFactor", &spriteComponent.tilingFactor, 0.1f, 0.0f, 100.0f); });
     });
 }
 }

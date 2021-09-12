@@ -2,6 +2,7 @@
 
 #include <PepperMint.h>
 
+#include "Panels/ContentBrowserPanel.h"
 #include "Panels/PropertiesPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/StatisticsPanel.h"
@@ -26,6 +27,7 @@ class EditorLayer : public Layer {
 
     void newScene();
     void openScene();
+    void openScene(const std::filesystem::path& iPath);
     void saveScene();
     void saveSceneAs();
 
@@ -39,7 +41,8 @@ class EditorLayer : public Layer {
     // Panels
     SceneHierarchyPanel _sceneHierarchyPanel;
     PropertiesPanel     _propertiesPanel;
-    ViewportPanel       _viewportPanel;
     StatisticsPanel     _statisticsPanel;
+    ViewportPanel       _viewportPanel;
+    ContentBrowserPanel _contentBrowserPanel;
 };
 }

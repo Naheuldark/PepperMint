@@ -14,12 +14,13 @@ class ViewportPanel {
     bool onKeyPressed(KeyPressedEvent& iEvent);
     bool onMouseButtonPressed(MouseButtonPressedEvent& iEvent);
 
-    EditorCamera& editorCamera() { return _editorCamera; }
-    glm::vec2     viewportSize() const { return _viewportSize; }
-    bool          viewportFocused() const { return _viewportFocused; }
-    bool          viewportHovered() const { return _viewportHovered; }
-    Entity        selectedEntity() const { return _selectedEntity; }
-    Entity        hoveredEntity() const { return _hoveredEntity; }
+    EditorCamera&          editorCamera() { return _editorCamera; }
+    glm::vec2              viewportSize() const { return _viewportSize; }
+    bool                   viewportFocused() const { return _viewportFocused; }
+    bool                   viewportHovered() const { return _viewportHovered; }
+    Entity                 selectedEntity() const { return _selectedEntity; }
+    Entity                 hoveredEntity() const { return _hoveredEntity; }
+    std::filesystem::path& sceneToOpen() { return _sceneToOpen; }
 
     void setEditorMode(bool iEditorMode) { _editorMode = iEditorMode; }
     void setSelectedEntity(Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
@@ -46,5 +47,8 @@ class ViewportPanel {
 
     // Mouse picking
     Entity _hoveredEntity{};
+
+    // Drag & Drop
+    std::filesystem::path _sceneToOpen;
 };
 }
