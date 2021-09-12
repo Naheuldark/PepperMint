@@ -31,5 +31,9 @@ If changes are made, or if you want to regenerate project files, rerun the [Win-
 - Artificial Intelligence
 - Audio system
 
+## Menthol Editor
+As of 12SEP2021, the editor state is as shown below:
+![PepperMint](/Resources/Captures/MentholEditor.png?raw=true "MentholEditor")
+
 ## Documentation
 For more information, refer to the [official PepperMint documentation](https://naheuldark.github.io/PepperMint/).
