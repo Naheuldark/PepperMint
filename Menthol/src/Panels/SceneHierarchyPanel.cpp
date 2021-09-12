@@ -4,9 +4,6 @@
 
 #include <ImGuizmo.h>
 
-#include <PepperMint/Core/Input.h>
-#include <PepperMint/Scene/Components.h>
-
 namespace PepperMint {
 
 void SceneHierarchyPanel::onImGuiRender() {

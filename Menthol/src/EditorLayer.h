@@ -2,10 +2,13 @@
 
 #include <PepperMint.h>
 
+#include "EditorStatus.h"
+
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/PropertiesPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/StatisticsPanel.h"
+#include "Panels/ToolbarPanel.h"
 #include "Panels/ViewportPanel.h"
 
 namespace PepperMint {
@@ -36,13 +39,12 @@ class EditorLayer : public Layer {
     Ref<Scene>       _activeScene;
     Ref<FrameBuffer> _frameBuffer;
 
-    bool _playing = false;
-
     // Panels
     SceneHierarchyPanel _sceneHierarchyPanel;
     PropertiesPanel     _propertiesPanel;
     StatisticsPanel     _statisticsPanel;
     ViewportPanel       _viewportPanel;
     ContentBrowserPanel _contentBrowserPanel;
+    ToolbarPanel        _toolbarPanel;
 };
 }

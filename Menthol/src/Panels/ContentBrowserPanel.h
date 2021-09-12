@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include <PepperMint/Renderer/Texture.h>
+#include <PepperMint.h>
 
 namespace PepperMint {
 
@@ -16,8 +16,7 @@ class ContentBrowserPanel {
   private:
     std::filesystem::path _currentDirectory;
 
-	// Icons
-	Ref<Texture2D> _directoryIcon;
-    Ref<Texture2D> _fileIcon;
+    // Icons
+    Ref<Texture2D> _directoryIcon, _fileIcon;
 };
 }

@@ -7,15 +7,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <PepperMint/Math/Math.h>
-#include <PepperMint/Scene/SceneSerializer.h>
-#include <PepperMint/Utils/PlatformUtils.h>
-
 namespace PepperMint {
 
 // Constants
-const float kMIN_PANEL_WIDTH  = 370.0f;
-const float kMIN_PANEL_HEIGHT = 230.0f;
+const float kMIN_PANEL_WIDTH = 370.0f;
 
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
@@ -62,7 +57,7 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
     }
 
     // Update
-    if (!_playing && _viewportPanel.viewportHovered()) {
+    if ((_toolbarPanel.sceneState() == SceneState::EDIT) && _viewportPanel.viewportHovered()) {
         _viewportPanel.editorCamera().onUpdate(iTimestep);
     }
 
@@ -84,10 +79,19 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
     {
         PM_PROFILE_SCOPE("Renderer Draw");
 
-        if (_playing) {
-            _activeScene->onUpdateRuntime(iTimestep);
-        } else {
-            _activeScene->onUpdateEditor(iTimestep, _viewportPanel.editorCamera());
+        switch (_toolbarPanel.sceneState()) {
+            case SceneState::EDIT: {
+                if (_viewportPanel.viewportHovered()) {
+                    _viewportPanel.editorCamera().onUpdate(iTimestep);
+                }
+
+                _activeScene->onUpdateEditor(iTimestep, _viewportPanel.editorCamera());
+                break;
+            }
+            case SceneState::PLAY: {
+                _activeScene->onUpdateRuntime(iTimestep);
+                break;
+            }
         }
 
         _viewportPanel.onUpdate(iTimestep);
@@ -137,8 +141,6 @@ void EditorLayer::onImGuiRender() {
 
         float minWindowSizeX  = style.WindowMinSize.x;
         style.WindowMinSize.x = kMIN_PANEL_WIDTH;
-        float minWindowSizeY  = style.WindowMinSize.y;
-        style.WindowMinSize.y = kMIN_PANEL_HEIGHT;
 
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
             ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
@@ -146,7 +148,6 @@ void EditorLayer::onImGuiRender() {
         }
 
         style.WindowMinSize.x = minWindowSizeX;
-        style.WindowMinSize.y = minWindowSizeY;
 
         // Menu Bar
         if (ImGui::BeginMenuBar()) {
@@ -189,8 +190,11 @@ void EditorLayer::onImGuiRender() {
 
         // Viewport
         _viewportPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
-        _viewportPanel.setEditorMode(!_playing);
+        _viewportPanel.setEditorMode(_toolbarPanel.sceneState() == SceneState::EDIT);
         _viewportPanel.onImGuiRender();
+
+        // Toolbar
+        _toolbarPanel.onImGuiRender();
 
         // Content Browser Panel
         _contentBrowserPanel.onImGuiRender();
@@ -204,7 +208,7 @@ void EditorLayer::onImGuiRender() {
 }
 
 void EditorLayer::onEvent(Event& iEvent) {
-    if (!_playing && _viewportPanel.viewportHovered()) {
+    if ((_toolbarPanel.sceneState() == SceneState::EDIT) && _viewportPanel.viewportHovered()) {
         _viewportPanel.editorCamera().onEvent(iEvent);
     }
 
@@ -247,9 +251,14 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
         }
 
         // Switch between Runtime and Editor cameras
-        case Key::P:
-            _playing = !_playing;
+        case Key::P: {
+            if (_toolbarPanel.sceneState() == SceneState::EDIT) {
+                _toolbarPanel.setSceneState(SceneState::PLAY);
+            } else if (_toolbarPanel.sceneState() == SceneState::PLAY) {
+                _toolbarPanel.setSceneState(SceneState::EDIT);
+            }
             break;
+        }
 
         default:
             break;

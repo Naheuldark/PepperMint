@@ -8,6 +8,7 @@
 #include "PepperMint/Core/Assert.h"
 #include "PepperMint/Core/Layer.h"
 #include "PepperMint/Core/Log.h"
+#include "PepperMint/Math/Math.h"
 
 #include "PepperMint/Core/Timestep.h"
 
@@ -20,6 +21,7 @@
 #include "PepperMint/Scene/Components.h"
 #include "PepperMint/Scene/Entity.h"
 #include "PepperMint/Scene/Scene.h"
+#include "PepperMint/Scene/SceneSerializer.h"
 #include "PepperMint/Scene/ScriptableEntity.h"
 
 #include "PepperMint/Renderer/RenderCommand.h"
@@ -31,3 +33,5 @@
 #include "PepperMint/Renderer/Shader.h"
 #include "PepperMint/Renderer/Texture.h"
 #include "PepperMint/Renderer/VertexArray.h"
+
+#include "PepperMint/Utils/PlatformUtils.h"

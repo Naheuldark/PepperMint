@@ -6,9 +6,6 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include <PepperMint/Core/Application.h>
-#include <PepperMint/Math/Math.h>
-
 namespace PepperMint {
 
 // External variables
