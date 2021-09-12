@@ -1,7 +1,6 @@
 # Binaries
 **/bin/
 bin-int/
-!vendor/premake/bin/
 
 # PepperMint files
 **.log

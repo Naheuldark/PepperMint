@@ -1,20 +1,25 @@
 import os
 import subprocess
-import CheckPython
+import platform
 
-# Make sure everything we need is installed
-CheckPython.ValidatePackages()
+from SetupPython import PythonConfiguration as PythonRequirements
 
-import Vulkan
+# Make sure everything we need for the setup is installed
+PythonRequirements.Validate()
 
-# Change from `scripts` directory to root
-os.chdir('../')
+from SetupPremake import PremakeConfiguration as PremakeRequirements
+from SetupVulkan import VulkanConfiguration as VulkanRequirements
 
-if (not Vulkan.CheckVulkanSDK()):
-	print("Vulkan SDK is not installed")
+# Change from devtools/scripts directory to root
+os.chdir('./../')
 
-if (not Vulkan.CheckVulkanSDKDebugLibs()):
-	print("Vulkan SDK debug libs not found")
+VulkanRequirements.Validate()
 
-print("Running premake...")
-subprocess.call(["vendor/premake/bin/premake5.exe", "vs2019"])
+if (PremakeRequirements.Validate()):
+    if platform.system() == "Windows":
+        print("\nRunning premake...")
+        subprocess.call([os.path.abspath("vendor/premake/bin/premake5.exe"), "vs2019"])
+
+    print("\nSetup completed!")
+else:
+    print("PepperMint requires Premake to generate project files.")
