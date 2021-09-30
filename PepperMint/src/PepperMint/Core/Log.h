@@ -1,13 +1,14 @@
 #pragma once
 
-#include <glm/gtx/string_cast.hpp>
-
 #include "PepperMint/Core/Base.h"
 
 #pragma warning(push, 0)
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #pragma warning(pop)
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 
 namespace PepperMint {
 
@@ -40,8 +41,7 @@ inline OStream& operator<<(OStream& os, const glm::mat<C, R, T, Q>& matrix) {
 
 template <typename OStream, typename T, glm::qualifier Q>
 inline OStream& operator<<(OStream& os, glm::qua<T, Q> quat) {
-    os << glm::to_string(quat);
-    return os;
+    return os << glm::to_string(quat);
 }
 
 // Core Log Macros
