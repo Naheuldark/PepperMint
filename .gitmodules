@@ -20,3 +20,6 @@
 [submodule "PepperMint/vendor/ImGuizmo"]
 	path = PepperMint/vendor/ImGuizmo
 	url = ../../Naheuldark/ImGuizmo.git
+[submodule "PepperMint/vendor/box2d"]
+	path = PepperMint/vendor/box2d
+	url = ../../Naheuldark/box2d.git
