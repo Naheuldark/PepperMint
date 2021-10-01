@@ -20,10 +20,14 @@ class OpenGLTexture2D : public Texture2D {
 
     void bind(uint32_t iSlot = 0) const override;
 
+    bool isLoaded() const override { return _isLoaded; }
+
     bool operator==(const Texture& iOther) const override { return _rendererId == ((OpenGLTexture2D&)iOther)._rendererId; }
 
   private:
     std::string _path;
+
+    bool _isLoaded = false;
 
     uint32_t _width, _height;
     uint32_t _rendererId;

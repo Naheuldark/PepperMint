@@ -294,9 +294,23 @@ void EditorLayer::openScene() {
 }
 
 void EditorLayer::openScene(const std::filesystem::path& iPath) {
-    newScene();
-    SceneSerializer(_activeScene).deserialize(iPath.string());
-    _statisticsPanel.setCurrentFile(iPath.string());
+    if (iPath.extension().string() != ".pm") {
+        PM_CORE_WARN("Could not load {0} - not a scene file", iPath.filename().string());
+        return;
+    }
+
+    auto&&          scene = CreateRef<Scene>();
+    SceneSerializer serializer(scene);
+    if (serializer.deserialize(iPath.string())) {
+        _activeScene = scene;
+
+        auto&& viewportsize = _viewportPanel.viewportSize();
+        _activeScene->onViewportResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
+
+        _viewportPanel.setActiveScene(_activeScene);
+        _sceneHierarchyPanel.setContext(_activeScene);
+        _statisticsPanel.setCurrentFile(iPath.string());
+    }
 }
 
 void EditorLayer::saveScene() {

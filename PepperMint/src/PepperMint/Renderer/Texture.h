@@ -18,6 +18,8 @@ class Texture {
 
     virtual void bind(uint32_t iSlot = 0) const = 0;
 
+    virtual bool isLoaded() const = 0;
+
     virtual bool operator==(const Texture& iOther) const = 0;
 };
 

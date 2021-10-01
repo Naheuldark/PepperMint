@@ -248,7 +248,13 @@ void drawComponents(Entity ioSelectedEntity) {
                 if (auto&& payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
                     const wchar_t*        path        = (const wchar_t*)payload->Data;
                     std::filesystem::path texturePath = std::filesystem::path(xASSET_PATH) / path;
-                    spriteComponent.texture           = Texture2D::Create(texturePath.string());
+
+                    auto&& texture = Texture2D::Create(texturePath.string());
+                    if (texture->isLoaded()) {
+                        spriteComponent.texture = texture;
+                    } else {
+                        PM_WARN("Could not load texture {0}", texturePath.filename().string());
+                    }
                 }
                 ImGui::EndDragDropTarget();
             }
