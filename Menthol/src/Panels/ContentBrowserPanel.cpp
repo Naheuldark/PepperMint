@@ -6,8 +6,8 @@ namespace PepperMint {
 
 extern const std::filesystem::path xASSET_PATH = "assets";
 
-const float kPADDING        = 10.0f;
-const float kTHUMBNAIL_SIZE = 95.0f;
+const float kPADDING        = 15.0f;  // TODO Update with screen resolution (old 10)
+const float kTHUMBNAIL_SIZE = 200.0f; // TODO Update with screen resolution (old 95)
 
 ContentBrowserPanel::ContentBrowserPanel() : _currentDirectory(xASSET_PATH) {
     _directoryIcon = Texture2D::Create("resources/icons/ContentBrowser/DirectoryIcon.png");
@@ -61,7 +61,7 @@ void ContentBrowserPanel::onImGuiRender() {
 
             ImGui::NextColumn();
 
-			ImGui::PopID();
+            ImGui::PopID();
         }
 
         ImGui::Columns(1);

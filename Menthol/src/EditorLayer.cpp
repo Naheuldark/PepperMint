@@ -10,7 +10,7 @@
 namespace PepperMint {
 
 // Constants
-const float kMIN_PANEL_WIDTH = 370.0f;
+const float kMIN_PANEL_WIDTH = 800.0f; // TODO Update with screen resolution (old 370)
 
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
@@ -26,8 +26,8 @@ void EditorLayer::onAttach() {
     }
 
     FrameBufferProperties properties;
-    properties.width       = 1280;
-    properties.height      = 720;
+    properties.width       = 3840; // TODO Update with screen resolution (old 1280x720)
+    properties.height      = 2400;
     properties.attachments = {
         FrameBufferTextureFormat::RGBA8,       // Color
         FrameBufferTextureFormat::RED_INTEGER, // Entity Id

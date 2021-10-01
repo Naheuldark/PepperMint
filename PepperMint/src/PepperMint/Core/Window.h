@@ -9,7 +9,9 @@ struct WindowProperties {
     std::string title;
     uint32_t    width, height;
 
-    WindowProperties(const std::string& iTitle = "PepperMint Engine", uint32_t iWidth = 1600, uint32_t iHeight = 900)
+    WindowProperties(const std::string& iTitle  = "PepperMint Engine",
+                     uint32_t           iWidth  = 3500, // TODO Update with screen resolution (old 1600x900)
+                     uint32_t           iHeight = 1800)
         : title(iTitle), width(iWidth), height(iHeight) {}
 };
 

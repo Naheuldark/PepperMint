@@ -39,7 +39,11 @@ void drawTwoColumnsWithLabel(const std::string& iLabel, float iColumnWidth, UIFu
     ImGui::Columns(1);
 }
 
-void drawVec3Control(const std::string& iLabel, glm::vec3& ioValues, float iResetValue = 0.0f, float iMin = 0.0f, float iColumnWidth = 100.0f) {
+void drawVec3Control(const std::string& iLabel,
+                     glm::vec3&         ioValues,
+                     float              iResetValue  = 0.0f,
+                     float              iMin         = 0.0f,
+                     float              iColumnWidth = 200.0f) { // TODO Update with screen redolution (old 100)
     ImGui::PushID(iLabel.c_str());
 
     drawTwoColumnsWithLabel(iLabel, iColumnWidth, [&]() {
@@ -74,14 +78,16 @@ void drawComponent(const std::string& iName, Entity iEntity, const ImGuiTreeNode
         bool isOpened = ImGui::TreeNodeEx((void*)typeid(Component).hash_code(), iFlags, iName.c_str());
         ImGui::PopStyleVar();
 
-        ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
+        ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.75f); // TODO Update with screen resolution (old 0.5)
 
-        if (ImGui::Button("...", ImVec2{lineHeight, lineHeight})) {
+        bool allowPopup = iRemovable;
+
+        if (ImGui::Button((allowPopup ? "..." : ""), ImVec2{lineHeight, lineHeight})) {
             ImGui::OpenPopup("##ComponentSettings");
         }
 
         bool removeComponent = false;
-        if (ImGui::BeginPopup("##ComponentSettings")) {
+        if (allowPopup && ImGui::BeginPopup("##ComponentSettings")) {
             if (iRemovable && ImGui::MenuItem("Remove Component")) {
                 removeComponent = true;
             }
@@ -157,7 +163,7 @@ void drawComponents(Entity ioSelectedEntity) {
     drawComponent<CameraComponent>("Camera", ioSelectedEntity, flags, true, [](auto&& cameraComponent) {
         auto&& camera = cameraComponent.camera;
 
-        const float columnWidth = 130.0f;
+        const float columnWidth = 250.0f; // TODO Update with screen resolution (old 130)
 
         drawTwoColumnsWithLabel("Primary", columnWidth, [&]() { ImGui::Checkbox("##Primary", &cameraComponent.primary); });
 
@@ -234,8 +240,9 @@ void drawComponents(Entity ioSelectedEntity) {
     });
 
     drawComponent<SpriteRendererComponent>("Sprite Renderer", ioSelectedEntity, flags, true, [](auto&& spriteComponent) {
-        drawTwoColumnsWithLabel("Color", 100.0f, [&]() { ImGui::ColorEdit4("##Color", glm::value_ptr(spriteComponent.color)); });
-        drawTwoColumnsWithLabel("Texture", 100.0f, [&]() {
+        // TODO Update with screen resolution (old 100)
+        drawTwoColumnsWithLabel("Color", 200.0f, [&]() { ImGui::ColorEdit4("##Color", glm::value_ptr(spriteComponent.color)); });
+        drawTwoColumnsWithLabel("Texture", 200.0f, [&]() {
             ImGui::Button("##Texture", ImVec2(100.0f, 0.0f));
             if (ImGui::BeginDragDropTarget()) {
                 if (auto&& payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
@@ -247,7 +254,7 @@ void drawComponents(Entity ioSelectedEntity) {
             }
         });
         drawTwoColumnsWithLabel(
-            "Tiling Factor", 100.0f, [&]() { ImGui::DragFloat("##TilingFactor", &spriteComponent.tilingFactor, 0.1f, 0.0f, 100.0f); });
+            "Tiling Factor", 200.0f, [&]() { ImGui::DragFloat("##TilingFactor", &spriteComponent.tilingFactor, 0.1f, 0.0f, 100.0f); });
     });
 }
 }

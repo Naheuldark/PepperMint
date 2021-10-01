@@ -5,9 +5,6 @@ bin-int/
 # PepperMint files
 **.log
 
-# ImGui files
-**.ini
-
 # Visual Studio files and folder
 .vs/
 **.sln
