@@ -12,6 +12,8 @@
 
 namespace PepperMint {
 
+float Window::sHighDPIScaleFactor = 1.0f;
+
 static uint8_t sGLFWWindowCount = 0;
 
 WindowsWindow::WindowsWindow(const WindowProperties& iProperties) {
@@ -45,6 +47,17 @@ void WindowsWindow::init(const WindowProperties& iProperties) {
 
     {
         PM_PROFILE_SCOPE("glfwCreateWindow");
+
+        auto&& monitor = glfwGetPrimaryMonitor();
+        float  xscale, yscale;
+        glfwGetMonitorContentScale(monitor, &xscale, &yscale);
+        PM_CORE_INFO("Window scale factor {0}x{1}", xscale, yscale);
+
+        if ((xscale > 1.0f) || (yscale > 1.0f)) {
+            sHighDPIScaleFactor = yscale;
+            glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+        }
+
 #ifdef PM_DEBUG
         if (RendererAPI::GetAPI() == RendererAPI::API::OPENGL) {
             glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);

@@ -43,7 +43,7 @@ void drawVec3Control(const std::string& iLabel,
                      glm::vec3&         ioValues,
                      float              iResetValue  = 0.0f,
                      float              iMin         = 0.0f,
-                     float              iColumnWidth = 200.0f) { // TODO Update with screen redolution (old 100)
+                     float              iColumnWidth = Window::sHighDPIScaleFactor * 100.0f) {
     ImGui::PushID(iLabel.c_str());
 
     drawTwoColumnsWithLabel(iLabel, iColumnWidth, [&]() {
@@ -78,7 +78,7 @@ void drawComponent(const std::string& iName, Entity iEntity, const ImGuiTreeNode
         bool isOpened = ImGui::TreeNodeEx((void*)typeid(Component).hash_code(), iFlags, iName.c_str());
         ImGui::PopStyleVar();
 
-        ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.75f); // TODO Update with screen resolution (old 0.5)
+        ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
 
         bool allowPopup = iRemovable;
 
@@ -163,7 +163,7 @@ void drawComponents(Entity ioSelectedEntity) {
     drawComponent<CameraComponent>("Camera", ioSelectedEntity, flags, true, [](auto&& cameraComponent) {
         auto&& camera = cameraComponent.camera;
 
-        const float columnWidth = 250.0f; // TODO Update with screen resolution (old 130)
+        const float columnWidth = Window::sHighDPIScaleFactor * 130.0f;
 
         drawTwoColumnsWithLabel("Primary", columnWidth, [&]() { ImGui::Checkbox("##Primary", &cameraComponent.primary); });
 
@@ -240,9 +240,10 @@ void drawComponents(Entity ioSelectedEntity) {
     });
 
     drawComponent<SpriteRendererComponent>("Sprite Renderer", ioSelectedEntity, flags, true, [](auto&& spriteComponent) {
-        // TODO Update with screen resolution (old 100)
-        drawTwoColumnsWithLabel("Color", 200.0f, [&]() { ImGui::ColorEdit4("##Color", glm::value_ptr(spriteComponent.color)); });
-        drawTwoColumnsWithLabel("Texture", 200.0f, [&]() {
+        auto&& columnWidth = Window::sHighDPIScaleFactor * 100.0f;
+
+        drawTwoColumnsWithLabel("Color", columnWidth, [&]() { ImGui::ColorEdit4("##Color", glm::value_ptr(spriteComponent.color)); });
+        drawTwoColumnsWithLabel("Texture", columnWidth, [&]() {
             ImGui::Button("##Texture", ImVec2(100.0f, 0.0f));
             if (ImGui::BeginDragDropTarget()) {
                 if (auto&& payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
@@ -260,7 +261,7 @@ void drawComponents(Entity ioSelectedEntity) {
             }
         });
         drawTwoColumnsWithLabel(
-            "Tiling Factor", 200.0f, [&]() { ImGui::DragFloat("##TilingFactor", &spriteComponent.tilingFactor, 0.1f, 0.0f, 100.0f); });
+            "Tiling Factor", columnWidth, [&]() { ImGui::DragFloat("##TilingFactor", &spriteComponent.tilingFactor, 0.1f, 0.0f, 100.0f); });
     });
 }
 }

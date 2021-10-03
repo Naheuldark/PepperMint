@@ -69,8 +69,8 @@ void ImGuiLayer::onAttach() {
     // io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
     // Setup fonts
-    io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Bold.ttf", 35.0f); // TODO Update with screen resolution (old 18)
-    io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Regular.ttf", 35.0f);
+    io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Bold.ttf", Window::sHighDPIScaleFactor * 15.0f);
+    io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Regular.ttf", Window::sHighDPIScaleFactor * 15.0f);
 
     // Setup ImGui style
     ImGui::StyleColorsDark();
@@ -79,6 +79,9 @@ void ImGuiLayer::onAttach() {
     // When viewports are enabled, tweak WindowRounding/WindowBg so platform windows can look
     // identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
+
+    style.ScaleAllSizes(Window::sHighDPIScaleFactor);
+
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
         style.WindowRounding              = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;

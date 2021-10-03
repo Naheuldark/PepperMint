@@ -9,9 +9,7 @@ struct WindowProperties {
     std::string title;
     uint32_t    width, height;
 
-    WindowProperties(const std::string& iTitle  = "PepperMint Engine",
-                     uint32_t           iWidth  = 3500, // TODO Update with screen resolution (old 1600x900)
-                     uint32_t           iHeight = 1800)
+    WindowProperties(const std::string& iTitle = "PepperMint Engine", uint32_t iWidth = 1400, uint32_t iHeight = 700)
         : title(iTitle), width(iWidth), height(iHeight) {}
 };
 
@@ -38,6 +36,9 @@ class Window {
     virtual void* nativeWindow() const = 0;
 
     static Scope<Window> Create(const WindowProperties& iProperties = WindowProperties());
+
+  public:
+    static float sHighDPIScaleFactor;
 };
 
 }

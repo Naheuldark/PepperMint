@@ -6,8 +6,8 @@ namespace PepperMint {
 
 extern const std::filesystem::path xASSET_PATH = "assets";
 
-const float kPADDING        = 15.0f;  // TODO Update with screen resolution (old 10)
-const float kTHUMBNAIL_SIZE = 200.0f; // TODO Update with screen resolution (old 95)
+const float kPADDING        = 8.0f;
+const float kTHUMBNAIL_SIZE = 80.0f;
 
 ContentBrowserPanel::ContentBrowserPanel() : _currentDirectory(xASSET_PATH) {
     _directoryIcon = Texture2D::Create("resources/icons/ContentBrowser/DirectoryIcon.png");
@@ -23,7 +23,7 @@ void ContentBrowserPanel::onImGuiRender() {
             }
         }
 
-        float cellSize = kTHUMBNAIL_SIZE + kPADDING;
+        float cellSize = Window::sHighDPIScaleFactor * kTHUMBNAIL_SIZE + Window::sHighDPIScaleFactor * kPADDING;
 
         float panelWidth  = ImGui::GetContentRegionAvail().x;
         int   columnCount = (int)(panelWidth / cellSize);
@@ -43,7 +43,10 @@ void ContentBrowserPanel::onImGuiRender() {
             Ref<Texture2D> icon = directoryEntry.is_directory() ? _directoryIcon : _fileIcon;
 
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-            ImGui::ImageButton((ImTextureID)icon->rendererId(), {kTHUMBNAIL_SIZE, kTHUMBNAIL_SIZE}, {0, 1}, {1, 0});
+            ImGui::ImageButton((ImTextureID)icon->rendererId(),
+                               {Window::sHighDPIScaleFactor * kTHUMBNAIL_SIZE, Window::sHighDPIScaleFactor * kTHUMBNAIL_SIZE},
+                               {0, 1},
+                               {1, 0});
             if (ImGui::BeginDragDropSource()) {
                 const wchar_t* itemPath = relativePath.c_str();
 

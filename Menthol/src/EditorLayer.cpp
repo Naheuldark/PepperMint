@@ -10,7 +10,7 @@
 namespace PepperMint {
 
 // Constants
-const float kMIN_PANEL_WIDTH = 800.0f; // TODO Update with screen resolution (old 370)
+const float kMIN_PANEL_WIDTH = 370.0f;
 
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
@@ -26,8 +26,8 @@ void EditorLayer::onAttach() {
     }
 
     FrameBufferProperties properties;
-    properties.width       = 3840; // TODO Update with screen resolution (old 1280x720)
-    properties.height      = 2400;
+    properties.width       = Window::sHighDPIScaleFactor * 1280;
+    properties.height      = Window::sHighDPIScaleFactor * 720;
     properties.attachments = {
         FrameBufferTextureFormat::RGBA8,       // Color
         FrameBufferTextureFormat::RED_INTEGER, // Entity Id
@@ -140,7 +140,7 @@ void EditorLayer::onImGuiRender() {
         ImGuiStyle& style = ImGui::GetStyle();
 
         float minWindowSizeX  = style.WindowMinSize.x;
-        style.WindowMinSize.x = kMIN_PANEL_WIDTH;
+        style.WindowMinSize.x = Window::sHighDPIScaleFactor * kMIN_PANEL_WIDTH;
 
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
             ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
