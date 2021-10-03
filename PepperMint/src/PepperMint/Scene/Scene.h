@@ -5,6 +5,8 @@
 #include "PepperMint/Core/Timestep.h"
 #include "PepperMint/Renderer/EditorCamera.h"
 
+class b2World;
+
 namespace PepperMint {
 
 class Entity;
@@ -23,6 +25,9 @@ class Scene {
     Entity createEntity(const std::string& iName = "Entity");
     void   destroyEntity(Entity iEntity);
 
+    void onRuntimeStart();
+    void onRuntimeStop();
+
     void onUpdateRuntime(Timestep iTimestep);
     void onUpdateEditor(Timestep iTimestep, EditorCamera& iCamera);
 
@@ -38,6 +43,8 @@ class Scene {
     std::string _name;
 
     entt::registry _registry;
+
+    b2World* _physicsWorld = nullptr;
 
     uint32_t _viewportWidth  = 0;
     uint32_t _viewportHeight = 0;

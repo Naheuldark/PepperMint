@@ -27,6 +27,8 @@ void serializeEntity(YAML::Emitter& out, Entity iEntityToSerialize) {
         serializeComponent<SpriteRendererComponent>(out, iEntityToSerialize);
         serializeComponent<CameraComponent>(out, iEntityToSerialize);
         serializeComponent<NativeScriptComponent>(out, iEntityToSerialize);
+        serializeComponent<RigidBody2DComponent>(out, iEntityToSerialize);
+        serializeComponent<BoxCollider2DComponent>(out, iEntityToSerialize);
     }
     out << YAML::EndMap;
 }
@@ -80,6 +82,8 @@ bool SceneSerializer::deserialize(const std::string& iFilepath) {
             SpriteRendererComponent::Deserialize(entity, deserializedEntity);
             CameraComponent::Deserialize(entity, deserializedEntity);
             NativeScriptComponent::Deserialize(entity, deserializedEntity);
+            RigidBody2DComponent::Deserialize(entity, deserializedEntity);
+            BoxCollider2DComponent::Deserialize(entity, deserializedEntity);
 
             PM_CORE_TRACE("\tDeserialized Entity '{0}' (id: {1})", deserializedEntity.get<TagComponent>().tag, uuid);
         }

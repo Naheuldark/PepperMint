@@ -10,6 +10,26 @@
 namespace YAML {
 
 template <>
+struct convert<glm::vec2> {
+    static Node encode(const glm::vec2& rhs) {
+        Node node;
+        node.push_back(rhs.x);
+        node.push_back(rhs.y);
+        node.SetStyle(EmitterStyle::Flow);
+        return node;
+    }
+
+    static bool decode(const Node& node, glm::vec2& rhs) {
+        if (!node.IsSequence() || node.size() != 2)
+            return false;
+
+        rhs.x = node[0].as<float>();
+        rhs.y = node[1].as<float>();
+        return true;
+    }
+};
+
+template <>
 struct convert<glm::vec3> {
     static Node encode(const glm::vec3& rhs) {
         Node node;
@@ -59,6 +79,12 @@ struct convert<glm::vec4> {
 namespace PepperMint {
 
 namespace {
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v) {
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+    return out;
+}
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v) {
     out << YAML::Flow;
@@ -222,4 +248,73 @@ void NativeScriptComponent::serialize(YAML::Emitter& out) const {
 }
 
 void NativeScriptComponent::Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {}
+
+// Rigid Body 2D Component
+void RigidBody2DComponent::serialize(YAML::Emitter& out) const {
+    out << YAML::Key << "RigidBody2DComponent";
+    out << YAML::BeginMap;
+    out << YAML::Key << "BodyType" << YAML::Value << (int)type;
+    out << YAML::Key << "FixedRotation" << YAML::Value << fixedRotation;
+    out << YAML::EndMap;
+}
+
+void RigidBody2DComponent::Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
+    auto&& serializedComponent = iSerializedEntity["RigidBody2DComponent"];
+    if (serializedComponent) {
+        auto&& bodyType      = serializedComponent["BodyType"].as<int>();
+        auto&& fixedRotation = serializedComponent["FixedRotation"].as<bool>();
+
+        if (ioDeserializedEntity.has<RigidBody2DComponent>()) {
+            ioDeserializedEntity.get<RigidBody2DComponent>().type          = (RigidBody2DComponent::BodyType)bodyType;
+            ioDeserializedEntity.get<RigidBody2DComponent>().fixedRotation = fixedRotation;
+        } else {
+            auto&& rigidBodyComponent        = ioDeserializedEntity.add<RigidBody2DComponent>();
+            rigidBodyComponent.type          = (RigidBody2DComponent::BodyType)bodyType;
+            rigidBodyComponent.fixedRotation = fixedRotation;
+        }
+    }
+}
+
+// Box Collider 2D Component
+void BoxCollider2DComponent::serialize(YAML::Emitter& out) const {
+    out << YAML::Key << "BoxCollider2DComponent";
+    out << YAML::BeginMap;
+    out << YAML::Key << "Offset" << YAML::Value << offset;
+    out << YAML::Key << "Size" << YAML::Value << size;
+    out << YAML::Key << "Density" << YAML::Value << density;
+    out << YAML::Key << "Friction" << YAML::Value << friction;
+    out << YAML::Key << "Restitution" << YAML::Value << restitution;
+    out << YAML::Key << "RestitutionThreshold" << YAML::Value << restitutionThreshold;
+    out << YAML::EndMap;
+}
+
+void BoxCollider2DComponent::Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
+    auto&& serializedComponent = iSerializedEntity["BoxCollider2DComponent"];
+    if (serializedComponent) {
+        auto&& offset               = serializedComponent["Offset"].as<glm::vec2>();
+        auto&& size                 = serializedComponent["Size"].as<glm::vec2>();
+        auto&& density              = serializedComponent["Density"].as<float>();
+        auto&& friction             = serializedComponent["Friction"].as<float>();
+        auto&& restitution          = serializedComponent["Restitution"].as<float>();
+        auto&& restitutionThreshold = serializedComponent["RestitutionThreshold"].as<float>();
+
+        if (ioDeserializedEntity.has<BoxCollider2DComponent>()) {
+            ioDeserializedEntity.get<BoxCollider2DComponent>().offset               = offset;
+            ioDeserializedEntity.get<BoxCollider2DComponent>().size                 = size;
+            ioDeserializedEntity.get<BoxCollider2DComponent>().density              = density;
+            ioDeserializedEntity.get<BoxCollider2DComponent>().friction             = friction;
+            ioDeserializedEntity.get<BoxCollider2DComponent>().restitution          = restitution;
+            ioDeserializedEntity.get<BoxCollider2DComponent>().restitutionThreshold = restitutionThreshold;
+        } else {
+            auto&& boxColliderComponent               = ioDeserializedEntity.add<BoxCollider2DComponent>();
+            boxColliderComponent.offset               = offset;
+            boxColliderComponent.size                 = size;
+            boxColliderComponent.density              = density;
+            boxColliderComponent.friction             = friction;
+            boxColliderComponent.restitution          = restitution;
+            boxColliderComponent.restitutionThreshold = restitutionThreshold;
+        }
+    }
+}
+
 }

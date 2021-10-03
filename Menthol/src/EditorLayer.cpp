@@ -194,7 +194,15 @@ void EditorLayer::onImGuiRender() {
         _viewportPanel.onImGuiRender();
 
         // Toolbar
+        SceneState oldState = _toolbarPanel.sceneState();
+
         _toolbarPanel.onImGuiRender();
+
+        if ((oldState == SceneState::EDIT) && (_toolbarPanel.sceneState() == SceneState::PLAY)) {
+            onScenePlay();
+        } else if ((oldState == SceneState::PLAY) && (_toolbarPanel.sceneState() == SceneState::EDIT)) {
+            onSceneStop();
+        }
 
         // Content Browser Panel
         _contentBrowserPanel.onImGuiRender();
@@ -253,9 +261,9 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
         // Switch between Runtime and Editor cameras
         case Key::P: {
             if (_toolbarPanel.sceneState() == SceneState::EDIT) {
-                _toolbarPanel.setSceneState(SceneState::PLAY);
+                onScenePlay();
             } else if (_toolbarPanel.sceneState() == SceneState::PLAY) {
-                _toolbarPanel.setSceneState(SceneState::EDIT);
+                onSceneStop();
             }
             break;
         }
@@ -267,6 +275,16 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
     _viewportPanel.onKeyPressed(iEvent);
 
     return true;
+}
+
+void EditorLayer::onScenePlay() {
+    _toolbarPanel.setSceneState(SceneState::PLAY);
+    _activeScene->onRuntimeStart();
+}
+
+void EditorLayer::onSceneStop() {
+    _toolbarPanel.setSceneState(SceneState::EDIT);
+    _activeScene->onRuntimeStop();
 }
 
 bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& iEvent) {

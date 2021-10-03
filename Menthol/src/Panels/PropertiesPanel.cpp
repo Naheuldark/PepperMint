@@ -138,6 +138,16 @@ void drawComponents(Entity ioSelectedEntity) {
             ImGui::CloseCurrentPopup();
         }
 
+        if (!ioSelectedEntity.has<RigidBody2DComponent>() && ImGui::MenuItem("Rigid Body")) {
+            ioSelectedEntity.add<RigidBody2DComponent>();
+            ImGui::CloseCurrentPopup();
+        }
+
+        if (!ioSelectedEntity.has<BoxCollider2DComponent>() && ImGui::MenuItem("Box Collider")) {
+            ioSelectedEntity.add<BoxCollider2DComponent>();
+            ImGui::CloseCurrentPopup();
+        }
+
         ImGui::EndPopup();
     }
 
@@ -262,6 +272,47 @@ void drawComponents(Entity ioSelectedEntity) {
         });
         drawTwoColumnsWithLabel(
             "Tiling Factor", columnWidth, [&]() { ImGui::DragFloat("##TilingFactor", &spriteComponent.tilingFactor, 0.1f, 0.0f, 100.0f); });
+    });
+
+    drawComponent<RigidBody2DComponent>("Rigid Body", ioSelectedEntity, flags, true, [](auto&& rigidBodyComponent) {
+        const float columnWidth = Window::sHighDPIScaleFactor * 130.0f;
+
+        drawTwoColumnsWithLabel("Body Type", columnWidth, [&]() {
+            const char* bodyTypeString[]      = {"Static", "Dynamic", "Kinematic"};
+            const char* currentBodyTypeString = bodyTypeString[(int)rigidBodyComponent.type];
+            if (ImGui::BeginCombo("##BodyType", currentBodyTypeString)) {
+                for (size_t i = 0; i < 3; ++i) {
+                    bool isSelected = (currentBodyTypeString == bodyTypeString[i]);
+                    if (ImGui::Selectable(bodyTypeString[i], isSelected)) {
+                        currentBodyTypeString   = bodyTypeString[i];
+                        rigidBodyComponent.type = ((RigidBody2DComponent::BodyType)i);
+                    }
+
+                    if (isSelected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+        });
+
+        drawTwoColumnsWithLabel("Fixed Rotation", columnWidth, [&]() { ImGui::Checkbox("##FixedRotation", &rigidBodyComponent.fixedRotation); });
+    });
+
+    drawComponent<BoxCollider2DComponent>("Box Collider", ioSelectedEntity, flags, true, [](auto&& boxColliderComponent) {
+        const float columnWidth = Window::sHighDPIScaleFactor * 130.0f;
+
+        drawTwoColumnsWithLabel("Offset", columnWidth, [&]() { ImGui::DragFloat2("##Offset", glm::value_ptr(boxColliderComponent.offset)); });
+        drawTwoColumnsWithLabel("Size", columnWidth, [&]() { ImGui::DragFloat2("##Size", glm::value_ptr(boxColliderComponent.size)); });
+        drawTwoColumnsWithLabel("Density", columnWidth, [&]() { ImGui::DragFloat("##Density", &boxColliderComponent.density, 0.01f, 0.0f, 1.0f); });
+        drawTwoColumnsWithLabel(
+            "Friction", columnWidth, [&]() { ImGui::DragFloat("##Friction", &boxColliderComponent.friction, 0.01f, 0.0f, 1.0f); });
+        drawTwoColumnsWithLabel(
+            "Restitution", columnWidth, [&]() { ImGui::DragFloat("##Restitution", &boxColliderComponent.restitution, 0.01f, 0.0f, 1.0f); });
+        drawTwoColumnsWithLabel("Restitution Threshold", columnWidth, [&]() {
+            ImGui::DragFloat("##RestitutionThreshold", &boxColliderComponent.restitutionThreshold, 0.01f, 0.0f);
+        });
     });
 }
 }

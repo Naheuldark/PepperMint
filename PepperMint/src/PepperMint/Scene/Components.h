@@ -81,7 +81,47 @@ struct NativeScriptComponent {
         };
     }
 
+    NativeScriptComponent()                             = default;
+    NativeScriptComponent(const NativeScriptComponent&) = default;
+
     void        serialize(YAML::Emitter& out) const;
     static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
 };
+
+struct RigidBody2DComponent {
+    enum class BodyType : int { STATIC = 0, DYNAMIC, KINEMATIC };
+
+    BodyType type          = BodyType::STATIC;
+    bool     fixedRotation = false;
+
+    // Runtime storage
+    void* runtimeBody = nullptr;
+
+    RigidBody2DComponent()                            = default;
+    RigidBody2DComponent(const RigidBody2DComponent&) = default;
+
+    void        serialize(YAML::Emitter& out) const;
+    static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
+};
+
+struct BoxCollider2DComponent {
+    glm::vec2 offset = {0.0f, 0.0f};
+    glm::vec2 size   = {0.5f, 0.5f};
+
+    // TODO Move into physics material
+    float density              = 1.0f;
+    float friction             = 0.5f;
+    float restitution          = 0.0f;
+    float restitutionThreshold = 0.5f;
+
+    // Runtime storage
+    void* runtimeFixture = nullptr;
+
+    BoxCollider2DComponent()                              = default;
+    BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
+
+    void        serialize(YAML::Emitter& out) const;
+    static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
+};
+
 }

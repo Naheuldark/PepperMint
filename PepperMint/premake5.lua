@@ -41,11 +41,13 @@ project "PepperMint"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.VulkanSDK}"
 	}
 
 	links {
 		"GLFW",
+		"Box2D",
 		"ImGui",
 		"Glad",
 		"yaml-cpp",

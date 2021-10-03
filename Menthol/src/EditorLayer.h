@@ -24,6 +24,9 @@ class EditorLayer : public Layer {
     void onImGuiRender() override;
     void onEvent(Event& iEvent) override;
 
+	void onScenePlay();
+	void onSceneStop();
+
   private:
     bool onKeyPressed(KeyPressedEvent& iEvent);
     bool onMouseButtonPressed(MouseButtonPressedEvent& iEvent);
