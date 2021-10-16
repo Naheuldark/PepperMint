@@ -24,8 +24,10 @@ class EditorLayer : public Layer {
     void onImGuiRender() override;
     void onEvent(Event& iEvent) override;
 
-	void onScenePlay();
-	void onSceneStop();
+    void onScenePlay();
+    void onSceneStop();
+
+    void duplicateSelectedEntity();
 
   private:
     bool onKeyPressed(KeyPressedEvent& iEvent);
@@ -40,6 +42,7 @@ class EditorLayer : public Layer {
   private:
     // Scene
     Ref<Scene>       _activeScene;
+    Ref<Scene>       _editorScene, _runtimeScene;
     Ref<FrameBuffer> _frameBuffer;
 
     // Panels

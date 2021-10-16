@@ -3,6 +3,7 @@
 #include <entt.hpp>
 
 #include "PepperMint/Core/Timestep.h"
+#include "PepperMint/Core/UUID.h"
 #include "PepperMint/Renderer/EditorCamera.h"
 
 class b2World;
@@ -23,6 +24,7 @@ class Scene {
     std::string name() const { return _name; }
 
     Entity createEntity(const std::string& iName = "Entity");
+    Entity createEntityWithUUID(const UUID& iUUID, const std::string& iName = "Entity");
     void   destroyEntity(Entity iEntity);
 
     void onRuntimeStart();
@@ -34,6 +36,10 @@ class Scene {
     void onViewportResize(uint32_t iWidth, uint32_t iHeight);
 
     Entity primaryCameraEntity();
+
+    void duplicateEntity(Entity iEntity);
+
+    static Ref<Scene> Copy(const Ref<Scene>& iOther);
 
   private:
     template <typename Component>

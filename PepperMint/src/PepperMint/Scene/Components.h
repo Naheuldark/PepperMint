@@ -3,9 +3,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+
+#include "PepperMint/Core/UUID.h"
 #include "PepperMint/Renderer/Texture.h"
 #include "PepperMint/Scene/SceneCamera.h"
-#include "PepperMint/Scene/ScriptableEntity.h"
 
 namespace YAML {
 class Emitter;
@@ -14,15 +17,19 @@ class Node;
 
 namespace PepperMint {
 
+struct IdComponent {
+    UUID uuid;
+
+    IdComponent()                   = default;
+    IdComponent(const IdComponent&) = default;
+};
+
 struct TagComponent {
     std::string tag;
 
     TagComponent()                    = default;
     TagComponent(const TagComponent&) = default;
     TagComponent(const std::string& iTag) : tag(iTag) {}
-
-    void        serialize(YAML::Emitter& out) const;
-    static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
 };
 
 struct TransformComponent {
@@ -35,10 +42,13 @@ struct TransformComponent {
     TransformComponent(const glm::vec3& iTranslation, const glm::vec3& iRotation = {0.0f, 0.0f, 0.0f}, const glm::vec3& iScale = {1.0f, 1.0f, 1.0f})
         : translation(iTranslation), rotation(iRotation), scale(iScale) {}
 
-    glm::mat4 transform() const;
+    glm::mat4 transform() const {
+        auto&& translate = glm::translate(glm::mat4(1.0f), translation);
+        auto&& rotate    = glm::toMat4(glm::quat(rotation));
+        auto&& rescale   = glm::scale(glm::mat4(1.0f), scale);
 
-    void        serialize(YAML::Emitter& out) const;
-    static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
+        return translate * rotate * rescale;
+    }
 };
 
 struct SpriteRendererComponent {
@@ -49,9 +59,6 @@ struct SpriteRendererComponent {
     SpriteRendererComponent()                               = default;
     SpriteRendererComponent(const SpriteRendererComponent&) = default;
     SpriteRendererComponent(const glm::vec4& iColor) : color(iColor) {}
-
-    void        serialize(YAML::Emitter& out) const;
-    static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
 };
 
 struct CameraComponent {
@@ -61,11 +68,9 @@ struct CameraComponent {
 
     CameraComponent()                       = default;
     CameraComponent(const CameraComponent&) = default;
-
-    void        serialize(YAML::Emitter& out) const;
-    static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
 };
 
+class ScriptableEntity; // TODO
 struct NativeScriptComponent {
     ScriptableEntity* script = nullptr;
 
@@ -83,9 +88,6 @@ struct NativeScriptComponent {
 
     NativeScriptComponent()                             = default;
     NativeScriptComponent(const NativeScriptComponent&) = default;
-
-    void        serialize(YAML::Emitter& out) const;
-    static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
 };
 
 struct RigidBody2DComponent {
@@ -99,9 +101,6 @@ struct RigidBody2DComponent {
 
     RigidBody2DComponent()                            = default;
     RigidBody2DComponent(const RigidBody2DComponent&) = default;
-
-    void        serialize(YAML::Emitter& out) const;
-    static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
 };
 
 struct BoxCollider2DComponent {
@@ -119,9 +118,6 @@ struct BoxCollider2DComponent {
 
     BoxCollider2DComponent()                              = default;
     BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
-
-    void        serialize(YAML::Emitter& out) const;
-    static void Deserialize(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity);
 };
 
 }

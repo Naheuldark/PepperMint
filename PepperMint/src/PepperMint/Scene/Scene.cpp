@@ -4,6 +4,7 @@
 #include "PepperMint/Scene/Components.h"
 #include "PepperMint/Scene/Entity.h"
 #include "PepperMint/Scene/Scene.h"
+#include "PepperMint/Scene/ScriptableEntity.h"
 
 // Box2D
 #include <box2d/b2_body.h>
@@ -28,12 +29,66 @@ b2BodyType rigidBody2DTypeToBox2DBodyType(RigidBody2DComponent::BodyType type) {
     PM_CORE_ASSERT(false, "Unknown body type");
     return b2_staticBody;
 }
+
+template <typename Component>
+void copyComponent(entt::registry& oDestination, const entt::registry& iSource, const std::unordered_map<UUID, entt::entity>& iEnttMap) {
+    auto&& allView = iSource.view<Component>();
+    for (auto&& sourceEntity : allView) {
+        auto&& sourceComponent   = iSource.get<Component>(sourceEntity);
+        auto&& destinationEntity = iEnttMap.at(iSource.get<IdComponent>(sourceEntity).uuid);
+        oDestination.emplace_or_replace<Component>(destinationEntity, sourceComponent);
+    }
 }
 
-Entity Scene::createEntity(const std::string& iName) {
+template <typename Component>
+void copyComponentIfExists(Entity oDestination, Entity iSource) {
+    if (iSource.has<Component>()) {
+        oDestination.addOrReplace<Component>(iSource.get<Component>());
+    }
+}
+}
+
+Ref<Scene> Scene::Copy(const Ref<Scene>& iOther) {
+    Ref<Scene> newScene = CreateRef<Scene>();
+
+    newScene->_viewportWidth  = iOther->_viewportWidth;
+    newScene->_viewportHeight = iOther->_viewportHeight;
+
+    std::unordered_map<UUID, entt::entity> enttMap;
+
+    // Create entities in new scene
+    auto&& sourceSceneRegistry = iOther->_registry;
+    auto&& destSceneRegistry   = newScene->_registry;
+
+    auto&& idView = sourceSceneRegistry.view<IdComponent>();
+    for (auto&& entity : idView) {
+        auto&& uuid = sourceSceneRegistry.get<IdComponent>(entity).uuid;
+        auto&& tag  = sourceSceneRegistry.get<TagComponent>(entity).tag;
+
+		PM_CORE_TRACE("Entity copied {0} (id {1})", tag, uuid);
+
+        Entity newEntity = newScene->createEntityWithUUID(uuid, tag);
+        enttMap.emplace(uuid, newEntity);
+    }
+
+    // Copy components (except Id and Tag components)
+    copyComponent<TransformComponent>(destSceneRegistry, sourceSceneRegistry, enttMap);
+    copyComponent<SpriteRendererComponent>(destSceneRegistry, sourceSceneRegistry, enttMap);
+    copyComponent<CameraComponent>(destSceneRegistry, sourceSceneRegistry, enttMap);
+    copyComponent<NativeScriptComponent>(destSceneRegistry, sourceSceneRegistry, enttMap);
+    copyComponent<RigidBody2DComponent>(destSceneRegistry, sourceSceneRegistry, enttMap);
+    copyComponent<BoxCollider2DComponent>(destSceneRegistry, sourceSceneRegistry, enttMap);
+
+    return newScene;
+}
+
+Entity Scene::createEntity(const std::string& iName) { return createEntityWithUUID(UUID(), iName); }
+
+Entity Scene::createEntityWithUUID(const UUID& iUUID, const std::string& iName) {
     Entity entity(_registry.create(), this);
-    entity.add<TransformComponent>();
+    entity.add<IdComponent>(iUUID);
     entity.add<TagComponent>(iName);
+    entity.add<TransformComponent>();
     return entity;
 }
 
@@ -182,6 +237,17 @@ Entity Scene::primaryCameraEntity() {
     return {};
 }
 
+void Scene::duplicateEntity(Entity iEntity) {
+    Entity newEntity = createEntity(iEntity.tag());
+
+    copyComponentIfExists<TransformComponent>(newEntity, iEntity);
+    copyComponentIfExists<SpriteRendererComponent>(newEntity, iEntity);
+    copyComponentIfExists<CameraComponent>(newEntity, iEntity);
+    copyComponentIfExists<NativeScriptComponent>(newEntity, iEntity);
+    copyComponentIfExists<RigidBody2DComponent>(newEntity, iEntity);
+    copyComponentIfExists<BoxCollider2DComponent>(newEntity, iEntity);
+}
+
 ///////////////////////////////////////
 // Behavior for each added component //
 ///////////////////////////////////////
@@ -189,6 +255,9 @@ template <typename Component>
 void Scene::onAddComponent(Entity iEntity, Component& ioComponent) {
     static_assert(false);
 }
+
+template <>
+void Scene::onAddComponent<IdComponent>(Entity iEntity, IdComponent& ioComponent) {}
 
 template <>
 void Scene::onAddComponent<TagComponent>(Entity iEntity, TagComponent& ioComponent) {}

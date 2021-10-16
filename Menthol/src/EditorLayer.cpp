@@ -15,7 +15,8 @@ const float kMIN_PANEL_WIDTH = 370.0f;
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
 
-    _activeScene = CreateRef<Scene>();
+    _editorScene = CreateRef<Scene>();
+    _activeScene = _editorScene;
 
     auto&& commandLineArgs = Application::Get().commandLineArgs();
     if (commandLineArgs.count > 1) {
@@ -235,6 +236,13 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
     bool shift   = Input::IsKeyPressed(Key::LEFT_SHIFT) || Input::IsKeyPressed(Key::RIGHT_SHIFT);
 
     switch (iEvent.keyCode()) {
+        case Key::D: {
+            if (control) {
+                duplicateSelectedEntity();
+            }
+            break;
+        }
+
         case Key::N: {
             if (control) {
                 newScene();
@@ -279,11 +287,19 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
 
 void EditorLayer::onScenePlay() {
     _toolbarPanel.setSceneState(SceneState::PLAY);
+
+    // Make a copy of the editor scene
+    _runtimeScene = Scene::Copy(_editorScene);
+
+    _activeScene = _runtimeScene;
     _activeScene->onRuntimeStart();
 }
 
 void EditorLayer::onSceneStop() {
     _toolbarPanel.setSceneState(SceneState::EDIT);
+
+    _activeScene  = _editorScene;
+    _runtimeScene = nullptr;
     _activeScene->onRuntimeStop();
 }
 
@@ -291,6 +307,17 @@ bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& iEvent) {
     _viewportPanel.onMouseButtonPressed(iEvent);
 
     return true;
+}
+
+void EditorLayer::duplicateSelectedEntity() {
+    if (_toolbarPanel.sceneState() != SceneState::EDIT) {
+        return;
+    }
+
+    Entity selectedEntity = _sceneHierarchyPanel.selectedEntity();
+    if (selectedEntity) {
+        _editorScene->duplicateEntity(selectedEntity);
+    }
 }
 
 void EditorLayer::newScene() {
@@ -312,6 +339,10 @@ void EditorLayer::openScene() {
 }
 
 void EditorLayer::openScene(const std::filesystem::path& iPath) {
+    if (_toolbarPanel.sceneState() != SceneState::EDIT) {
+        onSceneStop();
+    }
+
     if (iPath.extension().string() != ".pm") {
         PM_CORE_WARN("Could not load {0} - not a scene file", iPath.filename().string());
         return;
@@ -320,7 +351,8 @@ void EditorLayer::openScene(const std::filesystem::path& iPath) {
     auto&&          scene = CreateRef<Scene>();
     SceneSerializer serializer(scene);
     if (serializer.deserialize(iPath.string())) {
-        _activeScene = scene;
+        _editorScene = scene;
+        _activeScene = _editorScene;
 
         auto&& viewportsize = _viewportPanel.viewportSize();
         _activeScene->onViewportResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
