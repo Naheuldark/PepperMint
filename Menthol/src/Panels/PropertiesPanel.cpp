@@ -105,6 +105,14 @@ void drawComponent(const std::string& iName, Entity iEntity, const ImGuiTreeNode
     }
 }
 
+template <typename Component>
+void displayAddComponentEntry(Entity ioSelectedEntity, const std::string& iEntryName) {
+    if (!ioSelectedEntity.has<Component>() && ImGui::MenuItem(iEntryName.c_str())) {
+        ioSelectedEntity.add<Component>();
+        ImGui::CloseCurrentPopup();
+    }
+}
+
 void drawComponents(Entity ioSelectedEntity) {
     // Display Component Tag
     if (ioSelectedEntity.has<TagComponent>()) {
@@ -128,25 +136,10 @@ void drawComponents(Entity ioSelectedEntity) {
     }
 
     if (ImGui::BeginPopup("##AddComponent")) {
-        if (!ioSelectedEntity.has<CameraComponent>() && ImGui::MenuItem("Camera")) {
-            ioSelectedEntity.add<CameraComponent>();
-            ImGui::CloseCurrentPopup();
-        }
-
-        if (!ioSelectedEntity.has<SpriteRendererComponent>() && ImGui::MenuItem("Sprite Renderer")) {
-            ioSelectedEntity.add<SpriteRendererComponent>();
-            ImGui::CloseCurrentPopup();
-        }
-
-        if (!ioSelectedEntity.has<RigidBody2DComponent>() && ImGui::MenuItem("Rigid Body")) {
-            ioSelectedEntity.add<RigidBody2DComponent>();
-            ImGui::CloseCurrentPopup();
-        }
-
-        if (!ioSelectedEntity.has<BoxCollider2DComponent>() && ImGui::MenuItem("Box Collider")) {
-            ioSelectedEntity.add<BoxCollider2DComponent>();
-            ImGui::CloseCurrentPopup();
-        }
+        displayAddComponentEntry<CameraComponent>(ioSelectedEntity, "Camera");
+        displayAddComponentEntry<SpriteRendererComponent>(ioSelectedEntity, "Sprite Renderer");
+        displayAddComponentEntry<RigidBody2DComponent>(ioSelectedEntity, "Rigid Body");
+        displayAddComponentEntry<BoxCollider2DComponent>(ioSelectedEntity, "Box Collider");
 
         ImGui::EndPopup();
     }
