@@ -22,6 +22,7 @@ class Scene {
     ~Scene() = default;
 
     std::string name() const { return _name; }
+    void        setName(const std::string& iName) { _name = iName; }
 
     Entity createEntity(const std::string& iName = "Entity");
     Entity createEntityWithUUID(const UUID& iUUID, const std::string& iName = "Entity");

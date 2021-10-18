@@ -15,7 +15,7 @@ const float kMIN_PANEL_WIDTH = 370.0f;
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
 
-    _editorScene = CreateRef<Scene>();
+    _editorScene = CreateRef<Scene>("Editor");
     _activeScene = _editorScene;
 
     auto&& commandLineArgs = Application::Get().commandLineArgs();
@@ -290,6 +290,7 @@ void EditorLayer::onScenePlay() {
 
     // Make a copy of the editor scene
     _runtimeScene = Scene::Copy(_editorScene);
+    _runtimeScene->setName("Runtime");
 
     _activeScene = _runtimeScene;
     _activeScene->onRuntimeStart();
@@ -321,7 +322,8 @@ void EditorLayer::duplicateSelectedEntity() {
 }
 
 void EditorLayer::newScene() {
-    _activeScene = CreateRef<Scene>();
+    _editorScene = CreateRef<Scene>("Editor");
+    _activeScene = _editorScene;
 
     auto&& viewportsize = _viewportPanel.viewportSize();
     _activeScene->onViewportResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
@@ -348,10 +350,9 @@ void EditorLayer::openScene(const std::filesystem::path& iPath) {
         return;
     }
 
-    auto&&          scene = CreateRef<Scene>();
-    SceneSerializer serializer(scene);
+    _editorScene = CreateRef<Scene>("Editor");
+    SceneSerializer serializer(_editorScene);
     if (serializer.deserialize(iPath.string())) {
-        _editorScene = scene;
         _activeScene = _editorScene;
 
         auto&& viewportsize = _viewportPanel.viewportSize();

@@ -1,6 +1,51 @@
 Scene: Untitled
 Entities:
-  - Entity: 12837192831273
+  - Entity: 12837192831274
+    TagComponent:
+      Tag: Center
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+  - Entity: 12837192831275
+    TagComponent:
+      Tag: Top
+    TransformComponent:
+      Translation: [0, 2, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 0, 0, 1]
+  - Entity: 12837192831276
+    TagComponent:
+      Tag: Bottom
+    TransformComponent:
+      Translation: [0, -2, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 0.972972929, 0, 1]
+  - Entity: 12837192831277
+    TagComponent:
+      Tag: Left
+    TransformComponent:
+      Translation: [-2, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [0.054054141, 1, 0, 1]
+  - Entity: 12837192831278
+    TagComponent:
+      Tag: Right
+    TransformComponent:
+      Translation: [2, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [0, 0.2262218, 1, 1]
+  - Entity: 12837192831210
     TagComponent:
       Tag: Camera
     TransformComponent:
@@ -20,48 +65,3 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Right
-    TransformComponent:
-      Translation: [2, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [0, 0.2262218, 1, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Left
-    TransformComponent:
-      Translation: [-2, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [0.054054141, 1, 0, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Bottom
-    TransformComponent:
-      Translation: [0, -2, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 0.972972929, 0, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Top
-    TransformComponent:
-      Translation: [0, 2, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 0, 0, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Center
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
