@@ -40,8 +40,11 @@ class Renderer2D {
                          const glm::vec4& iColor        = glm::vec4(1.0f),
                          int              iEntityId     = -1);
 
+    static void DrawCircle(const glm::mat4& iTransform, const glm::vec4& iColor, float iThickness, float iFade, int iEntityId);
+
     // Components
     static void DrawSprite(const TransformComponent& iTransformComponent, const SpriteRendererComponent& iSpriteComponent, int iEntityId = -1);
+    static void DrawCircle(const TransformComponent& iTransformComponent, const CircleRendererComponent& iCircleComponent, int iEntityId = -1);
 
     // Statistics
     struct Statistics {

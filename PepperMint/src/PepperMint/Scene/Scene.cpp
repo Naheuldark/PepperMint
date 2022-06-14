@@ -206,10 +206,22 @@ void Scene::onUpdateRuntime(Timestep iTimestep) {
     if (mainCamera) {
         Renderer2D::BeginScene(*mainCamera, cameraTransform);
         {
-            auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-            for (auto&& entity : group) {
-                auto&& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-                Renderer2D::DrawSprite(transformComponent, spriteComponent, (int)entity);
+            // Draw Sprites
+            {
+                auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+                for (auto&& entity : group) {
+                    auto&& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+                    Renderer2D::DrawSprite(transformComponent, spriteComponent, (int)entity);
+                }
+            }
+
+            // Draw Circles
+            {
+                auto&& view = _registry.view<TransformComponent, CircleRendererComponent>();
+                for (auto&& entity : view) {
+                    auto&& [transformComponent, circleComponent] = view.get<TransformComponent, CircleRendererComponent>(entity);
+                    Renderer2D::DrawCircle(transformComponent, circleComponent, (int)entity);
+                }
             }
         }
         Renderer2D::EndScene();
@@ -219,10 +231,22 @@ void Scene::onUpdateRuntime(Timestep iTimestep) {
 void Scene::onUpdateEditor(Timestep iTimestep, EditorCamera& iCamera) {
     Renderer2D::BeginScene(iCamera);
     {
-        auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-        for (auto&& entity : group) {
-            auto&& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-            Renderer2D::DrawSprite(transformComponent, spriteComponent, (int)entity);
+        // Draw Sprites
+        {
+            auto&& group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+            for (auto&& entity : group) {
+                auto&& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+                Renderer2D::DrawSprite(transformComponent, spriteComponent, (int)entity);
+            }
+        }
+
+        // Draw Circles
+        {
+            auto&& view = _registry.view<TransformComponent, CircleRendererComponent>();
+            for (auto&& entity : view) {
+                auto&& [transformComponent, circleComponent] = view.get<TransformComponent, CircleRendererComponent>(entity);
+                Renderer2D::DrawCircle(transformComponent, circleComponent, (int)entity);
+            }
         }
     }
     Renderer2D::EndScene();
@@ -278,6 +302,9 @@ void Scene::onAddComponent<TransformComponent>(Entity iEntity, TransformComponen
 
 template <>
 void Scene::onAddComponent<SpriteRendererComponent>(Entity iEntity, SpriteRendererComponent& ioComponent) {}
+
+template <>
+void Scene::onAddComponent<CircleRendererComponent>(Entity iEntity, CircleRendererComponent& ioComponent) {}
 
 template <>
 void Scene::onAddComponent<CameraComponent>(Entity iEntity, CameraComponent& ioComponent) {

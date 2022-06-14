@@ -52,8 +52,8 @@ void OpenGLRendererAPI::setClearColor(const glm::vec4& iColor) { glClearColor(iC
 void OpenGLRendererAPI::clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 
 void OpenGLRendererAPI::drawIndexed(Ref<VertexArray> iVertexArray, uint32_t iIndexCount) {
+    iVertexArray->bind();
     auto&& count = iIndexCount ? iIndexCount : iVertexArray->indexBuffer()->count();
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
-    glBindTexture(GL_TEXTURE_2D, 0);
 }
 }

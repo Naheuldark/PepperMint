@@ -22,20 +22,42 @@ struct QuadVertex {
     int entityId;
 };
 
+struct CircleVertex {
+    glm::vec3 worldPosition;
+    glm::vec3 localPosition;
+    glm::vec4 color;
+    float     thickness;
+    float     fade;
+
+    // Editor only
+    int entityId;
+};
+
 struct Renderer2DData {
     static const uint32_t MAX_QUADS         = 20000;
     static const uint32_t MAX_VERTICES      = MAX_QUADS * 4;
     static const uint32_t MAX_INDICES       = MAX_QUADS * 6;
     static const uint32_t MAX_TEXTURE_SLOTS = 32; // TODO Render capacity
 
+    Ref<Texture2D> whiteTexture;
+
+    // Quad Renderer Data
     Ref<VertexArray>  quadVertexArray;
     Ref<VertexBuffer> quadVertexBuffer;
-    Ref<Shader>       textureShader;
-    Ref<Texture2D>    whiteTexture;
+    Ref<Shader>       quadShader;
 
     uint32_t    quadIndexCount       = 0;
     QuadVertex* quadVertexBufferBase = nullptr;
     QuadVertex* quadVertexBufferPtr  = nullptr;
+
+    // Circle Renderer Data
+    Ref<VertexArray>  circleVertexArray;
+    Ref<VertexBuffer> circleVertexBuffer;
+    Ref<Shader>       circleShader;
+
+    uint32_t      circleIndexCount       = 0;
+    CircleVertex* circleVertexBufferBase = nullptr;
+    CircleVertex* circleVertexBufferPtr  = nullptr;
 
     std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> textureSlots;
     uint32_t                                      textureSlotIndex = 1; // 0 = white texture
@@ -97,6 +119,28 @@ void Renderer2D::Init() {
     sData.quadVertexArray->setIndexBuffer(quadIndexBuffer);
     delete[] quadIndices;
 
+    ////////////
+    // Circle //
+    ////////////
+
+    // Vertex Array
+    sData.circleVertexArray = VertexArray::Create();
+
+    // Vertex Buffer
+    sData.circleVertexBuffer = VertexBuffer::Create(Renderer2DData::MAX_VERTICES * sizeof(CircleVertex));
+    sData.circleVertexBuffer->setLayout({
+        {ShaderDataType::FLOAT3, "iWorldPosition"},
+        {ShaderDataType::FLOAT3, "iLocalPosition"},
+        {ShaderDataType::FLOAT4, "iColor"},
+        {ShaderDataType::FLOAT, "iThickness"},
+        {ShaderDataType::FLOAT, "iFade"},
+        {ShaderDataType::INT, "iEntityId"},
+    });
+    sData.circleVertexArray->addVertexBuffer(sData.circleVertexBuffer);
+    sData.circleVertexArray->setIndexBuffer(quadIndexBuffer); // Use same index buffer as for quad
+
+    sData.circleVertexBufferBase = new CircleVertex[Renderer2DData::MAX_VERTICES];
+
     //////////////
     // Textures //
     //////////////
@@ -121,7 +165,8 @@ void Renderer2D::Init() {
     // Shaders //
     /////////////
 
-    sData.textureShader       = Shader::Create("assets/shaders/Texture.glsl");
+    sData.quadShader          = Shader::Create("assets/shaders/Renderer2D_Quad.glsl");
+    sData.circleShader        = Shader::Create("assets/shaders/Renderer2D_Circle.glsl");
     sData.cameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
 }
 
@@ -156,27 +201,38 @@ void Renderer2D::EndScene() {
 }
 
 void Renderer2D::Flush() {
-    if (sData.quadIndexCount == 0) {
-        return; // Nothing to draw
+    if (sData.quadIndexCount > 0) {
+        uint32_t dataSize = (uint32_t)((uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
+        sData.quadVertexBuffer->setData(sData.quadVertexBufferBase, dataSize);
+
+        // Bind textures
+        for (uint32_t i = 0; i < sData.textureSlotIndex; ++i) {
+            sData.textureSlots[i]->bind(i);
+        }
+
+        sData.quadShader->bind();
+        RenderCommand::DrawIndexed(sData.quadVertexArray, sData.quadIndexCount);
+
+        sData.stats.drawCalls++;
     }
 
-    uint32_t dataSize = (uint32_t)((uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
-    sData.quadVertexBuffer->setData(sData.quadVertexBufferBase, dataSize);
+    if (sData.circleIndexCount > 0) {
+        uint32_t dataSize = (uint32_t)((uint8_t*)sData.circleVertexBufferPtr - (uint8_t*)sData.circleVertexBufferBase);
+        sData.circleVertexBuffer->setData(sData.circleVertexBufferBase, dataSize);
 
-    // Bind textures
-    for (uint32_t i = 0; i < sData.textureSlotIndex; ++i) {
-        sData.textureSlots[i]->bind(i);
+        sData.circleShader->bind();
+        RenderCommand::DrawIndexed(sData.circleVertexArray, sData.circleIndexCount);
+
+        sData.stats.drawCalls++;
     }
-
-    sData.textureShader->bind();
-    RenderCommand::DrawIndexed(sData.quadVertexArray, sData.quadIndexCount);
-
-    sData.stats.drawCalls++;
 }
 
 void Renderer2D::StartBatch() {
     sData.quadIndexCount      = 0;
     sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
+
+    sData.circleIndexCount      = 0;
+    sData.circleVertexBufferPtr = sData.circleVertexBufferBase;
 
     sData.textureSlotIndex = 1;
 }
@@ -261,10 +317,32 @@ void Renderer2D::DrawQuad(const glm::mat4& iTransform, float iTilingFactor, Ref<
     sData.stats.quadCount++;
 }
 
+void Renderer2D::DrawCircle(const glm::mat4& iTransform, const glm::vec4& iColor, float iThickness, float iFade, int iEntityId) {
+    PM_PROFILE_FUNCTION();
+
+    for (size_t i = 0; i < 4; ++i) {
+        sData.circleVertexBufferPtr->worldPosition = iTransform * sData.quadVertexPositions[i];
+        sData.circleVertexBufferPtr->localPosition = sData.quadVertexPositions[i] * 2.0f;
+        sData.circleVertexBufferPtr->color         = iColor;
+        sData.circleVertexBufferPtr->thickness     = iThickness;
+        sData.circleVertexBufferPtr->fade          = iFade;
+        sData.circleVertexBufferPtr->entityId      = iEntityId;
+        sData.circleVertexBufferPtr++;
+    }
+
+    sData.circleIndexCount += 6;
+
+    sData.stats.quadCount++;
+}
+
 ////////////////
 // Components //
 ////////////////
 void Renderer2D::DrawSprite(const TransformComponent& iTransformComponent, const SpriteRendererComponent& iSpriteComponent, int iEntityId) {
     DrawQuad(iTransformComponent.transform(), iSpriteComponent.tilingFactor, iSpriteComponent.texture, iSpriteComponent.color, iEntityId);
+}
+
+void Renderer2D::DrawCircle(const TransformComponent& iTransformComponent, const CircleRendererComponent& iCircleComponent, int iEntityId) {
+    DrawCircle(iTransformComponent.transform(), iCircleComponent.color, iCircleComponent.thickness, iCircleComponent.fade, iEntityId);
 }
 }

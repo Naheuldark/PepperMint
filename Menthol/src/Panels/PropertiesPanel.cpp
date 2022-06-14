@@ -138,6 +138,7 @@ void drawComponents(Entity ioSelectedEntity) {
     if (ImGui::BeginPopup("##AddComponent")) {
         displayAddComponentEntry<CameraComponent>(ioSelectedEntity, "Camera");
         displayAddComponentEntry<SpriteRendererComponent>(ioSelectedEntity, "Sprite Renderer");
+        displayAddComponentEntry<CircleRendererComponent>(ioSelectedEntity, "Circle Renderer");
         displayAddComponentEntry<RigidBody2DComponent>(ioSelectedEntity, "Rigid Body");
         displayAddComponentEntry<BoxCollider2DComponent>(ioSelectedEntity, "Box Collider");
 
@@ -265,6 +266,14 @@ void drawComponents(Entity ioSelectedEntity) {
         });
         drawTwoColumnsWithLabel(
             "Tiling Factor", columnWidth, [&]() { ImGui::DragFloat("##TilingFactor", &spriteComponent.tilingFactor, 0.1f, 0.0f, 100.0f); });
+    });
+
+    drawComponent<CircleRendererComponent>("Circle Renderer", ioSelectedEntity, flags, true, [](auto&& circleComponent) {
+        auto&& columnWidth = Window::sHighDPIScaleFactor * 100.0f;
+
+        drawTwoColumnsWithLabel("Color", columnWidth, [&]() { ImGui::ColorEdit4("##Color", glm::value_ptr(circleComponent.color)); });
+        drawTwoColumnsWithLabel("Thickness", columnWidth, [&]() { ImGui::DragFloat("##Thickness", &circleComponent.thickness, 0.025f, 0.0f, 1.0f); });
+        drawTwoColumnsWithLabel("Fade", columnWidth, [&]() { ImGui::DragFloat("##Fade", &circleComponent.fade, 0.00025f, 0.0f, 1.0f); });
     });
 
     drawComponent<RigidBody2DComponent>("Rigid Body", ioSelectedEntity, flags, true, [](auto&& rigidBodyComponent) {

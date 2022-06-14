@@ -26,6 +26,9 @@ void SceneHierarchyPanel::onImGuiRender() {
             } else if (ImGui::MenuItem("Create Sprite")) {
                 _selectedEntity = _context->createEntity("Sprite");
                 _selectedEntity.add<SpriteRendererComponent>();
+            } else if (ImGui::MenuItem("Create Circle")) {
+                _selectedEntity = _context->createEntity("Circle");
+                _selectedEntity.add<CircleRendererComponent>();
             }
             ImGui::EndPopup();
         }

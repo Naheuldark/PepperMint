@@ -172,6 +172,33 @@ void deserializeSpriteRendererComponent(const YAML::Node& iSerializedEntity, Ent
     }
 }
 
+// Circle Renderer Component
+void serializeCircleRendererComponent(YAML::Emitter& out, const CircleRendererComponent& iComponent) {
+    out << YAML::Key << "CircleRendererComponent";
+    out << YAML::BeginMap;
+    out << YAML::Key << "Color" << YAML::Value << iComponent.color;
+    out << YAML::Key << "Thickness" << YAML::Value << iComponent.thickness;
+    out << YAML::Key << "Fade" << YAML::Value << iComponent.fade;
+    out << YAML::EndMap;
+}
+
+void deserializeCircleRendererComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
+    auto&& serializedComponent = iSerializedEntity["CircleRendererComponent"];
+    if (serializedComponent) {
+        auto&& color     = serializedComponent["Color"].as<glm::vec4>();
+        auto&& thickness = serializedComponent["Thickness"].as<float>();
+        auto&& fade      = serializedComponent["Fade"].as<float>();
+
+        if (ioDeserializedEntity.has<CircleRendererComponent>()) {
+            ioDeserializedEntity.get<CircleRendererComponent>().color     = color;
+            ioDeserializedEntity.get<CircleRendererComponent>().thickness = thickness;
+            ioDeserializedEntity.get<CircleRendererComponent>().fade      = fade;
+        } else {
+            ioDeserializedEntity.add<CircleRendererComponent>(color, thickness, fade);
+        }
+    }
+}
+
 // Camera Component
 void serializeCameraComponent(YAML::Emitter& out, const CameraComponent& iComponent) {
     out << YAML::Key << "CameraComponent";
@@ -326,6 +353,9 @@ void serializeEntity(YAML::Emitter& out, Entity iEntityToSerialize) {
         if (iEntityToSerialize.has<SpriteRendererComponent>()) {
             serializeSpriteRendererComponent(out, iEntityToSerialize.get<SpriteRendererComponent>());
         }
+        if (iEntityToSerialize.has<CircleRendererComponent>()) {
+            serializeCircleRendererComponent(out, iEntityToSerialize.get<CircleRendererComponent>());
+        }
         if (iEntityToSerialize.has<CameraComponent>()) {
             serializeCameraComponent(out, iEntityToSerialize.get<CameraComponent>());
         }
@@ -389,6 +419,7 @@ bool SceneSerializer::deserialize(const std::string& iFilepath) {
             deserializeTagComponent(entity, deserializedEntity);
             deserializeTransformComponent(entity, deserializedEntity);
             deserializeSpriteRendererComponent(entity, deserializedEntity);
+            deserializeCircleRendererComponent(entity, deserializedEntity);
             deserializeCameraComponent(entity, deserializedEntity);
             deserializeNativeScriptComponent(entity, deserializedEntity);
             deserializeRigidBody2DComponent(entity, deserializedEntity);

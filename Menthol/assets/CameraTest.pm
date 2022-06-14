@@ -1,4 +1,4 @@
-Scene: Untitled
+Scene: Editor
 Entities:
   - Entity: 12837192831274
     TagComponent:
@@ -65,3 +65,14 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
+  - Entity: 12502220062587660413
+    TagComponent:
+      Tag: Circle
+    TransformComponent:
+      Translation: [2, 2, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CircleRendererComponent:
+      Color: [1, 1, 1, 1]
+      Thickness: 0.275000006
+      Fade: 0.165999994
