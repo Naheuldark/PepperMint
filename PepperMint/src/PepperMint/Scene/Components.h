@@ -120,4 +120,10 @@ struct BoxCollider2DComponent {
     BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
 };
 
+template <typename... Component>
+struct ComponentGroup {};
+
+using AllComponents =
+    ComponentGroup<TransformComponent, SpriteRendererComponent, CameraComponent, NativeScriptComponent, RigidBody2DComponent, BoxCollider2DComponent>;
+
 }
