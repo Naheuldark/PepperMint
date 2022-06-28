@@ -33,6 +33,14 @@ struct CircleVertex {
     int entityId;
 };
 
+struct LineVertex {
+    glm::vec3 position;
+    glm::vec4 color;
+
+    // Editor only
+    int entityId;
+};
+
 struct Renderer2DData {
     static const uint32_t MAX_QUADS         = 20000;
     static const uint32_t MAX_VERTICES      = MAX_QUADS * 4;
@@ -49,6 +57,7 @@ struct Renderer2DData {
     uint32_t    quadIndexCount       = 0;
     QuadVertex* quadVertexBufferBase = nullptr;
     QuadVertex* quadVertexBufferPtr  = nullptr;
+    ////
 
     // Circle Renderer Data
     Ref<VertexArray>  circleVertexArray;
@@ -58,6 +67,19 @@ struct Renderer2DData {
     uint32_t      circleIndexCount       = 0;
     CircleVertex* circleVertexBufferBase = nullptr;
     CircleVertex* circleVertexBufferPtr  = nullptr;
+    ////
+
+    // Line Renderer Data
+    Ref<VertexArray>  lineVertexArray;
+    Ref<VertexBuffer> lineVertexBuffer;
+    Ref<Shader>       lineShader;
+
+    uint32_t    lineVertexCount      = 0;
+    LineVertex* lineVertexBufferBase = nullptr;
+    LineVertex* lineVertexBufferPtr  = nullptr;
+
+    float LINE_WIDTH = 1.0f;
+    ////
 
     std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> textureSlots;
     uint32_t                                      textureSlotIndex = 1; // 0 = white texture
@@ -141,6 +163,24 @@ void Renderer2D::Init() {
 
     sData.circleVertexBufferBase = new CircleVertex[Renderer2DData::MAX_VERTICES];
 
+    //////////
+    // Line //
+    //////////
+
+    // Vertex Array
+    sData.lineVertexArray = VertexArray::Create();
+
+    // Vertex Buffer
+    sData.lineVertexBuffer = VertexBuffer::Create(Renderer2DData::MAX_VERTICES * sizeof(LineVertex));
+    sData.lineVertexBuffer->setLayout({
+        {ShaderDataType::FLOAT3, "iPosition"},
+        {ShaderDataType::FLOAT4, "iColor"},
+        {ShaderDataType::INT, "iEntityId"},
+    });
+    sData.lineVertexArray->addVertexBuffer(sData.lineVertexBuffer);
+
+    sData.lineVertexBufferBase = new LineVertex[Renderer2DData::MAX_VERTICES];
+
     //////////////
     // Textures //
     //////////////
@@ -165,8 +205,10 @@ void Renderer2D::Init() {
     // Shaders //
     /////////////
 
-    sData.quadShader          = Shader::Create("assets/shaders/Renderer2D_Quad.glsl");
-    sData.circleShader        = Shader::Create("assets/shaders/Renderer2D_Circle.glsl");
+    sData.quadShader   = Shader::Create("assets/shaders/Renderer2D_Quad.glsl");
+    sData.circleShader = Shader::Create("assets/shaders/Renderer2D_Circle.glsl");
+    sData.lineShader   = Shader::Create("assets/shaders/Renderer2D_Line.glsl");
+
     sData.cameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
 }
 
@@ -225,6 +267,17 @@ void Renderer2D::Flush() {
 
         sData.stats.drawCalls++;
     }
+
+    if (sData.lineVertexCount > 0) {
+        uint32_t dataSize = (uint32_t)((uint8_t*)sData.lineVertexBufferPtr - (uint8_t*)sData.lineVertexBufferBase);
+        sData.lineVertexBuffer->setData(sData.lineVertexBufferBase, dataSize);
+
+        sData.lineShader->bind();
+        RenderCommand::SetLineWidth(sData.LINE_WIDTH);
+        RenderCommand::DrawLines(sData.lineVertexArray, sData.lineVertexCount);
+
+        sData.stats.drawCalls++;
+    }
 }
 
 void Renderer2D::StartBatch() {
@@ -233,6 +286,9 @@ void Renderer2D::StartBatch() {
 
     sData.circleIndexCount      = 0;
     sData.circleVertexBufferPtr = sData.circleVertexBufferBase;
+
+    sData.lineVertexCount     = 0;
+    sData.lineVertexBufferPtr = sData.lineVertexBufferBase;
 
     sData.textureSlotIndex = 1;
 }
@@ -334,6 +390,51 @@ void Renderer2D::DrawCircle(const glm::mat4& iTransform, const glm::vec4& iColor
 
     sData.stats.quadCount++;
 }
+
+void Renderer2D::DrawLine(const glm::vec3& iPos0, glm::vec3& iPos1, const glm::vec4& iColor, int iEntityId) {
+    sData.lineVertexBufferPtr->position = iPos0;
+    sData.lineVertexBufferPtr->color    = iColor;
+    sData.lineVertexBufferPtr->entityId = iEntityId;
+    sData.lineVertexBufferPtr++;
+
+    sData.lineVertexBufferPtr->position = iPos1;
+    sData.lineVertexBufferPtr->color    = iColor;
+    sData.lineVertexBufferPtr->entityId = iEntityId;
+    sData.lineVertexBufferPtr++;
+
+    sData.lineVertexCount += 2;
+}
+
+void Renderer2D::DrawRect(const glm::vec3& iPosition, const glm::vec2& iSize, const glm::vec4& iColor, int iEntityId) {
+    auto&& p0 = glm::vec3(iPosition.x - iSize.x * 0.5f, iPosition.y - iSize.y * 0.5f, iPosition.z);
+    auto&& p1 = glm::vec3(iPosition.x + iSize.x * 0.5f, iPosition.y - iSize.y * 0.5f, iPosition.z);
+    auto&& p2 = glm::vec3(iPosition.x + iSize.x * 0.5f, iPosition.y + iSize.y * 0.5f, iPosition.z);
+    auto&& p3 = glm::vec3(iPosition.x - iSize.x * 0.5f, iPosition.y + iSize.y * 0.5f, iPosition.z);
+
+    DrawLine(p0, p1, iColor);
+    DrawLine(p1, p2, iColor);
+    DrawLine(p2, p3, iColor);
+    DrawLine(p3, p0, iColor);
+}
+
+void Renderer2D::DrawRect(const glm::mat4& iTransform, const glm::vec4& iColor, int iEntityId) {
+    glm::vec3 lineVertices[4]{};
+    for (size_t i = 0; i < 4; i++) {
+        lineVertices[i] = iTransform * sData.quadVertexPositions[i];
+    }
+
+    DrawLine(lineVertices[0], lineVertices[1], iColor);
+    DrawLine(lineVertices[1], lineVertices[2], iColor);
+    DrawLine(lineVertices[2], lineVertices[3], iColor);
+    DrawLine(lineVertices[3], lineVertices[0], iColor);
+}
+
+/////////////////////
+// Getter / Setter //
+/////////////////////
+float Renderer2D::GetLineWidth() { return sData.LINE_WIDTH; }
+
+void Renderer2D::SetLineWidth(float iWidth) { sData.LINE_WIDTH = iWidth; }
 
 ////////////////
 // Components //

@@ -43,6 +43,8 @@ void OpenGLRendererAPI::init() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_DEPTH_TEST);
+
+    glEnable(GL_LINE_SMOOTH);
 }
 
 void OpenGLRendererAPI::setViewport(uint32_t iX, uint32_t iY, uint32_t iWidth, uint32_t iHeight) { glViewport(iX, iY, iWidth, iHeight); }
@@ -56,4 +58,11 @@ void OpenGLRendererAPI::drawIndexed(Ref<VertexArray> iVertexArray, uint32_t iInd
     auto&& count = iIndexCount ? iIndexCount : iVertexArray->indexBuffer()->count();
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
+
+void OpenGLRendererAPI::drawLines(Ref<VertexArray> iVertexArray, uint32_t iVertexCount) {
+    iVertexArray->bind();
+    glDrawArrays(GL_LINES, 0, iVertexCount);
+}
+
+void OpenGLRendererAPI::setLineWidth(float iWidth) { glLineWidth(iWidth); }
 }

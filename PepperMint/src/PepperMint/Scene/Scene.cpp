@@ -223,6 +223,12 @@ void Scene::onUpdateRuntime(Timestep iTimestep) {
                     Renderer2D::DrawCircle(transformComponent, circleComponent, (int)entity);
                 }
             }
+
+            // Draw Lines & Rectangles
+            {
+                Renderer2D::DrawLine(glm::vec3(-5, 2, 0), glm::vec3(4, 4, 0), glm::vec4(0, 1, .5, 1));
+                Renderer2D::DrawRect(glm::vec3(15, 1, 0), glm::vec2(2, 3), glm::vec4(0, 1, .5, 1));
+            }
         }
         Renderer2D::EndScene();
     }

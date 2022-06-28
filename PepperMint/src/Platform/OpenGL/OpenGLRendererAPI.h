@@ -15,7 +15,10 @@ class OpenGLRendererAPI : public RendererAPI {
     void setClearColor(const glm::vec4& iColor) override;
     void clear() override;
 
-    void drawIndexed(Ref<VertexArray> iVertexArray, uint32_t iIndexCount) override;
+    void drawIndexed(Ref<VertexArray> iVertexArray, uint32_t iIndexCount = 0) override;
+    void drawLines(Ref<VertexArray> iVertexArray, uint32_t iVertexCount = 0) override;
+
+    void setLineWidth(float iWidth) override;
 };
 
 }

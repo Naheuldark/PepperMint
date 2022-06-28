@@ -21,6 +21,9 @@ class RendererAPI {
     virtual void clear()                                                                  = 0;
 
     virtual void drawIndexed(Ref<VertexArray> iVertexArray, uint32_t iIndexCount = 0) = 0;
+    virtual void drawLines(Ref<VertexArray> iVertexArray, uint32_t iVertexCount = 0)  = 0;
+
+    virtual void setLineWidth(float iWidth) = 0;
 
     static API GetAPI() { return sAPI; }
 
