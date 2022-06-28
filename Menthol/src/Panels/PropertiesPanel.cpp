@@ -141,6 +141,7 @@ void drawComponents(Entity ioSelectedEntity) {
         displayAddComponentEntry<CircleRendererComponent>(ioSelectedEntity, "Circle Renderer");
         displayAddComponentEntry<RigidBody2DComponent>(ioSelectedEntity, "Rigid Body");
         displayAddComponentEntry<BoxCollider2DComponent>(ioSelectedEntity, "Box Collider");
+        displayAddComponentEntry<CircleCollider2DComponent>(ioSelectedEntity, "Circle Collider");
 
         ImGui::EndPopup();
     }
@@ -314,6 +315,22 @@ void drawComponents(Entity ioSelectedEntity) {
             "Restitution", columnWidth, [&]() { ImGui::DragFloat("##Restitution", &boxColliderComponent.restitution, 0.01f, 0.0f, 1.0f); });
         drawTwoColumnsWithLabel("Restitution Threshold", columnWidth, [&]() {
             ImGui::DragFloat("##RestitutionThreshold", &boxColliderComponent.restitutionThreshold, 0.01f, 0.0f);
+        });
+    });
+
+    drawComponent<CircleCollider2DComponent>("Circle Collider", ioSelectedEntity, flags, true, [](auto&& circleColliderComponent) {
+        const float columnWidth = Window::sHighDPIScaleFactor * 130.0f;
+
+        drawTwoColumnsWithLabel("Offset", columnWidth, [&]() { ImGui::DragFloat2("##Offset", glm::value_ptr(circleColliderComponent.offset)); });
+        drawTwoColumnsWithLabel("Radius", columnWidth, [&]() { ImGui::DragFloat("##Radius", &circleColliderComponent.radius, 0.01f, 0.0f); });
+        drawTwoColumnsWithLabel(
+            "Density", columnWidth, [&]() { ImGui::DragFloat("##Density", &circleColliderComponent.density, 0.01f, 0.0f, 1.0f); });
+        drawTwoColumnsWithLabel(
+            "Friction", columnWidth, [&]() { ImGui::DragFloat("##Friction", &circleColliderComponent.friction, 0.01f, 0.0f, 1.0f); });
+        drawTwoColumnsWithLabel(
+            "Restitution", columnWidth, [&]() { ImGui::DragFloat("##Restitution", &circleColliderComponent.restitution, 0.01f, 0.0f, 1.0f); });
+        drawTwoColumnsWithLabel("Restitution Threshold", columnWidth, [&]() {
+            ImGui::DragFloat("##RestitutionThreshold", &circleColliderComponent.restitutionThreshold, 0.01f, 0.0f);
         });
     });
 }

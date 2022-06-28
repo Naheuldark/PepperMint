@@ -338,6 +338,48 @@ void deserializeBoxCollider2DComponent(const YAML::Node& iSerializedEntity, Enti
     }
 }
 
+// Circle Collider 2D Component
+void serializeCircleCollider2DComponent(YAML::Emitter& out, const CircleCollider2DComponent& iComponent) {
+    out << YAML::Key << "CircleCollider2DComponent";
+    out << YAML::BeginMap;
+    out << YAML::Key << "Offset" << YAML::Value << iComponent.offset;
+    out << YAML::Key << "Radius" << YAML::Value << iComponent.radius;
+    out << YAML::Key << "Density" << YAML::Value << iComponent.density;
+    out << YAML::Key << "Friction" << YAML::Value << iComponent.friction;
+    out << YAML::Key << "Restitution" << YAML::Value << iComponent.restitution;
+    out << YAML::Key << "RestitutionThreshold" << YAML::Value << iComponent.restitutionThreshold;
+    out << YAML::EndMap;
+}
+
+void deserializeCircleCollider2DComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
+    auto&& serializedComponent = iSerializedEntity["CircleCollider2DComponent"];
+    if (serializedComponent) {
+        auto&& offset               = serializedComponent["Offset"].as<glm::vec2>();
+        auto&& radius               = serializedComponent["Radius"].as<float>();
+        auto&& density              = serializedComponent["Density"].as<float>();
+        auto&& friction             = serializedComponent["Friction"].as<float>();
+        auto&& restitution          = serializedComponent["Restitution"].as<float>();
+        auto&& restitutionThreshold = serializedComponent["RestitutionThreshold"].as<float>();
+
+        if (ioDeserializedEntity.has<CircleCollider2DComponent>()) {
+            ioDeserializedEntity.get<CircleCollider2DComponent>().offset               = offset;
+            ioDeserializedEntity.get<CircleCollider2DComponent>().radius               = radius;
+            ioDeserializedEntity.get<CircleCollider2DComponent>().density              = density;
+            ioDeserializedEntity.get<CircleCollider2DComponent>().friction             = friction;
+            ioDeserializedEntity.get<CircleCollider2DComponent>().restitution          = restitution;
+            ioDeserializedEntity.get<CircleCollider2DComponent>().restitutionThreshold = restitutionThreshold;
+        } else {
+            auto&& boxColliderComponent               = ioDeserializedEntity.add<CircleCollider2DComponent>();
+            boxColliderComponent.offset               = offset;
+            boxColliderComponent.radius               = radius;
+            boxColliderComponent.density              = density;
+            boxColliderComponent.friction             = friction;
+            boxColliderComponent.restitution          = restitution;
+            boxColliderComponent.restitutionThreshold = restitutionThreshold;
+        }
+    }
+}
+
 void serializeEntity(YAML::Emitter& out, Entity iEntityToSerialize) {
     PM_CORE_ASSERT(iEntityToSerialize.has<IdComponent>());
 

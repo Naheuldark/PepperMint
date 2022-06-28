@@ -8,6 +8,7 @@
 
 // Box2D
 #include <box2d/b2_body.h>
+#include <box2d/b2_circle_shape.h>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_polygon_shape.h>
 #include <box2d/b2_world.h>
@@ -140,6 +141,22 @@ void Scene::onRuntimeStart() {
             fixtureDef.friction             = boxCollider.friction;
             fixtureDef.restitution          = boxCollider.restitution;
             fixtureDef.restitutionThreshold = boxCollider.restitutionThreshold;
+            body->CreateFixture(&fixtureDef);
+        }
+
+        if (tmp.has<CircleCollider2DComponent>()) {
+            auto&& circleCollider = tmp.get<CircleCollider2DComponent>();
+
+            b2CircleShape circleShape;
+            circleShape.m_p.Set(circleCollider.offset.x, circleCollider.offset.y);
+            circleShape.m_radius = transform.scale.x * circleCollider.radius;
+
+            b2FixtureDef fixtureDef;
+            fixtureDef.shape                = &circleShape;
+            fixtureDef.density              = circleCollider.density;
+            fixtureDef.friction             = circleCollider.friction;
+            fixtureDef.restitution          = circleCollider.restitution;
+            fixtureDef.restitutionThreshold = circleCollider.restitutionThreshold;
             body->CreateFixture(&fixtureDef);
         }
     }
@@ -327,5 +344,8 @@ void Scene::onAddComponent<RigidBody2DComponent>(Entity iEntity, RigidBody2DComp
 
 template <>
 void Scene::onAddComponent<BoxCollider2DComponent>(Entity iEntity, BoxCollider2DComponent& ioComponent) {}
+
+template <>
+void Scene::onAddComponent<CircleCollider2DComponent>(Entity iEntity, CircleCollider2DComponent& ioComponent) {}
 
 }

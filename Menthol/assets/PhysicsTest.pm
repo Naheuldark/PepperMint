@@ -42,7 +42,7 @@ Entities:
     TagComponent:
       Tag: Camera
     TransformComponent:
-      Translation: [2.69274592, 6.10296726, 33.8046646]
+      Translation: [2.69274592, 6.10296726, 27.6257687]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
@@ -62,13 +62,16 @@ Entities:
     TagComponent:
       Tag: Circle
     TransformComponent:
-      Translation: [-7.81348991, 5.62852573, 0]
+      Translation: [3.669806, 5.58152533, -3.81535801e-06]
       Rotation: [0, 0, 0]
       Scale: [2, 2, 2]
     CircleRendererComponent:
       Color: [1, 0, 0.966696739, 1]
       Thickness: 1
       Fade: 0.00499999989
+    RigidBody2DComponent:
+      BodyType: 0
+      FixedRotation: false
   - Entity: 12837192831212
     TagComponent:
       Tag: Blob
