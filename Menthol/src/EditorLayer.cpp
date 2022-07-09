@@ -57,11 +57,6 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
         _activeScene->onViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
     }
 
-    // Update
-    if ((_toolbarPanel.sceneState() == SceneState::EDIT) && _viewportPanel.viewportHovered()) {
-        _viewportPanel.editorCamera().onUpdate(iTimestep);
-    }
-
     // Statistics
     Renderer2D::ResetStats();
 
@@ -77,14 +72,13 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
         _frameBuffer->clearAttachment(1, -1);
     }
 
+    // Update
     {
         PM_PROFILE_SCOPE("Renderer Draw");
 
-        switch (_toolbarPanel.sceneState()) {
+        switch (_sceneState) {
             case SceneState::EDIT: {
-                if (_viewportPanel.viewportHovered()) {
-                    _viewportPanel.editorCamera().onUpdate(iTimestep);
-                }
+                _viewportPanel.editorCamera().onUpdate(iTimestep);
 
                 _activeScene->onUpdateEditor(iTimestep, _viewportPanel.editorCamera());
                 break;
@@ -191,17 +185,16 @@ void EditorLayer::onImGuiRender() {
 
         // Viewport
         _viewportPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
-        _viewportPanel.setEditorMode(_toolbarPanel.sceneState() == SceneState::EDIT);
+        _viewportPanel.setEditorMode(_sceneState == SceneState::EDIT);
         _viewportPanel.onImGuiRender();
 
         // Toolbar
-        SceneState oldState = _toolbarPanel.sceneState();
-
+        _toolbarPanel.setSceneState(_sceneState);
         _toolbarPanel.onImGuiRender();
 
-        if ((oldState == SceneState::EDIT) && (_toolbarPanel.sceneState() == SceneState::PLAY)) {
+        if ((_sceneState == SceneState::EDIT) && _toolbarPanel.playButtonClicked()) {
             onScenePlay();
-        } else if ((oldState == SceneState::PLAY) && (_toolbarPanel.sceneState() == SceneState::EDIT)) {
+        } else if ((_sceneState == SceneState::PLAY) && _toolbarPanel.playButtonClicked()) {
             onSceneStop();
         }
 
@@ -217,7 +210,7 @@ void EditorLayer::onImGuiRender() {
 }
 
 void EditorLayer::onEvent(Event& iEvent) {
-    if ((_toolbarPanel.sceneState() == SceneState::EDIT) && _viewportPanel.viewportHovered()) {
+    if ((_sceneState == SceneState::EDIT) && _viewportPanel.viewportHovered()) {
         _viewportPanel.editorCamera().onEvent(iEvent);
     }
 
@@ -266,11 +259,11 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
             break;
         }
 
-        // Switch between Runtime and Editor cameras
+        // Switch between Runtime and Editor scene
         case Key::P: {
-            if (_toolbarPanel.sceneState() == SceneState::EDIT) {
+            if (_sceneState == SceneState::EDIT) {
                 onScenePlay();
-            } else if (_toolbarPanel.sceneState() == SceneState::PLAY) {
+            } else if (_sceneState == SceneState::PLAY) {
                 onSceneStop();
             }
             break;
@@ -286,19 +279,21 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
 }
 
 void EditorLayer::onScenePlay() {
-    _toolbarPanel.setSceneState(SceneState::PLAY);
+    _sceneState = SceneState::PLAY;
 
     // Make a copy of the editor scene
     _runtimeScene = Scene::Copy(_editorScene);
     _runtimeScene->setName("Runtime");
 
+	// Switch active scene
     _activeScene = _runtimeScene;
     _activeScene->onRuntimeStart();
 }
 
 void EditorLayer::onSceneStop() {
-    _toolbarPanel.setSceneState(SceneState::EDIT);
+    _sceneState = SceneState::EDIT;
 
+	// Switch active scene
     _activeScene  = _editorScene;
     _runtimeScene = nullptr;
     _activeScene->onRuntimeStop();
@@ -311,7 +306,7 @@ bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& iEvent) {
 }
 
 void EditorLayer::duplicateSelectedEntity() {
-    if (_toolbarPanel.sceneState() != SceneState::EDIT) {
+    if (_sceneState != SceneState::EDIT) {
         return;
     }
 
@@ -341,7 +336,7 @@ void EditorLayer::openScene() {
 }
 
 void EditorLayer::openScene(const std::filesystem::path& iPath) {
-    if (_toolbarPanel.sceneState() != SceneState::EDIT) {
+    if (_sceneState != SceneState::EDIT) {
         onSceneStop();
     }
 

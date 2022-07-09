@@ -2,7 +2,7 @@
 
 #include <PepperMint.h>
 
-#include "EditorStatus.h"
+#include "EditorUtils.h"
 
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/PropertiesPanel.h"
@@ -44,6 +44,7 @@ class EditorLayer : public Layer {
     Ref<Scene>       _activeScene;
     Ref<Scene>       _editorScene, _runtimeScene;
     Ref<FrameBuffer> _frameBuffer;
+    SceneState       _sceneState = SceneState::EDIT;
 
     // Panels
     SceneHierarchyPanel _sceneHierarchyPanel;

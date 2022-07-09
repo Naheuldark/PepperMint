@@ -10,6 +10,8 @@ ToolbarPanel::ToolbarPanel() {
 }
 
 void ToolbarPanel::onImGuiRender() {
+    _playButtonClicked = false;
+
     auto&& colors        = ImGui::GetStyle().Colors;
     auto&& buttonHovered = colors[ImGuiCol_ButtonHovered];
     auto&& buttonActive  = colors[ImGuiCol_ButtonActive];
@@ -26,11 +28,7 @@ void ToolbarPanel::onImGuiRender() {
         Ref<Texture2D> icon = _sceneState == SceneState::EDIT ? _playIcon : _stopIcon;
         ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
         if (ImGui::ImageButton((ImTextureID)icon->rendererId(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0)) {
-            if (_sceneState == SceneState::EDIT) {
-                _sceneState = SceneState::PLAY;
-            } else if (_sceneState == SceneState::PLAY) {
-                _sceneState = SceneState::EDIT;
-            }
+            _playButtonClicked = true;
         }
         ImGui::PopStyleVar(2);
         ImGui::PopStyleColor(3);
