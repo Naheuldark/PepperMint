@@ -72,6 +72,13 @@ Entities:
     RigidBody2DComponent:
       BodyType: 0
       FixedRotation: false
+    CircleCollider2DComponent:
+      Offset: [0, 0]
+      Radius: 0.5
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
   - Entity: 12837192831212
     TagComponent:
       Tag: Blob

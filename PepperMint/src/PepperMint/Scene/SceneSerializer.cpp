@@ -410,6 +410,9 @@ void serializeEntity(YAML::Emitter& out, Entity iEntityToSerialize) {
         if (iEntityToSerialize.has<BoxCollider2DComponent>()) {
             serializeBoxCollider2DComponent(out, iEntityToSerialize.get<BoxCollider2DComponent>());
         }
+        if (iEntityToSerialize.has<CircleCollider2DComponent>()) {
+            serializeCircleCollider2DComponent(out, iEntityToSerialize.get<CircleCollider2DComponent>());
+        }
     }
     out << YAML::EndMap;
 }
@@ -466,6 +469,7 @@ bool SceneSerializer::deserialize(const std::string& iFilepath) {
             deserializeNativeScriptComponent(entity, deserializedEntity);
             deserializeRigidBody2DComponent(entity, deserializedEntity);
             deserializeBoxCollider2DComponent(entity, deserializedEntity);
+            deserializeCircleCollider2DComponent(entity, deserializedEntity);
 
             PM_CORE_TRACE("\tDeserialized Entity '{0}' (id: {1})", deserializedEntity.tag(), uuid);
         }
