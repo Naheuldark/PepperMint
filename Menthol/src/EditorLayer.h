@@ -7,6 +7,7 @@
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/PropertiesPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/SettingsPanel.h"
 #include "Panels/StatisticsPanel.h"
 #include "Panels/ToolbarPanel.h"
 #include "Panels/ViewportPanel.h"
@@ -30,6 +31,8 @@ class EditorLayer : public PepperMint::Layer {
     void duplicateSelectedEntity();
 
   private:
+    void onOverlayRender();
+
     bool onKeyPressed(PepperMint::KeyPressedEvent& iEvent);
     bool onMouseButtonPressed(PepperMint::MouseButtonPressedEvent& iEvent);
 
@@ -53,5 +56,6 @@ class EditorLayer : public PepperMint::Layer {
     ViewportPanel       _viewportPanel;
     ContentBrowserPanel _contentBrowserPanel;
     ToolbarPanel        _toolbarPanel;
+    SettingsPanel       _settingsPanel;
 };
 }

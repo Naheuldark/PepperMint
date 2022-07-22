@@ -40,7 +40,7 @@ class Renderer2D {
                          const glm::vec4& iColor        = glm::vec4(1.0f),
                          int              iEntityId     = -1);
 
-    static void DrawCircle(const glm::mat4& iTransform, const glm::vec4& iColor, float iThickness, float iFade, int iEntityId = -1);
+    static void DrawCircle(const glm::mat4& iTransform, const glm::vec4& iColor, float iThickness = 1.0f, float iFade = 0.005f, int iEntityId = -1);
 
     static void DrawLine(const glm::vec3& iPos0, glm::vec3& iPos1, const glm::vec4& iColor, int iEntityId = -1);
 

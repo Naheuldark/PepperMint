@@ -114,7 +114,7 @@ void Scene::destroyEntity(Entity iEntity) { _registry.destroy(iEntity); }
 void Scene::onRuntimeStart() {
     _physicsWorld = new b2World({0.0f, -9.8f});
 
-    auto&& physicsView = _registry.view<RigidBody2DComponent>();
+    auto&& physicsView = getAllEntitiesWith<RigidBody2DComponent>();
     for (auto&& entity : physicsView) {
         Entity tmp       = {entity, this};
         auto&& transform = tmp.get<TransformComponent>();
@@ -169,7 +169,7 @@ void Scene::onRuntimeStop() {
 
 void Scene::onUpdateRuntime(Timestep iTimestep) {
     // Update scripts
-    auto&& scriptView = _registry.view<NativeScriptComponent>();
+    auto&& scriptView = getAllEntitiesWith<NativeScriptComponent>();
     for (auto&& entity : scriptView) {
         auto&& scriptComponent = scriptView.get<NativeScriptComponent>(entity);
 
@@ -190,7 +190,7 @@ void Scene::onUpdateRuntime(Timestep iTimestep) {
         const int32_t positionIterations = 2;
         _physicsWorld->Step(iTimestep, velocityIterations, positionIterations);
 
-        auto&& physicsView = _registry.view<RigidBody2DComponent>();
+        auto&& physicsView = getAllEntitiesWith<RigidBody2DComponent>();
         for (auto&& entity : physicsView) {
             Entity tmp       = {entity, this};
             auto&& transform = tmp.get<TransformComponent>();
@@ -209,7 +209,7 @@ void Scene::onUpdateRuntime(Timestep iTimestep) {
     Camera*   mainCamera = nullptr;
     glm::mat4 cameraTransform;
 
-    auto&& renderView = _registry.view<TransformComponent, CameraComponent>();
+    auto&& renderView = getAllEntitiesWith<TransformComponent, CameraComponent>();
     for (auto&& entity : renderView) {
         auto&& [transformComponent, cameraComponent] = renderView.get<TransformComponent, CameraComponent>(entity);
 
@@ -234,17 +234,11 @@ void Scene::onUpdateRuntime(Timestep iTimestep) {
 
             // Draw Circles
             {
-                auto&& view = _registry.view<TransformComponent, CircleRendererComponent>();
+                auto&& view = getAllEntitiesWith<TransformComponent, CircleRendererComponent>();
                 for (auto&& entity : view) {
                     auto&& [transformComponent, circleComponent] = view.get<TransformComponent, CircleRendererComponent>(entity);
                     Renderer2D::DrawCircle(transformComponent, circleComponent, (int)entity);
                 }
-            }
-
-            // Draw Lines & Rectangles
-            {
-                Renderer2D::DrawLine(glm::vec3(-5, 2, 0), glm::vec3(4, 4, 0), glm::vec4(0, 1, .5, 1));
-                Renderer2D::DrawRect(glm::vec3(15, 1, 0), glm::vec2(2, 3), glm::vec4(0, 1, .5, 1));
             }
         }
         Renderer2D::EndScene();
@@ -265,7 +259,7 @@ void Scene::onUpdateEditor(Timestep iTimestep, EditorCamera& iCamera) {
 
         // Draw Circles
         {
-            auto&& view = _registry.view<TransformComponent, CircleRendererComponent>();
+            auto&& view = getAllEntitiesWith<TransformComponent, CircleRendererComponent>();
             for (auto&& entity : view) {
                 auto&& [transformComponent, circleComponent] = view.get<TransformComponent, CircleRendererComponent>(entity);
                 Renderer2D::DrawCircle(transformComponent, circleComponent, (int)entity);
@@ -280,7 +274,7 @@ void Scene::onViewportResize(uint32_t iWidth, uint32_t iHeight) {
     _viewportHeight = iHeight;
 
     // Resize all non-fixedAspectRatio cameras
-    auto&& view = _registry.view<CameraComponent>();
+    auto&& view = getAllEntitiesWith<CameraComponent>();
     for (auto&& entity : view) {
         auto&& cameraComponent = view.get<CameraComponent>(entity);
         if (!cameraComponent.fixedAspectRatio) {
@@ -290,7 +284,7 @@ void Scene::onViewportResize(uint32_t iWidth, uint32_t iHeight) {
 }
 
 Entity Scene::primaryCameraEntity() {
-    auto&& view = _registry.view<CameraComponent>();
+    auto&& view = getAllEntitiesWith<CameraComponent>();
     for (auto&& entity : view) {
         auto&& cameraComponent = view.get<CameraComponent>(entity);
         if (cameraComponent.primary) {

@@ -57,14 +57,13 @@ void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
         _activeScene->onViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
     }
 
-    // Statistics
     PepperMint::Renderer2D::ResetStats();
 
-    // Render
+    _frameBuffer->bind();
+
     {
         PM_PROFILE_SCOPE("Renderer Preparation");
 
-        _frameBuffer->bind();
         PepperMint::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         PepperMint::RenderCommand::Clear();
 
@@ -72,7 +71,6 @@ void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
         _frameBuffer->clearAttachment(1, -1);
     }
 
-    // Update
     {
         PM_PROFILE_SCOPE("Renderer Draw");
 
@@ -90,9 +88,11 @@ void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
         }
 
         _viewportPanel.onUpdate(iTimestep);
-
-        _frameBuffer->unbind();
     }
+
+    onOverlayRender();
+
+    _frameBuffer->unbind();
 }
 
 void EditorLayer::onImGuiRender() {
@@ -205,8 +205,57 @@ void EditorLayer::onImGuiRender() {
             openScene(_viewportPanel.sceneToOpen());
             _viewportPanel.sceneToOpen().clear();
         }
+
+        // Settings Panel
+        _settingsPanel.onImGuiRender();
     }
     ImGui::End();
+}
+
+void EditorLayer::onOverlayRender() {
+    if (_sceneState == SceneState::PLAY) {
+        auto&& camera = _activeScene->primaryCameraEntity();
+        PepperMint::Renderer2D::BeginScene(camera.get<PepperMint::CameraComponent>().camera,
+                                           camera.get<PepperMint::TransformComponent>().transform());
+    } else {
+        PepperMint::Renderer2D::BeginScene(_viewportPanel.editorCamera());
+    }
+
+    if (_settingsPanel.showPhysicsCollider()) {
+        // Box Colliders
+        {
+            auto&& view = _activeScene->getAllEntitiesWith<PepperMint::TransformComponent, PepperMint::BoxCollider2DComponent>();
+            for (auto&& entity : view) {
+                auto [transformComponent, boxColliderComponent] =
+                    view.get<PepperMint::TransformComponent, PepperMint::BoxCollider2DComponent>(entity);
+
+                auto&& translation = transformComponent.translation + glm::vec3(boxColliderComponent.offset, 0.001f);
+                auto&& scale       = transformComponent.scale * glm::vec3(boxColliderComponent.size * 2.0f, 1.0f);
+                auto&& transform   = glm::translate(glm::mat4(1.0f), translation) *
+                                   glm::rotate(glm::mat4(1.0f), transformComponent.rotation.z, glm::vec3(0.0f, 0.0f, 1.0f)) *
+                                   glm::scale(glm::mat4(1.0f), scale);
+
+                PepperMint::Renderer2D::DrawRect(transform, glm::vec4(0, 1, 0, 1));
+            }
+        }
+
+        // Circle Colliders
+        {
+            auto&& view = _activeScene->getAllEntitiesWith<PepperMint::TransformComponent, PepperMint::CircleCollider2DComponent>();
+            for (auto&& entity : view) {
+                auto [transformComponent, circleColliderComponent] =
+                    view.get<PepperMint::TransformComponent, PepperMint::CircleCollider2DComponent>(entity);
+
+                auto&& translation = transformComponent.translation + glm::vec3(circleColliderComponent.offset, 0.001f);
+                auto&& scale       = transformComponent.scale * glm::vec3(circleColliderComponent.radius * 2.0f);
+                auto&& transform   = glm::translate(glm::mat4(1.0f), translation) * glm::scale(glm::mat4(1.0f), scale);
+
+                PepperMint::Renderer2D::DrawCircle(transform, glm::vec4(0, 1, 0, 1), 0.01f);
+            }
+        }
+    }
+
+    PepperMint::Renderer2D::EndScene();
 }
 
 void EditorLayer::onEvent(PepperMint::Event& iEvent) {
