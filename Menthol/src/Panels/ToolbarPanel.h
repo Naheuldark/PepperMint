@@ -4,7 +4,7 @@
 
 #include "../EditorUtils.h"
 
-namespace PepperMint {
+namespace Menthol {
 
 class ToolbarPanel {
   public:
@@ -21,6 +21,6 @@ class ToolbarPanel {
     bool       _playButtonClicked = false;
 
     // Icons
-    Ref<Texture2D> _playIcon, _stopIcon;
+    PepperMint::Ref<PepperMint::Texture2D> _playIcon, _stopIcon;
 };
 }

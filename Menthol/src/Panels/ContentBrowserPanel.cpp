@@ -2,7 +2,7 @@
 
 #include <imgui/imgui.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 extern const std::filesystem::path xASSET_PATH = "assets";
 
@@ -10,8 +10,8 @@ const float kPADDING        = 8.0f;
 const float kTHUMBNAIL_SIZE = 80.0f;
 
 ContentBrowserPanel::ContentBrowserPanel() : _currentDirectory(xASSET_PATH) {
-    _directoryIcon = Texture2D::Create("resources/icons/ContentBrowser/DirectoryIcon.png");
-    _fileIcon      = Texture2D::Create("resources/icons/ContentBrowser/FileIcon.png");
+    _directoryIcon = PepperMint::Texture2D::Create("resources/icons/ContentBrowser/DirectoryIcon.png");
+    _fileIcon      = PepperMint::Texture2D::Create("resources/icons/ContentBrowser/FileIcon.png");
 }
 
 void ContentBrowserPanel::onImGuiRender() {
@@ -23,7 +23,7 @@ void ContentBrowserPanel::onImGuiRender() {
             }
         }
 
-        float cellSize = Window::sHighDPIScaleFactor * kTHUMBNAIL_SIZE + Window::sHighDPIScaleFactor * kPADDING;
+        float cellSize = PepperMint::Window::sHighDPIScaleFactor * kTHUMBNAIL_SIZE + PepperMint::Window::sHighDPIScaleFactor * kPADDING;
 
         float panelWidth  = ImGui::GetContentRegionAvail().x;
         int   columnCount = (int)(panelWidth / cellSize);
@@ -40,11 +40,11 @@ void ContentBrowserPanel::onImGuiRender() {
 
             ImGui::PushID(filenameString.c_str());
 
-            Ref<Texture2D> icon = directoryEntry.is_directory() ? _directoryIcon : _fileIcon;
+            PepperMint::Ref<PepperMint::Texture2D> icon = directoryEntry.is_directory() ? _directoryIcon : _fileIcon;
 
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::ImageButton((ImTextureID)icon->rendererId(),
-                               {Window::sHighDPIScaleFactor * kTHUMBNAIL_SIZE, Window::sHighDPIScaleFactor * kTHUMBNAIL_SIZE},
+                               {PepperMint::Window::sHighDPIScaleFactor * kTHUMBNAIL_SIZE, PepperMint::Window::sHighDPIScaleFactor * kTHUMBNAIL_SIZE},
                                {0, 1},
                                {1, 0});
             if (ImGui::BeginDragDropSource()) {

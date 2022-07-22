@@ -4,7 +4,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 // External variables
 extern const std::filesystem::path xASSET_PATH; // defined in ContentBrowserPanel.cpp
@@ -43,7 +43,7 @@ void drawVec3Control(const std::string& iLabel,
                      glm::vec3&         ioValues,
                      float              iResetValue  = 0.0f,
                      float              iMin         = 0.0f,
-                     float              iColumnWidth = Window::sHighDPIScaleFactor * 100.0f) {
+                     float              iColumnWidth = PepperMint::Window::sHighDPIScaleFactor * 100.0f) {
     ImGui::PushID(iLabel.c_str());
 
     drawTwoColumnsWithLabel(iLabel, iColumnWidth, [&]() {
@@ -53,7 +53,7 @@ void drawVec3Control(const std::string& iLabel,
 
         float  lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
         ImVec2 buttonSize = {lineHeight + 3.0f, lineHeight};
-        auto&& boldFont   = ImGui::GetIO().Fonts->Fonts[(int)FontStyle::BOLD];
+        auto&& boldFont   = ImGui::GetIO().Fonts->Fonts[(int)PepperMint::FontStyle::BOLD];
 
         drawFloatControl("X", ioValues.x, iResetValue, buttonSize, ImVec4{0.8f, 0.1f, 0.15f, 1.0f}, boldFont);
         ImGui::SameLine();
@@ -68,7 +68,7 @@ void drawVec3Control(const std::string& iLabel,
 }
 
 template <typename Component, typename UIFunc>
-void drawComponent(const std::string& iName, Entity iEntity, const ImGuiTreeNodeFlags iFlags, bool iRemovable, UIFunc UIFunction) {
+void drawComponent(const std::string& iName, PepperMint::Entity iEntity, const ImGuiTreeNodeFlags iFlags, bool iRemovable, UIFunc UIFunction) {
     if (iEntity.has<Component>()) {
         ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
 
@@ -106,17 +106,17 @@ void drawComponent(const std::string& iName, Entity iEntity, const ImGuiTreeNode
 }
 
 template <typename Component>
-void displayAddComponentEntry(Entity ioSelectedEntity, const std::string& iEntryName) {
+void displayAddComponentEntry(PepperMint::Entity ioSelectedEntity, const std::string& iEntryName) {
     if (!ioSelectedEntity.has<Component>() && ImGui::MenuItem(iEntryName.c_str())) {
         ioSelectedEntity.add<Component>();
         ImGui::CloseCurrentPopup();
     }
 }
 
-void drawComponents(Entity ioSelectedEntity) {
+void drawComponents(PepperMint::Entity ioSelectedEntity) {
     // Display Component Tag
-    if (ioSelectedEntity.has<TagComponent>()) {
-        auto&& tag = ioSelectedEntity.get<TagComponent>().tag;
+    if (ioSelectedEntity.has<PepperMint::TagComponent>()) {
+        auto&& tag = ioSelectedEntity.get<PepperMint::TagComponent>().tag;
 
         char buffer[256];
         memset(buffer, 0, sizeof(buffer));
@@ -136,12 +136,12 @@ void drawComponents(Entity ioSelectedEntity) {
     }
 
     if (ImGui::BeginPopup("##AddComponent")) {
-        displayAddComponentEntry<CameraComponent>(ioSelectedEntity, "Camera");
-        displayAddComponentEntry<SpriteRendererComponent>(ioSelectedEntity, "Sprite Renderer");
-        displayAddComponentEntry<CircleRendererComponent>(ioSelectedEntity, "Circle Renderer");
-        displayAddComponentEntry<RigidBody2DComponent>(ioSelectedEntity, "Rigid Body");
-        displayAddComponentEntry<BoxCollider2DComponent>(ioSelectedEntity, "Box Collider");
-        displayAddComponentEntry<CircleCollider2DComponent>(ioSelectedEntity, "Circle Collider");
+        displayAddComponentEntry<PepperMint::CameraComponent>(ioSelectedEntity, "Camera");
+        displayAddComponentEntry<PepperMint::SpriteRendererComponent>(ioSelectedEntity, "Sprite Renderer");
+        displayAddComponentEntry<PepperMint::CircleRendererComponent>(ioSelectedEntity, "Circle Renderer");
+        displayAddComponentEntry<PepperMint::RigidBody2DComponent>(ioSelectedEntity, "Rigid Body");
+        displayAddComponentEntry<PepperMint::BoxCollider2DComponent>(ioSelectedEntity, "Box Collider");
+        displayAddComponentEntry<PepperMint::CircleCollider2DComponent>(ioSelectedEntity, "Circle Collider");
 
         ImGui::EndPopup();
     }
@@ -152,7 +152,7 @@ void drawComponents(Entity ioSelectedEntity) {
     const ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
                                      ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
-    drawComponent<TransformComponent>("Tranform", ioSelectedEntity, flags, false, [](auto&& transformComponent) {
+    drawComponent<PepperMint::TransformComponent>("Tranform", ioSelectedEntity, flags, false, [](auto&& transformComponent) {
         // Translation controls
         drawVec3Control("Translation", transformComponent.translation);
 
@@ -165,10 +165,10 @@ void drawComponents(Entity ioSelectedEntity) {
         drawVec3Control("Scale", transformComponent.scale, 1.0f);
     });
 
-    drawComponent<CameraComponent>("Camera", ioSelectedEntity, flags, true, [](auto&& cameraComponent) {
+    drawComponent<PepperMint::CameraComponent>("Camera", ioSelectedEntity, flags, true, [](auto&& cameraComponent) {
         auto&& camera = cameraComponent.camera;
 
-        const float columnWidth = Window::sHighDPIScaleFactor * 130.0f;
+        const float columnWidth = PepperMint::Window::sHighDPIScaleFactor * 130.0f;
 
         drawTwoColumnsWithLabel("Primary", columnWidth, [&]() { ImGui::Checkbox("##Primary", &cameraComponent.primary); });
 
@@ -180,7 +180,7 @@ void drawComponents(Entity ioSelectedEntity) {
                     bool isSelected = (currentProjectionTypeString == projectionTypeString[i]);
                     if (ImGui::Selectable(projectionTypeString[i], isSelected)) {
                         currentProjectionTypeString = projectionTypeString[i];
-                        camera.setProjectionType((SceneCamera::ProjectionType)i);
+                        camera.setProjectionType((PepperMint::SceneCamera::ProjectionType)i);
                     }
 
                     if (isSelected) {
@@ -192,7 +192,7 @@ void drawComponents(Entity ioSelectedEntity) {
             }
         });
 
-        if (camera.projectionType() == SceneCamera::ProjectionType::PERSPECTIVE) {
+        if (camera.projectionType() == PepperMint::SceneCamera::ProjectionType::PERSPECTIVE) {
             drawTwoColumnsWithLabel("Vertical FOV", columnWidth, [&]() {
                 float verticalFOV = glm::degrees(camera.perspectiveVerticalFOV());
                 if (ImGui::DragFloat("##VerticalFOV", &verticalFOV)) {
@@ -214,7 +214,7 @@ void drawComponents(Entity ioSelectedEntity) {
                 }
             });
 
-        } else if (camera.projectionType() == SceneCamera::ProjectionType::ORTHOGRAPHIC) {
+        } else if (camera.projectionType() == PepperMint::SceneCamera::ProjectionType::ORTHOGRAPHIC) {
             drawTwoColumnsWithLabel("Size", columnWidth, [&]() {
                 float size = camera.orthographicSize();
                 if (ImGui::DragFloat("##Size", &size)) {
@@ -244,8 +244,8 @@ void drawComponents(Entity ioSelectedEntity) {
         }
     });
 
-    drawComponent<SpriteRendererComponent>("Sprite Renderer", ioSelectedEntity, flags, true, [](auto&& spriteComponent) {
-        auto&& columnWidth = Window::sHighDPIScaleFactor * 100.0f;
+    drawComponent<PepperMint::SpriteRendererComponent>("Sprite Renderer", ioSelectedEntity, flags, true, [](auto&& spriteComponent) {
+        auto&& columnWidth = PepperMint::Window::sHighDPIScaleFactor * 100.0f;
 
         drawTwoColumnsWithLabel("Color", columnWidth, [&]() { ImGui::ColorEdit4("##Color", glm::value_ptr(spriteComponent.color)); });
         drawTwoColumnsWithLabel("Texture", columnWidth, [&]() {
@@ -255,7 +255,7 @@ void drawComponents(Entity ioSelectedEntity) {
                     const wchar_t*        path        = (const wchar_t*)payload->Data;
                     std::filesystem::path texturePath = std::filesystem::path(xASSET_PATH) / path;
 
-                    auto&& texture = Texture2D::Create(texturePath.string());
+                    auto&& texture = PepperMint::Texture2D::Create(texturePath.string());
                     if (texture->isLoaded()) {
                         spriteComponent.texture = texture;
                     } else {
@@ -269,16 +269,16 @@ void drawComponents(Entity ioSelectedEntity) {
             "Tiling Factor", columnWidth, [&]() { ImGui::DragFloat("##TilingFactor", &spriteComponent.tilingFactor, 0.1f, 0.0f, 100.0f); });
     });
 
-    drawComponent<CircleRendererComponent>("Circle Renderer", ioSelectedEntity, flags, true, [](auto&& circleComponent) {
-        auto&& columnWidth = Window::sHighDPIScaleFactor * 100.0f;
+    drawComponent<PepperMint::CircleRendererComponent>("Circle Renderer", ioSelectedEntity, flags, true, [](auto&& circleComponent) {
+        auto&& columnWidth = PepperMint::Window::sHighDPIScaleFactor * 100.0f;
 
         drawTwoColumnsWithLabel("Color", columnWidth, [&]() { ImGui::ColorEdit4("##Color", glm::value_ptr(circleComponent.color)); });
         drawTwoColumnsWithLabel("Thickness", columnWidth, [&]() { ImGui::DragFloat("##Thickness", &circleComponent.thickness, 0.025f, 0.0f, 1.0f); });
         drawTwoColumnsWithLabel("Fade", columnWidth, [&]() { ImGui::DragFloat("##Fade", &circleComponent.fade, 0.00025f, 0.0f, 1.0f); });
     });
 
-    drawComponent<RigidBody2DComponent>("Rigid Body", ioSelectedEntity, flags, true, [](auto&& rigidBodyComponent) {
-        const float columnWidth = Window::sHighDPIScaleFactor * 130.0f;
+    drawComponent<PepperMint::RigidBody2DComponent>("Rigid Body", ioSelectedEntity, flags, true, [](auto&& rigidBodyComponent) {
+        const float columnWidth = PepperMint::Window::sHighDPIScaleFactor * 130.0f;
 
         drawTwoColumnsWithLabel("Body Type", columnWidth, [&]() {
             const char* bodyTypeString[]      = {"Static", "Dynamic", "Kinematic"};
@@ -288,7 +288,7 @@ void drawComponents(Entity ioSelectedEntity) {
                     bool isSelected = (currentBodyTypeString == bodyTypeString[i]);
                     if (ImGui::Selectable(bodyTypeString[i], isSelected)) {
                         currentBodyTypeString   = bodyTypeString[i];
-                        rigidBodyComponent.type = ((RigidBody2DComponent::BodyType)i);
+                        rigidBodyComponent.type = ((PepperMint::RigidBody2DComponent::BodyType)i);
                     }
 
                     if (isSelected) {
@@ -303,8 +303,8 @@ void drawComponents(Entity ioSelectedEntity) {
         drawTwoColumnsWithLabel("Fixed Rotation", columnWidth, [&]() { ImGui::Checkbox("##FixedRotation", &rigidBodyComponent.fixedRotation); });
     });
 
-    drawComponent<BoxCollider2DComponent>("Box Collider", ioSelectedEntity, flags, true, [](auto&& boxColliderComponent) {
-        const float columnWidth = Window::sHighDPIScaleFactor * 130.0f;
+    drawComponent<PepperMint::BoxCollider2DComponent>("Box Collider", ioSelectedEntity, flags, true, [](auto&& boxColliderComponent) {
+        const float columnWidth = PepperMint::Window::sHighDPIScaleFactor * 130.0f;
 
         drawTwoColumnsWithLabel("Offset", columnWidth, [&]() { ImGui::DragFloat2("##Offset", glm::value_ptr(boxColliderComponent.offset)); });
         drawTwoColumnsWithLabel("Size", columnWidth, [&]() { ImGui::DragFloat2("##Size", glm::value_ptr(boxColliderComponent.size)); });
@@ -318,8 +318,8 @@ void drawComponents(Entity ioSelectedEntity) {
         });
     });
 
-    drawComponent<CircleCollider2DComponent>("Circle Collider", ioSelectedEntity, flags, true, [](auto&& circleColliderComponent) {
-        const float columnWidth = Window::sHighDPIScaleFactor * 130.0f;
+    drawComponent<PepperMint::CircleCollider2DComponent>("Circle Collider", ioSelectedEntity, flags, true, [](auto&& circleColliderComponent) {
+        const float columnWidth = PepperMint::Window::sHighDPIScaleFactor * 130.0f;
 
         drawTwoColumnsWithLabel("Offset", columnWidth, [&]() { ImGui::DragFloat2("##Offset", glm::value_ptr(circleColliderComponent.offset)); });
         drawTwoColumnsWithLabel("Radius", columnWidth, [&]() { ImGui::DragFloat("##Radius", &circleColliderComponent.radius, 0.01f, 0.0f); });

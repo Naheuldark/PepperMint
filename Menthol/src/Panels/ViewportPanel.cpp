@@ -6,12 +6,12 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-namespace PepperMint {
+namespace Menthol {
 
 // External variables
 extern const std::filesystem::path xASSET_PATH; // defined in ContentBrowserPanel.cpp
 
-void ViewportPanel::onUpdate(Timestep iTimestep) {
+void ViewportPanel::onUpdate(PepperMint::Timestep iTimestep) {
     // Mouse picking
     //	(0,0) is the bottom left corner
     //	(_viewportSize.x, _viewportSize.y) is the top right corner
@@ -25,7 +25,7 @@ void ViewportPanel::onUpdate(Timestep iTimestep) {
 
     if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y) {
         int pixelData  = _frameBuffer->readPixel(1, mouseX, mouseY);
-        _hoveredEntity = (pixelData == -1) ? Entity() : Entity((entt::entity)pixelData, _activeScene.get());
+        _hoveredEntity = (pixelData == -1) ? PepperMint::Entity() : PepperMint::Entity((entt::entity)pixelData, _activeScene.get());
     }
 }
 
@@ -43,7 +43,7 @@ void ViewportPanel::onImGuiRender() {
         // Focus
         _viewportFocused = ImGui::IsWindowFocused();
         _viewportHovered = ImGui::IsWindowHovered();
-        Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused && !_viewportHovered);
+        PepperMint::Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused && !_viewportHovered);
 
         // Size
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
@@ -75,11 +75,11 @@ void ViewportPanel::onImGuiRender() {
             auto&& cameraView       = _editorCamera.viewMatrix();
 
             // Entity transform
-            auto&&    transformComponent = _selectedEntity.get<TransformComponent>();
+            auto&&    transformComponent = _selectedEntity.get<PepperMint::TransformComponent>();
             glm::mat4 transform          = transformComponent.transform();
 
             // Snapping (0.5m for translation/scale - 45 degrees for rotation)
-            bool  snap      = Input::IsKeyPressed(Key::LEFT_CONTROL);
+            bool  snap      = PepperMint::Input::IsKeyPressed(PepperMint::Key::LEFT_CONTROL);
             float snapValue = 0.5f;
             if (_gizmoType == ImGuizmo::OPERATION::ROTATE) {
                 snapValue = 45.0f;
@@ -97,7 +97,7 @@ void ViewportPanel::onImGuiRender() {
 
             if (ImGuizmo::IsUsing()) {
                 glm::vec3 translation, rotation, scale;
-                Math::decompose(transform, translation, rotation, scale);
+                PepperMint::Math::decompose(transform, translation, rotation, scale);
 
                 auto&& deltaRotation           = rotation - transformComponent.rotation;
                 transformComponent.translation = translation;
@@ -110,28 +110,28 @@ void ViewportPanel::onImGuiRender() {
     ImGui::PopStyleVar();
 }
 
-bool ViewportPanel::onKeyPressed(KeyPressedEvent& iEvent) {
+bool ViewportPanel::onKeyPressed(PepperMint::KeyPressedEvent& iEvent) {
     switch (iEvent.keyCode()) {
         // Gizmos
-        case Key::Q: {
+        case PepperMint::Key::Q: {
             if (!ImGuizmo::IsUsing()) {
                 _gizmoType = -1;
             }
             break;
         }
-        case Key::W: {
+        case PepperMint::Key::W: {
             if (!ImGuizmo::IsUsing()) {
                 _gizmoType = ImGuizmo::OPERATION::TRANSLATE;
             }
             break;
         }
-        case Key::E: {
+        case PepperMint::Key::E: {
             if (!ImGuizmo::IsUsing()) {
                 _gizmoType = ImGuizmo::OPERATION::ROTATE;
             }
             break;
         }
-        case Key::R: {
+        case PepperMint::Key::R: {
             if (!ImGuizmo::IsUsing()) {
                 _gizmoType = ImGuizmo::OPERATION::SCALE;
             }
@@ -145,9 +145,9 @@ bool ViewportPanel::onKeyPressed(KeyPressedEvent& iEvent) {
     return true;
 }
 
-bool ViewportPanel::onMouseButtonPressed(MouseButtonPressedEvent& iEvent) {
-    if (iEvent.mouseButton() == Mouse::BUTTON_LEFT) {
-        if (_viewportHovered && (!ImGuizmo::IsOver()) && (!Input::IsKeyPressed(Key::LEFT_ALT))) {
+bool ViewportPanel::onMouseButtonPressed(PepperMint::MouseButtonPressedEvent& iEvent) {
+    if (iEvent.mouseButton() == PepperMint::Mouse::BUTTON_LEFT) {
+        if (_viewportHovered && (!ImGuizmo::IsOver()) && (!PepperMint::Input::IsKeyPressed(PepperMint::Key::LEFT_ALT))) {
             _selectedEntity = _hoveredEntity;
         }
     }

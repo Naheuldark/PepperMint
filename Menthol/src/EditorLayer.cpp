@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace PepperMint {
+namespace Menthol {
 
 // Constants
 const float kMIN_PANEL_WIDTH = 370.0f;
@@ -15,28 +15,28 @@ const float kMIN_PANEL_WIDTH = 370.0f;
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
 
-    _editorScene = CreateRef<Scene>("Editor");
+    _editorScene = PepperMint::CreateRef<PepperMint::Scene>("Editor");
     _activeScene = _editorScene;
 
-    auto&& commandLineArgs = Application::Get().commandLineArgs();
+    auto&& commandLineArgs = PepperMint::Application::Get().commandLineArgs();
     if (commandLineArgs.count > 1) {
-        auto&&          sceneFilePath = commandLineArgs[1];
-        SceneSerializer serializer(_activeScene);
+        auto&&                      sceneFilePath = commandLineArgs[1];
+        PepperMint::SceneSerializer serializer(_activeScene);
         serializer.deserialize(sceneFilePath);
         _statisticsPanel.setCurrentFile(sceneFilePath);
     }
 
-    FrameBufferProperties properties;
-    properties.width       = Window::sHighDPIScaleFactor * 1280;
-    properties.height      = Window::sHighDPIScaleFactor * 720;
+    PepperMint::FrameBufferProperties properties;
+    properties.width       = PepperMint::Window::sHighDPIScaleFactor * 1280;
+    properties.height      = PepperMint::Window::sHighDPIScaleFactor * 720;
     properties.attachments = {
-        FrameBufferTextureFormat::RGBA8,       // Color
-        FrameBufferTextureFormat::RED_INTEGER, // Entity Id
-        FrameBufferTextureFormat::DEPTH        // Depth
+        PepperMint::FrameBufferTextureFormat::RGBA8,       // Color
+        PepperMint::FrameBufferTextureFormat::RED_INTEGER, // Entity Id
+        PepperMint::FrameBufferTextureFormat::DEPTH        // Depth
     };
-    _frameBuffer = FrameBuffer::Create(properties);
+    _frameBuffer = PepperMint::FrameBuffer::Create(properties);
 
-    _viewportPanel.editorCamera() = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+    _viewportPanel.editorCamera() = PepperMint::EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
     _viewportPanel.setFrameBuffer(_frameBuffer);
     _viewportPanel.setActiveScene(_activeScene);
     _sceneHierarchyPanel.setContext(_activeScene);
@@ -44,12 +44,12 @@ void EditorLayer::onAttach() {
 
 void EditorLayer::onDetach() { PM_PROFILE_FUNCTION(); }
 
-void EditorLayer::onUpdate(Timestep iTimestep) {
+void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
     PM_PROFILE_FUNCTION();
 
     // Resize
-    FrameBufferProperties spec         = _frameBuffer->properties();
-    auto&&                viewportSize = _viewportPanel.viewportSize();
+    PepperMint::FrameBufferProperties spec         = _frameBuffer->properties();
+    auto&&                            viewportSize = _viewportPanel.viewportSize();
     if (viewportSize.x > 0.0f && viewportSize.y > 0.0f && // zero sized framebuffer is invalid
         (spec.width != viewportSize.x || spec.height != viewportSize.y)) {
         _frameBuffer->resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
@@ -58,15 +58,15 @@ void EditorLayer::onUpdate(Timestep iTimestep) {
     }
 
     // Statistics
-    Renderer2D::ResetStats();
+    PepperMint::Renderer2D::ResetStats();
 
     // Render
     {
         PM_PROFILE_SCOPE("Renderer Preparation");
 
         _frameBuffer->bind();
-        RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
-        RenderCommand::Clear();
+        PepperMint::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
+        PepperMint::RenderCommand::Clear();
 
         // Clear Entity Id attachment to -1
         _frameBuffer->clearAttachment(1, -1);
@@ -135,7 +135,7 @@ void EditorLayer::onImGuiRender() {
         ImGuiStyle& style = ImGui::GetStyle();
 
         float minWindowSizeX  = style.WindowMinSize.x;
-        style.WindowMinSize.x = Window::sHighDPIScaleFactor * kMIN_PANEL_WIDTH;
+        style.WindowMinSize.x = PepperMint::Window::sHighDPIScaleFactor * kMIN_PANEL_WIDTH;
 
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
             ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
@@ -164,7 +164,7 @@ void EditorLayer::onImGuiRender() {
                 }
 
                 if (ImGui::MenuItem("Exit")) {
-                    Application::Get().close();
+                    PepperMint::Application::Get().close();
                 }
                 ImGui::EndMenu();
             }
@@ -209,46 +209,46 @@ void EditorLayer::onImGuiRender() {
     ImGui::End();
 }
 
-void EditorLayer::onEvent(Event& iEvent) {
+void EditorLayer::onEvent(PepperMint::Event& iEvent) {
     if ((_sceneState == SceneState::EDIT) && _viewportPanel.viewportHovered()) {
         _viewportPanel.editorCamera().onEvent(iEvent);
     }
 
-    EventDispatcher dispatcher(iEvent);
-    dispatcher.dispatch<KeyPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onKeyPressed));
-    dispatcher.dispatch<MouseButtonPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onMouseButtonPressed));
+    PepperMint::EventDispatcher dispatcher(iEvent);
+    dispatcher.dispatch<PepperMint::KeyPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onKeyPressed));
+    dispatcher.dispatch<PepperMint::MouseButtonPressedEvent>(PM_BIND_EVENT_FN(EditorLayer::onMouseButtonPressed));
 }
 
-bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
+bool EditorLayer::onKeyPressed(PepperMint::KeyPressedEvent& iEvent) {
     // Shorcuts
     if (iEvent.repeatCount() > 0) {
         return false;
     }
 
-    bool control = Input::IsKeyPressed(Key::LEFT_CONTROL) || Input::IsKeyPressed(Key::RIGHT_CONTROL);
-    bool shift   = Input::IsKeyPressed(Key::LEFT_SHIFT) || Input::IsKeyPressed(Key::RIGHT_SHIFT);
+    bool control = PepperMint::Input::IsKeyPressed(PepperMint::Key::LEFT_CONTROL) || PepperMint::Input::IsKeyPressed(PepperMint::Key::RIGHT_CONTROL);
+    bool shift   = PepperMint::Input::IsKeyPressed(PepperMint::Key::LEFT_SHIFT) || PepperMint::Input::IsKeyPressed(PepperMint::Key::RIGHT_SHIFT);
 
     switch (iEvent.keyCode()) {
-        case Key::D: {
+        case PepperMint::Key::D: {
             if (control) {
                 duplicateSelectedEntity();
             }
             break;
         }
 
-        case Key::N: {
+        case PepperMint::Key::N: {
             if (control) {
                 newScene();
             }
             break;
         }
-        case Key::O: {
+        case PepperMint::Key::O: {
             if (control) {
                 openScene();
             }
             break;
         }
-        case Key::S: {
+        case PepperMint::Key::S: {
             if (control) {
                 if (shift) {
                     saveSceneAs();
@@ -260,7 +260,7 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& iEvent) {
         }
 
         // Switch between Runtime and Editor scene
-        case Key::P: {
+        case PepperMint::Key::P: {
             if (_sceneState == SceneState::EDIT) {
                 onScenePlay();
             } else if (_sceneState == SceneState::PLAY) {
@@ -282,10 +282,10 @@ void EditorLayer::onScenePlay() {
     _sceneState = SceneState::PLAY;
 
     // Make a copy of the editor scene
-    _runtimeScene = Scene::Copy(_editorScene);
+    _runtimeScene = PepperMint::Scene::Copy(_editorScene);
     _runtimeScene->setName("Runtime");
 
-	// Switch active scene
+    // Switch active scene
     _activeScene = _runtimeScene;
     _activeScene->onRuntimeStart();
 }
@@ -293,13 +293,13 @@ void EditorLayer::onScenePlay() {
 void EditorLayer::onSceneStop() {
     _sceneState = SceneState::EDIT;
 
-	// Switch active scene
+    // Switch active scene
     _activeScene  = _editorScene;
     _runtimeScene = nullptr;
     _activeScene->onRuntimeStop();
 }
 
-bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& iEvent) {
+bool EditorLayer::onMouseButtonPressed(PepperMint::MouseButtonPressedEvent& iEvent) {
     _viewportPanel.onMouseButtonPressed(iEvent);
 
     return true;
@@ -310,14 +310,14 @@ void EditorLayer::duplicateSelectedEntity() {
         return;
     }
 
-    Entity selectedEntity = _sceneHierarchyPanel.selectedEntity();
+    PepperMint::Entity selectedEntity = _sceneHierarchyPanel.selectedEntity();
     if (selectedEntity) {
         _editorScene->duplicateEntity(selectedEntity);
     }
 }
 
 void EditorLayer::newScene() {
-    _editorScene = CreateRef<Scene>("Editor");
+    _editorScene = PepperMint::CreateRef<PepperMint::Scene>("Editor");
     _activeScene = _editorScene;
 
     auto&& viewportsize = _viewportPanel.viewportSize();
@@ -329,7 +329,7 @@ void EditorLayer::newScene() {
 }
 
 void EditorLayer::openScene() {
-    auto&& filepath = FileDialogs::OpenFile("PepperMint Scene (*.pm)\0*.pm\0");
+    auto&& filepath = PepperMint::FileDialogs::OpenFile("PepperMint Scene (*.pm)\0*.pm\0");
     if (!filepath.empty()) {
         openScene(filepath);
     }
@@ -345,8 +345,8 @@ void EditorLayer::openScene(const std::filesystem::path& iPath) {
         return;
     }
 
-    _editorScene = CreateRef<Scene>("Editor");
-    SceneSerializer serializer(_editorScene);
+    _editorScene = PepperMint::CreateRef<PepperMint::Scene>("Editor");
+    PepperMint::SceneSerializer serializer(_editorScene);
     if (serializer.deserialize(iPath.string())) {
         _activeScene = _editorScene;
 
@@ -363,14 +363,14 @@ void EditorLayer::saveScene() {
     if (_statisticsPanel.currentFile().empty()) {
         saveSceneAs();
     } else {
-        SceneSerializer(_activeScene).serialize(_statisticsPanel.currentFile());
+        PepperMint::SceneSerializer(_activeScene).serialize(_statisticsPanel.currentFile());
     }
 }
 
 void EditorLayer::saveSceneAs() {
-    auto&& filepath = FileDialogs::SaveFile("PepperMint Scene (*.pm)\0*.pm\0");
+    auto&& filepath = PepperMint::FileDialogs::SaveFile("PepperMint Scene (*.pm)\0*.pm\0");
     if (!filepath.empty()) {
-        SceneSerializer(_activeScene).serialize(filepath);
+        PepperMint::SceneSerializer(_activeScene).serialize(filepath);
         _statisticsPanel.setCurrentFile(filepath);
     }
 }

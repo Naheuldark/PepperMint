@@ -27,6 +27,17 @@ class Scene {
     Entity createEntity(const std::string& iName = "Entity");
     Entity createEntityWithUUID(const UUID& iUUID, const std::string& iName = "Entity");
     void   destroyEntity(Entity iEntity);
+    void   duplicateEntity(Entity iEntity);
+
+    template <typename... Components>
+    auto getAllEntitiesWith() {
+        return _registry.view<Components...>();
+    }
+
+    template <typename Func>
+    void forEachEntity(Func iFunc) {
+        _registry.each(iFunc);
+    }
 
     void onRuntimeStart();
     void onRuntimeStop();
@@ -37,8 +48,6 @@ class Scene {
     void onViewportResize(uint32_t iWidth, uint32_t iHeight);
 
     Entity primaryCameraEntity();
-
-    void duplicateEntity(Entity iEntity);
 
     static Ref<Scene> Copy(const Ref<Scene>& iOther);
 

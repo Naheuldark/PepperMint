@@ -1,6 +1,6 @@
 #pragma once
 
-namespace PepperMint {
+namespace Menthol {
 
 enum class SceneState : int {
     EDIT = 0,

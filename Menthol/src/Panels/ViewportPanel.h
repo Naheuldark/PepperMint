@@ -2,37 +2,37 @@
 
 #include <PepperMint.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 class ViewportPanel {
   public:
     ViewportPanel()  = default;
     ~ViewportPanel() = default;
 
-    void onUpdate(Timestep iTimestep);
+    void onUpdate(PepperMint::Timestep iTimestep);
     void onImGuiRender();
-    bool onKeyPressed(KeyPressedEvent& iEvent);
-    bool onMouseButtonPressed(MouseButtonPressedEvent& iEvent);
+    bool onKeyPressed(PepperMint::KeyPressedEvent& iEvent);
+    bool onMouseButtonPressed(PepperMint::MouseButtonPressedEvent& iEvent);
 
-    EditorCamera&          editorCamera() { return _editorCamera; }
-    glm::vec2              viewportSize() const { return _viewportSize; }
-    bool                   viewportFocused() const { return _viewportFocused; }
-    bool                   viewportHovered() const { return _viewportHovered; }
-    Entity                 selectedEntity() const { return _selectedEntity; }
-    Entity                 hoveredEntity() const { return _hoveredEntity; }
-    std::filesystem::path& sceneToOpen() { return _sceneToOpen; }
+    PepperMint::EditorCamera& editorCamera() { return _editorCamera; }
+    glm::vec2                 viewportSize() const { return _viewportSize; }
+    bool                      viewportFocused() const { return _viewportFocused; }
+    bool                      viewportHovered() const { return _viewportHovered; }
+    PepperMint::Entity        selectedEntity() const { return _selectedEntity; }
+    PepperMint::Entity        hoveredEntity() const { return _hoveredEntity; }
+    std::filesystem::path&    sceneToOpen() { return _sceneToOpen; }
 
     void setEditorMode(bool iEditorMode) { _editorMode = iEditorMode; }
-    void setSelectedEntity(Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
-    void setFrameBuffer(const Ref<FrameBuffer>& iFrameBuffer) { _frameBuffer = iFrameBuffer; }
-    void setActiveScene(const Ref<Scene>& iActiveScene) { _activeScene = iActiveScene; }
+    void setSelectedEntity(PepperMint::Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
+    void setFrameBuffer(const PepperMint::Ref<PepperMint::FrameBuffer>& iFrameBuffer) { _frameBuffer = iFrameBuffer; }
+    void setActiveScene(const PepperMint::Ref<PepperMint::Scene>& iActiveScene) { _activeScene = iActiveScene; }
 
   private:
-    Entity       _selectedEntity{};
-    EditorCamera _editorCamera;
+    PepperMint::Entity       _selectedEntity{};
+    PepperMint::EditorCamera _editorCamera;
 
-    Ref<FrameBuffer> _frameBuffer;
-    Ref<Scene>       _activeScene;
+    PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
+    PepperMint::Ref<PepperMint::Scene>       _activeScene;
 
     // Viewport
     glm::vec2 _viewportSize = {0.0f, 0.0f};
@@ -46,7 +46,7 @@ class ViewportPanel {
     int  _gizmoType  = -1;
 
     // Mouse picking
-    Entity _hoveredEntity{};
+    PepperMint::Entity _hoveredEntity{};
 
     // Drag & Drop
     std::filesystem::path _sceneToOpen;

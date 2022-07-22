@@ -4,7 +4,7 @@
 
 #include <PepperMint.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 class ContentBrowserPanel {
   public:
@@ -17,6 +17,6 @@ class ContentBrowserPanel {
     std::filesystem::path _currentDirectory;
 
     // Icons
-    Ref<Texture2D> _directoryIcon, _fileIcon;
+    PepperMint::Ref<PepperMint::Texture2D> _directoryIcon, _fileIcon;
 };
 }

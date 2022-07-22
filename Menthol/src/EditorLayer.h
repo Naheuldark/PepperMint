@@ -11,18 +11,18 @@
 #include "Panels/ToolbarPanel.h"
 #include "Panels/ViewportPanel.h"
 
-namespace PepperMint {
+namespace Menthol {
 
-class EditorLayer : public Layer {
+class EditorLayer : public PepperMint::Layer {
   public:
     EditorLayer() : Layer("Menthol") {}
     ~EditorLayer() override = default;
 
     void onAttach() override;
     void onDetach() override;
-    void onUpdate(Timestep iTimestep) override;
+    void onUpdate(PepperMint::Timestep iTimestep) override;
     void onImGuiRender() override;
-    void onEvent(Event& iEvent) override;
+    void onEvent(PepperMint::Event& iEvent) override;
 
     void onScenePlay();
     void onSceneStop();
@@ -30,8 +30,8 @@ class EditorLayer : public Layer {
     void duplicateSelectedEntity();
 
   private:
-    bool onKeyPressed(KeyPressedEvent& iEvent);
-    bool onMouseButtonPressed(MouseButtonPressedEvent& iEvent);
+    bool onKeyPressed(PepperMint::KeyPressedEvent& iEvent);
+    bool onMouseButtonPressed(PepperMint::MouseButtonPressedEvent& iEvent);
 
     void newScene();
     void openScene();
@@ -41,10 +41,10 @@ class EditorLayer : public Layer {
 
   private:
     // Scene
-    Ref<Scene>       _activeScene;
-    Ref<Scene>       _editorScene, _runtimeScene;
-    Ref<FrameBuffer> _frameBuffer;
-    SceneState       _sceneState = SceneState::EDIT;
+    PepperMint::Ref<PepperMint::Scene>       _activeScene;
+    PepperMint::Ref<PepperMint::Scene>       _editorScene, _runtimeScene;
+    PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
+    SceneState                               _sceneState = SceneState::EDIT;
 
     // Panels
     SceneHierarchyPanel _sceneHierarchyPanel;

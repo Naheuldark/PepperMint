@@ -2,7 +2,7 @@
 
 #include <PepperMint.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 class PropertiesPanel {
   public:
@@ -11,9 +11,9 @@ class PropertiesPanel {
 
     void onImGuiRender();
 
-    void setSelectedEntity(Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
+    void setSelectedEntity(PepperMint::Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
 
   private:
-    Entity _selectedEntity{};
+    PepperMint::Entity _selectedEntity{};
 };
 }

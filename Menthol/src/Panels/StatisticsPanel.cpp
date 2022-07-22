@@ -2,7 +2,7 @@
 
 #include <imgui/imgui.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 void StatisticsPanel::onImGuiRender() {
     ImGui::Begin("Statistics");
@@ -20,13 +20,13 @@ void StatisticsPanel::onImGuiRender() {
 
         std::string hoveredEntity("None");
         if (_hoveredEntity) {
-            hoveredEntity = _hoveredEntity.get<TagComponent>().tag;
+            hoveredEntity = _hoveredEntity.get<PepperMint::TagComponent>().tag;
         }
         ImGui::Text("Hovered Entity: %s", hoveredEntity.c_str());
 
         ImGui::Separator();
 
-        auto&& stats = Renderer2D::Stats();
+        auto&& stats = PepperMint::Renderer2D::Stats();
         ImGui::Text("Renderer2D:");
         ImGui::Text("\t\tDraw Calls: %d", stats.drawCalls);
         ImGui::Text("\t\tQuads: %d", stats.quadCount);

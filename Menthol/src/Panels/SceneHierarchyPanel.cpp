@@ -4,15 +4,15 @@
 
 #include <ImGuizmo.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 void SceneHierarchyPanel::onImGuiRender() {
     ImGui::Begin("Scene Hierarchy");
     {
-        _context->_registry.each([&](auto&& entity) { drawEntityNode({entity, _context.get()}); });
+        _context->forEachEntity([&](auto&& entity) { drawEntityNode({entity, _context.get()}); });
 
         // Left-click on blank space
-        if (Input::IsMouseButtonPressed(Mouse::BUTTON_LEFT) && ImGui::IsWindowHovered()) {
+        if (PepperMint::Input::IsMouseButtonPressed(PepperMint::Mouse::BUTTON_LEFT) && ImGui::IsWindowHovered()) {
             _selectedEntity = {};
         }
 
@@ -22,13 +22,13 @@ void SceneHierarchyPanel::onImGuiRender() {
                 _selectedEntity = _context->createEntity("Empty Entity");
             } else if (ImGui::MenuItem("Create Camera")) {
                 _selectedEntity = _context->createEntity("Camera");
-                _selectedEntity.add<CameraComponent>();
+                _selectedEntity.add<PepperMint::CameraComponent>();
             } else if (ImGui::MenuItem("Create Sprite")) {
                 _selectedEntity = _context->createEntity("Sprite");
-                _selectedEntity.add<SpriteRendererComponent>();
+                _selectedEntity.add<PepperMint::SpriteRendererComponent>();
             } else if (ImGui::MenuItem("Create Circle")) {
                 _selectedEntity = _context->createEntity("Circle");
-                _selectedEntity.add<CircleRendererComponent>();
+                _selectedEntity.add<PepperMint::CircleRendererComponent>();
             }
             ImGui::EndPopup();
         }
@@ -36,8 +36,8 @@ void SceneHierarchyPanel::onImGuiRender() {
     ImGui::End();
 }
 
-void SceneHierarchyPanel::drawEntityNode(Entity iEntity) {
-    auto&& tag = iEntity.get<TagComponent>().tag;
+void SceneHierarchyPanel::drawEntityNode(PepperMint::Entity iEntity) {
+    auto&& tag = iEntity.get<PepperMint::TagComponent>().tag;
 
     ImGuiTreeNodeFlags commonFlags  = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     ImGuiTreeNodeFlags selectedFlag = ((_selectedEntity == iEntity) ? ImGuiTreeNodeFlags_Selected : 0);

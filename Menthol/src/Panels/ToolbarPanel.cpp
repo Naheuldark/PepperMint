@@ -2,11 +2,11 @@
 
 #include <imgui/imgui.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 ToolbarPanel::ToolbarPanel() {
-    _playIcon = Texture2D::Create("resources/icons/Editor/PlayButton.png");
-    _stopIcon = Texture2D::Create("resources/icons/Editor/StopButton.png");
+    _playIcon = PepperMint::Texture2D::Create("resources/icons/Editor/PlayButton.png");
+    _stopIcon = PepperMint::Texture2D::Create("resources/icons/Editor/StopButton.png");
 }
 
 void ToolbarPanel::onImGuiRender() {
@@ -24,8 +24,8 @@ void ToolbarPanel::onImGuiRender() {
 
     ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     {
-        float          size = ImGui::GetWindowHeight() - 4.0f;
-        Ref<Texture2D> icon = _sceneState == SceneState::EDIT ? _playIcon : _stopIcon;
+        float                                  size = ImGui::GetWindowHeight() - 4.0f;
+        PepperMint::Ref<PepperMint::Texture2D> icon = _sceneState == SceneState::EDIT ? _playIcon : _stopIcon;
         ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
         if (ImGui::ImageButton((ImTextureID)icon->rendererId(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0)) {
             _playButtonClicked = true;

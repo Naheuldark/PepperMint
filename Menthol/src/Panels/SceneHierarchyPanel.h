@@ -2,30 +2,30 @@
 
 #include <PepperMint.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 class SceneHierarchyPanel {
   public:
     SceneHierarchyPanel() = default;
-    SceneHierarchyPanel(const Ref<Scene>& iScene) : _context(iScene) {}
+    SceneHierarchyPanel(const PepperMint::Ref<PepperMint::Scene>& iScene) : _context(iScene) {}
 
     ~SceneHierarchyPanel() = default;
 
     void onImGuiRender();
 
-    Entity selectedEntity() const { return _selectedEntity; }
-    void   setSelectedEntity(Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
+    PepperMint::Entity selectedEntity() const { return _selectedEntity; }
+    void               setSelectedEntity(PepperMint::Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
 
-    void setContext(const Ref<Scene>& iScene) {
+    void setContext(const PepperMint::Ref<PepperMint::Scene>& iScene) {
         _context        = iScene;
         _selectedEntity = {};
     }
 
   private:
-    void drawEntityNode(Entity iEntity);
+    void drawEntityNode(PepperMint::Entity iEntity);
 
   private:
-    Ref<Scene> _context;
-    Entity     _selectedEntity;
+    PepperMint::Ref<PepperMint::Scene> _context;
+    PepperMint::Entity                 _selectedEntity;
 };
 }

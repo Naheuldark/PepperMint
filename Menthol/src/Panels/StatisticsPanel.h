@@ -2,7 +2,7 @@
 
 #include <PepperMint.h>
 
-namespace PepperMint {
+namespace Menthol {
 
 class StatisticsPanel {
   public:
@@ -14,10 +14,10 @@ class StatisticsPanel {
     std::string currentFile() const { return _currentFile; }
     void        setCurrentFile(const std::string& iFile) { _currentFile = iFile; }
 
-    void setHoveredEntity(const Entity& iHoveredEntity) { _hoveredEntity = iHoveredEntity; }
+    void setHoveredEntity(const PepperMint::Entity& iHoveredEntity) { _hoveredEntity = iHoveredEntity; }
 
   private:
-    std::string _currentFile;
-    Entity      _hoveredEntity{};
+    std::string        _currentFile;
+    PepperMint::Entity _hoveredEntity{};
 };
 }
