@@ -1,9 +1,9 @@
-#include "Sandbox2D.h"
-
 #include <imgui/imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Sandbox2D.h"
 
 void Sandbox2D::onAttach() {
     PM_PROFILE_FUNCTION();
@@ -37,22 +37,17 @@ void Sandbox2D::onUpdate(PepperMint::Timestep iTimestep) {
         rotation += iTimestep * 50.0f;
 
         PepperMint::Renderer2D::BeginScene(_cameraController.camera());
-        PepperMint::Renderer2D::DrawQuad(
-            {1.0f, 0.0f}, -45.0f, {0.8f, 0.8f}, 1.0f, nullptr, _squareColor);
-        PepperMint::Renderer2D::DrawQuad(
-            {0.5f, -0.5f}, 0.0f, {0.5f, 0.75f}, 1.0f, nullptr, {0.8f, 0.3f, 0.8f, 1.0f});
-        PepperMint::Renderer2D::DrawQuad(
-            {0.0f, 0.0f, -0.1f}, 0.0f, {20.0f, 20.0f}, 10.0f, _checkerboardTexture);
-        PepperMint::Renderer2D::DrawQuad(
-            {-1.0f, 0.0f, 0.0f}, rotation, {1.0f, 1.0f}, 20.0f, _checkerboardTexture);
+        PepperMint::Renderer2D::DrawQuad({1.0f, 0.0f}, -45.0f, {0.8f, 0.8f}, 1.0f, nullptr, _squareColor);
+        PepperMint::Renderer2D::DrawQuad({0.5f, -0.5f}, 0.0f, {0.5f, 0.75f}, 1.0f, nullptr, {0.8f, 0.3f, 0.8f, 1.0f});
+        PepperMint::Renderer2D::DrawQuad({0.0f, 0.0f, -0.1f}, 0.0f, {20.0f, 20.0f}, 10.0f, _checkerboardTexture);
+        PepperMint::Renderer2D::DrawQuad({-1.0f, 0.0f, 0.0f}, rotation, {1.0f, 1.0f}, 20.0f, _checkerboardTexture);
         PepperMint::Renderer2D::EndScene();
 
         PepperMint::Renderer2D::BeginScene(_cameraController.camera());
         for (float y = -5.0f; y < 5.0f; y += 0.5f) {
             for (float x = -5.0f; x < 5.0f; x += 0.5f) {
                 glm::vec4 color = {(x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f};
-                PepperMint::Renderer2D::DrawQuad(
-                    {x, y}, 0.0f, {0.45f, 0.45f}, 1.0f, nullptr, color);
+                PepperMint::Renderer2D::DrawQuad({x, y}, 0.0f, {0.45f, 0.45f}, 1.0f, nullptr, color);
             }
         }
         PepperMint::Renderer2D::EndScene();

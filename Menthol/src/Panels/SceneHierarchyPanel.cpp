@@ -1,8 +1,8 @@
-#include "SceneHierarchyPanel.h"
-
 #include <imgui/imgui.h>
 
 #include <ImGuizmo.h>
+
+#include "SceneHierarchyPanel.h"
 
 namespace Menthol {
 

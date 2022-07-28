@@ -1,17 +1,17 @@
 #include "pmpch.h"
 
-#include "PepperMint/Renderer/Renderer2D.h"
-#include "PepperMint/Scene/Components.h"
-#include "PepperMint/Scene/Entity.h"
-#include "PepperMint/Scene/Scene.h"
-#include "PepperMint/Scene/ScriptableEntity.h"
-
 // Box2D
 #include <box2d/b2_body.h>
 #include <box2d/b2_circle_shape.h>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_polygon_shape.h>
 #include <box2d/b2_world.h>
+
+#include "PepperMint/Renderer/Renderer2D.h"
+#include "PepperMint/Scene/Components.h"
+#include "PepperMint/Scene/Entity.h"
+#include "PepperMint/Scene/Scene.h"
+#include "PepperMint/Scene/ScriptableEntity.h"
 
 namespace PepperMint {
 

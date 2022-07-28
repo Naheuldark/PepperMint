@@ -7,7 +7,9 @@ namespace Menthol {
 
 class Menthol : public PepperMint::Application {
   public:
-    Menthol(PepperMint::ApplicationCommandLineArgs iArgs) : PepperMint::Application("Menthol", iArgs) { pushLayer(PepperMint::CreateRef<EditorLayer>()); }
+    Menthol(PepperMint::ApplicationCommandLineArgs iArgs) : PepperMint::Application("Menthol", iArgs) {
+        pushLayer(PepperMint::CreateRef<EditorLayer>());
+    }
     ~Menthol() = default;
 };
 }

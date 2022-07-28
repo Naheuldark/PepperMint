@@ -1,9 +1,9 @@
-#include "ExampleLayer.h"
-
 #include <imgui/imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "ExampleLayer.h"
 
 ExampleLayer::ExampleLayer() : Layer("Example"), _cameraController(1280.0f / 720.0f, true) {
     ////////////
@@ -16,8 +16,7 @@ ExampleLayer::ExampleLayer() : Layer("Example"), _cameraController(1280.0f / 720
     float squareVertices[5 * 4] = {-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,
                                    0.5f,  0.5f,  0.0f, 1.0f, 1.0f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f};
 
-    PepperMint::Ref<PepperMint::VertexBuffer> squareVB =
-        PepperMint::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
+    PepperMint::Ref<PepperMint::VertexBuffer> squareVB = PepperMint::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
     squareVB->setLayout({
         {PepperMint::ShaderDataType::FLOAT3, "iPosition"},
         {PepperMint::ShaderDataType::FLOAT2, "iTexCoord"},
@@ -27,8 +26,7 @@ ExampleLayer::ExampleLayer() : Layer("Example"), _cameraController(1280.0f / 720
     // Index Buffer
     uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
 
-    PepperMint::Ref<PepperMint::IndexBuffer> squareIB =
-        PepperMint::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
+    PepperMint::Ref<PepperMint::IndexBuffer> squareIB = PepperMint::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
     _squareVA->setIndexBuffer(squareIB);
 
     /////////////
@@ -80,11 +78,9 @@ void ExampleLayer::onUpdate(PepperMint::Timestep iTimestep) {
     }
 
     _texture->bind();
-    PepperMint::Renderer::Submit(
-        textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+    PepperMint::Renderer::Submit(textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
     _chernoTexture->bind();
-    PepperMint::Renderer::Submit(
-        textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+    PepperMint::Renderer::Submit(textureShader, _squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
     PepperMint::Renderer::EndScene();
 }

@@ -1,10 +1,9 @@
 #pragma once
 
 #include <PepperMint.h>
+#include <imgui/imgui.h>
 
 #include "Level.h"
-
-#include <imgui/imgui.h>
 
 class FlappyShipLayer : public PepperMint::Layer {
   public:

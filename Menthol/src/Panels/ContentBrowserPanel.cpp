@@ -1,6 +1,6 @@
-#include "ContentBrowserPanel.h"
-
 #include <imgui/imgui.h>
+
+#include "ContentBrowserPanel.h"
 
 namespace Menthol {
 

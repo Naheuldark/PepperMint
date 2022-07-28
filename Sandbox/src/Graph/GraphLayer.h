@@ -1,7 +1,6 @@
 #pragma once
 
 #include <PepperMint.h>
-
 #include <imgui/imgui.h>
 
 class GraphLayer : public PepperMint::Layer {

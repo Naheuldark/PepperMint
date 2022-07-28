@@ -6,6 +6,8 @@
 #include "Graph/GraphLayer.h"
 #include "Sandbox2D/Sandbox2D.h"
 
+namespace Sandbox {
+
 class Sandbox : public PepperMint::Application {
   public:
     Sandbox(PepperMint::ApplicationCommandLineArgs iArgs) {
@@ -18,5 +20,6 @@ class Sandbox : public PepperMint::Application {
 
     ~Sandbox() = default;
 };
+}
 
-PepperMint::Application* PepperMint::CreateApplication(PepperMint::ApplicationCommandLineArgs iArgs) { return new Sandbox(iArgs); }
+PepperMint::Application* PepperMint::CreateApplication(PepperMint::ApplicationCommandLineArgs iArgs) { return new Sandbox::Sandbox(iArgs); }

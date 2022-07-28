@@ -1,8 +1,7 @@
-#include "Level.h"
-
-#include "Random.h"
-
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "Level.h"
+#include "Random.h"
 
 namespace {
 
@@ -96,21 +95,16 @@ void Level::onRender() {
     auto&& color     = HSVtoRGB(_pillarHSV);
 
     // Background
-    PepperMint::Renderer2D::DrawQuad(
-        {playerPos.x, 0.0f, -0.8f}, 0.0f, {50.0f, 50.0f}, 1.0f, nullptr, {0.3f, 0.3f, 0.3f, 1.0f});
+    PepperMint::Renderer2D::DrawQuad({playerPos.x, 0.0f, -0.8f}, 0.0f, {50.0f, 50.0f}, 1.0f, nullptr, {0.3f, 0.3f, 0.3f, 1.0f});
 
     // Floors + Ceiling
-    PepperMint::Renderer2D::DrawQuad(
-        {playerPos.x, 34.0f}, 0.0f, {50.0f, 50.0f}, 1.0f, nullptr, color);
-    PepperMint::Renderer2D::DrawQuad(
-        {playerPos.x, -34.0f}, 0.0f, {50.0f, 50.0f}, 1.0f, nullptr, color);
+    PepperMint::Renderer2D::DrawQuad({playerPos.x, 34.0f}, 0.0f, {50.0f, 50.0f}, 1.0f, nullptr, color);
+    PepperMint::Renderer2D::DrawQuad({playerPos.x, -34.0f}, 0.0f, {50.0f, 50.0f}, 1.0f, nullptr, color);
 
     // Pillars
     for (auto&& pillar : _pillars) {
-        PepperMint::Renderer2D::DrawQuad(
-            pillar.topPosition, glm::radians(180.0f), pillar.topScale, 1.0f, _pillarTexture, color);
-        PepperMint::Renderer2D::DrawQuad(
-            pillar.bottomPosition, 0.0f, pillar.bottomScale, 1.0f, _pillarTexture, color);
+        PepperMint::Renderer2D::DrawQuad(pillar.topPosition, glm::radians(180.0f), pillar.topScale, 1.0f, _pillarTexture, color);
+        PepperMint::Renderer2D::DrawQuad(pillar.bottomPosition, 0.0f, pillar.bottomScale, 1.0f, _pillarTexture, color);
     }
 
     // Player
@@ -164,17 +158,13 @@ bool Level::checkCollision() {
         return true;
     }
 
-    glm::vec4 playerVertices[4] = {{-0.5f, -0.5f, 0.0f, 1.0f},
-                                   {0.5f, -0.5f, 0.0f, 1.0f},
-                                   {0.5f, 0.5f, 0.0f, 1.0f},
-                                   {-0.5f, 0.5f, 0.0f, 1.0f}};
+    glm::vec4 playerVertices[4] = {{-0.5f, -0.5f, 0.0f, 1.0f}, {0.5f, -0.5f, 0.0f, 1.0f}, {0.5f, 0.5f, 0.0f, 1.0f}, {-0.5f, 0.5f, 0.0f, 1.0f}};
 
     glm::vec4 playerTransformedVertices[4];
     for (int i = 0; i < 4; i++) {
-        playerTransformedVertices[i] =
-            glm::translate(glm::mat4(1.0f), {pos.x, pos.y, 0.0f}) *
-            glm::rotate(glm::mat4(1.0f), glm::radians(_player.rotation()), {0.0f, 0.0f, 1.0f}) *
-            glm::scale(glm::mat4(1.0f), {1.0f, 1.3f, 1.0f}) * playerVertices[i];
+        playerTransformedVertices[i] = glm::translate(glm::mat4(1.0f), {pos.x, pos.y, 0.0f}) *
+                                       glm::rotate(glm::mat4(1.0f), glm::radians(_player.rotation()), {0.0f, 0.0f, 1.0f}) *
+                                       glm::scale(glm::mat4(1.0f), {1.0f, 1.3f, 1.0f}) * playerVertices[i];
     }
 
     // To match Triangle.png (each corner is 10% from the texture edge)
@@ -189,10 +179,9 @@ bool Level::checkCollision() {
 
         // Top pillars
         for (int i = 0; i < 3; i++) {
-            triangle[i] =
-                glm::translate(glm::mat4(1.0f), {p.topPosition.x, p.topPosition.y, 0.0f}) *
-                glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), {0.0f, 0.0f, 1.0f}) *
-                glm::scale(glm::mat4(1.0f), {p.topScale.x, p.topScale.y, 1.0f}) * pillarVertices[i];
+            triangle[i] = glm::translate(glm::mat4(1.0f), {p.topPosition.x, p.topPosition.y, 0.0f}) *
+                          glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), {0.0f, 0.0f, 1.0f}) *
+                          glm::scale(glm::mat4(1.0f), {p.topScale.x, p.topScale.y, 1.0f}) * pillarVertices[i];
         }
 
         for (auto&& vertex : playerTransformedVertices) {
@@ -202,10 +191,8 @@ bool Level::checkCollision() {
 
         // Bottom pillars
         for (int i = 0; i < 3; i++) {
-            triangle[i] =
-                glm::translate(glm::mat4(1.0f), {p.bottomPosition.x, p.bottomPosition.y, 0.0f}) *
-                glm::scale(glm::mat4(1.0f), {p.bottomScale.x, p.bottomScale.y, 1.0f}) *
-                pillarVertices[i];
+            triangle[i] = glm::translate(glm::mat4(1.0f), {p.bottomPosition.x, p.bottomPosition.y, 0.0f}) *
+                          glm::scale(glm::mat4(1.0f), {p.bottomScale.x, p.bottomScale.y, 1.0f}) * pillarVertices[i];
         }
 
         for (auto&& vertex : playerTransformedVertices) {

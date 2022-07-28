@@ -1,8 +1,8 @@
-#include "PropertiesPanel.h"
-
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
+
+#include "PropertiesPanel.h"
 
 namespace Menthol {
 

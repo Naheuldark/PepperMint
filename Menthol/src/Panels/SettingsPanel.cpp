@@ -1,6 +1,6 @@
-#include "SettingsPanel.h"
-
 #include <imgui/imgui.h>
+
+#include "SettingsPanel.h"
 
 namespace Menthol {
 

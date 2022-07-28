@@ -1,11 +1,11 @@
-#include "EditorLayer.h"
-
 #include <imgui/imgui.h>
 
 #include <ImGuizmo.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "EditorLayer.h"
 
 namespace Menthol {
 

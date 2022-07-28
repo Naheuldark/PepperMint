@@ -1,9 +1,8 @@
-#include "ParticleSystem.h"
-
-#include "Random.h"
-
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/compatibility.hpp>
+
+#include "ParticleSystem.h"
+#include "Random.h"
 
 ParticleSystem::ParticleSystem() { _particles.resize(1000); }
 
@@ -23,9 +22,8 @@ void ParticleSystem::emit(const ParticleProperties& iProperties) {
     particle.colorEnd   = iProperties.colorEnd;
 
     // Size
-    particle.sizeBegin =
-        iProperties.sizeBegin + iProperties.sizeVariation * (Random::Float() - 0.5f);
-    particle.sizeEnd = iProperties.sizeEnd;
+    particle.sizeBegin = iProperties.sizeBegin + iProperties.sizeVariation * (Random::Float() - 0.5f);
+    particle.sizeEnd   = iProperties.sizeEnd;
 
     // Life
     particle.lifeTime      = iProperties.lifeTime;
@@ -61,7 +59,6 @@ void ParticleSystem::onRender() {
 
         float size = glm::lerp(particle.sizeEnd, particle.sizeBegin, life);
 
-        PepperMint::Renderer2D::DrawQuad(
-            particle.position, particle.rotation, {size, size}, 1.0f, nullptr, color);
+        PepperMint::Renderer2D::DrawQuad(particle.position, particle.rotation, {size, size}, 1.0f, nullptr, color);
     }
 }

@@ -1,6 +1,6 @@
-#include "StatisticsPanel.h"
-
 #include <imgui/imgui.h>
+
+#include "StatisticsPanel.h"
 
 namespace Menthol {
 

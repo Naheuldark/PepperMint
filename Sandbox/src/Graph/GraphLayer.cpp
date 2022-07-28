@@ -26,8 +26,7 @@ void GraphLayer::onUpdate(PepperMint::Timestep iTimestep) {
 
     PepperMint::Renderer2D::BeginScene(*_camera);
     if (_send) {
-        PepperMint::Renderer2D::DrawQuad(
-            {-10.0f, 0.0f}, 0.0f, {1.0f, 1.0f}, 1.0f, nullptr, {1, 0, 0, 1});
+        PepperMint::Renderer2D::DrawQuad({-10.0f, 0.0f}, 0.0f, {1.0f, 1.0f}, 1.0f, nullptr, {1, 0, 0, 1});
     }
     PepperMint::Renderer2D::EndScene();
 }
@@ -41,8 +40,7 @@ void GraphLayer::onImGuiRender() {
 
 void GraphLayer::onEvent(PepperMint::Event& iEvent) {
     PepperMint::EventDispatcher dispatcher(iEvent);
-    dispatcher.dispatch<PepperMint::WindowResizeEvent>(
-        PM_BIND_EVENT_FN(GraphLayer::onWindowResize));
+    dispatcher.dispatch<PepperMint::WindowResizeEvent>(PM_BIND_EVENT_FN(GraphLayer::onWindowResize));
 }
 
 bool GraphLayer::onWindowResize(PepperMint::WindowResizeEvent& iEvent) {
@@ -57,5 +55,5 @@ void GraphLayer::updateCamera(uint32_t iWidth, uint32_t iHeight) {
     float top    = kCameraHeight;
     float left   = bottom * aspectRatio;
     float right  = top * aspectRatio;
-    _camera = PepperMint::CreateScope<PepperMint::OrthographicCamera>(left, right, bottom, top);
+    _camera      = PepperMint::CreateScope<PepperMint::OrthographicCamera>(left, right, bottom, top);
 }

@@ -23,8 +23,8 @@ class SceneCamera : public Camera {
 
     ProjectionType projectionType() const { return _projectionType; }
     void           setProjectionType(ProjectionType iType) {
-        _projectionType = iType;
-        updateProjection();
+                  _projectionType = iType;
+                  updateProjection();
     }
 
     ///////////////////////////////////
@@ -32,20 +32,20 @@ class SceneCamera : public Camera {
     ///////////////////////////////////
     float perspectiveVerticalFOV() const { return _perspectiveFOV; }
     void  setPerspectiveVerticalFOV(float iVerticalFOV) {
-        _perspectiveFOV = iVerticalFOV;
-        updateProjection();
+         _perspectiveFOV = iVerticalFOV;
+         updateProjection();
     }
 
     float perspectiveNearClip() const { return _perspectiveNear; }
     void  setPerspectiveNearClip(float iNearClip) {
-        _perspectiveNear = iNearClip;
-        updateProjection();
+         _perspectiveNear = iNearClip;
+         updateProjection();
     }
 
     float perspectiveFarClip() const { return _perspectiveFar; }
     void  setPerspectiveFarClip(float iFarClip) {
-        _perspectiveFar = iFarClip;
-        updateProjection();
+         _perspectiveFar = iFarClip;
+         updateProjection();
     }
 
     ////////////////////////////////////
@@ -53,20 +53,20 @@ class SceneCamera : public Camera {
     ////////////////////////////////////
     float orthographicSize() const { return _orthographicSize; }
     void  setOrthographicSize(float iSize) {
-        _orthographicSize = iSize;
-        updateProjection();
+         _orthographicSize = iSize;
+         updateProjection();
     }
 
     float orthographicNearClip() const { return _orthographicNear; }
     void  setOrthographicNearClip(float iNearClip) {
-        _orthographicNear = iNearClip;
-        updateProjection();
+         _orthographicNear = iNearClip;
+         updateProjection();
     }
 
     float orthographicFarClip() const { return _orthographicFar; }
     void  setOrthographicFarClip(float iFarClip) {
-        _orthographicFar = iFarClip;
-        updateProjection();
+         _orthographicFar = iFarClip;
+         updateProjection();
     }
 
   private:

@@ -1,7 +1,7 @@
-#include "Player.h"
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui/imgui.h>
+
+#include "Player.h"
 
 Player::Player() {
     // Smoke
@@ -43,9 +43,7 @@ void Player::onUpdate(PepperMint::Timestep iTimestep) {
 
         // Flames
         glm::vec2 emissionPoint = {0.0f, -0.6f};
-        glm::vec4 rotated =
-            glm::rotate(glm::mat4(1.0f), glm::radians(rotation()), {0.0f, 0.0f, 1.0f}) *
-            glm::vec4(emissionPoint, 0.0f, 1.0f);
+        glm::vec4 rotated       = glm::rotate(glm::mat4(1.0f), glm::radians(rotation()), {0.0f, 0.0f, 1.0f}) * glm::vec4(emissionPoint, 0.0f, 1.0f);
 
         _flames.position   = _position + glm::vec2{rotated.x, rotated.y};
         _flames.velocity.y = -_velocity.y * 0.2f - 0.2f;
@@ -70,11 +68,7 @@ void Player::onUpdate(PepperMint::Timestep iTimestep) {
 
 void Player::onRender() {
     _particleSystem.onRender();
-    PepperMint::Renderer2D::DrawQuad({_position.x, _position.y, 0.5f},
-                                     glm::radians(rotation()),
-                                     {1.0f, 1.3f},
-                                     1.0f,
-                                     _shipTexture);
+    PepperMint::Renderer2D::DrawQuad({_position.x, _position.y, 0.5f}, glm::radians(rotation()), {1.0f, 1.3f}, 1.0f, _shipTexture);
 }
 
 void Player::onImGuiRender() {
