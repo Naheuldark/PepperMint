@@ -335,7 +335,7 @@ void EditorLayer::onEvent(PepperMint::Event& iEvent) {
 
 bool EditorLayer::onKeyPressed(PepperMint::KeyPressedEvent& iEvent) {
     // Shorcuts
-    if (iEvent.repeatCount() > 0) {
+    if (iEvent.isRepeat()) {
         return false;
     }
 

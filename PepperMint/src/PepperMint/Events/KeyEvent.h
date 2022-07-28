@@ -21,21 +21,21 @@ class KeyEvent : public Event {
 
 class KeyPressedEvent : public KeyEvent {
   public:
-    KeyPressedEvent(const KeyCode iKeyCode, const uint16_t iRepeatCount) : KeyEvent(iKeyCode), _repeatCount(iRepeatCount) {}
+    KeyPressedEvent(const KeyCode iKeyCode, bool iIsRepeat = false) : KeyEvent(iKeyCode), _isRepeat(iIsRepeat) {}
     ~KeyPressedEvent() override = default;
 
-    uint16_t repeatCount() const { return _repeatCount; }
+    bool isRepeat() const { return _isRepeat; }
 
     std::string toString() const override {
         std::ostringstream ss;
-        ss << "KeyPressedEvent: " << _keyCode << " (" << _repeatCount << " repeats)";
+        ss << "KeyPressedEvent: " << _keyCode << " (repeat? " << _isRepeat << ")";
         return ss.str();
     }
 
     EVENT_TYPE(KEY_PRESSED)
 
   private:
-    uint16_t _repeatCount;
+    bool _isRepeat;
 };
 
 class KeyReleasedEvent : public KeyEvent {

@@ -10,7 +10,7 @@ namespace PepperMint {
 bool Input::IsKeyPressed(const KeyCode iKeyCode) {
     auto&& window = static_cast<GLFWwindow*>(Application::Get().window().nativeWindow());
     auto&& state  = glfwGetKey(window, static_cast<int>(iKeyCode));
-    return (state == GLFW_PRESS) || (state == GLFW_REPEAT);
+    return (state == GLFW_PRESS);
 }
 
 bool Input::IsMouseButtonPressed(const MouseCode iButton) {
