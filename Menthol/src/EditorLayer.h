@@ -2,14 +2,11 @@
 
 #include <PepperMint.h>
 
-#include "EditorUtils.h"
-
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/PropertiesPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SettingsPanel.h"
 #include "Panels/StatisticsPanel.h"
-#include "Panels/ToolbarPanel.h"
 #include "Panels/ViewportPanel.h"
 
 namespace Menthol {
@@ -26,6 +23,7 @@ class EditorLayer : public PepperMint::Layer {
     void onEvent(PepperMint::Event& iEvent) override;
 
     void onScenePlay();
+    void onSceneSimulate();
     void onSceneStop();
 
     void duplicateSelectedEntity();
@@ -43,11 +41,21 @@ class EditorLayer : public PepperMint::Layer {
     void saveSceneAs();
 
   private:
+    enum class SceneState : int {
+        EDIT     = 0,
+        PLAY     = 1,
+        SIMULATE = 2,
+    };
+
+  private:
     // Scene
     PepperMint::Ref<PepperMint::Scene>       _activeScene;
-    PepperMint::Ref<PepperMint::Scene>       _editorScene, _runtimeScene;
+    PepperMint::Ref<PepperMint::Scene>       _editorScene, _runtimeScene, _simulateScene;
     PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
     SceneState                               _sceneState = SceneState::EDIT;
+
+    // Icons
+    PepperMint::Ref<PepperMint::Texture2D> _playIcon, _stopIcon, _simulateIcon;
 
     // Panels
     SceneHierarchyPanel _sceneHierarchyPanel;
@@ -55,7 +63,6 @@ class EditorLayer : public PepperMint::Layer {
     StatisticsPanel     _statisticsPanel;
     ViewportPanel       _viewportPanel;
     ContentBrowserPanel _contentBrowserPanel;
-    ToolbarPanel        _toolbarPanel;
     SettingsPanel       _settingsPanel;
 };
 }

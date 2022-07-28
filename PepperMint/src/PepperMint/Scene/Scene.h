@@ -42,8 +42,12 @@ class Scene {
     void onRuntimeStart();
     void onRuntimeStop();
 
+    void onSimulateStart();
+    void onSimulateStop();
+
     void onUpdateRuntime(Timestep iTimestep);
-    void onUpdateEditor(Timestep iTimestep, EditorCamera& iCamera);
+    void onUpdateSimulate(Timestep iTimestep, const EditorCamera& iCamera);
+    void onUpdateEditor(Timestep iTimestep, const EditorCamera& iCamera);
 
     void onViewportResize(uint32_t iWidth, uint32_t iHeight);
 
@@ -54,6 +58,15 @@ class Scene {
   private:
     template <typename Component>
     void onAddComponent(Entity iEntity, Component& ioComponent);
+
+    void onPhysics2DStart();
+    void onPhysics2DStop();
+
+    void onUpdatePhysics2D(Timestep iTimestep);
+    void onUpdateScript(Timestep iTimestep);
+
+    void renderRuntimeScene();
+    void renderEditorScene(const EditorCamera& iCamera);
 
   private:
     std::string _name;

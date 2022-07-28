@@ -15,6 +15,10 @@ const float kMIN_PANEL_WIDTH = 370.0f;
 void EditorLayer::onAttach() {
     PM_PROFILE_FUNCTION();
 
+    _playIcon     = PepperMint::Texture2D::Create("resources/icons/Editor/PlayButton.png");
+    _stopIcon     = PepperMint::Texture2D::Create("resources/icons/Editor/StopButton.png");
+    _simulateIcon = PepperMint::Texture2D::Create("resources/icons/Editor/SimulateButton.png");
+
     _editorScene = PepperMint::CreateRef<PepperMint::Scene>("Editor");
     _activeScene = _editorScene;
 
@@ -77,12 +81,16 @@ void EditorLayer::onUpdate(PepperMint::Timestep iTimestep) {
         switch (_sceneState) {
             case SceneState::EDIT: {
                 _viewportPanel.editorCamera().onUpdate(iTimestep);
-
                 _activeScene->onUpdateEditor(iTimestep, _viewportPanel.editorCamera());
                 break;
             }
             case SceneState::PLAY: {
                 _activeScene->onUpdateRuntime(iTimestep);
+                break;
+            }
+            case SceneState::SIMULATE: {
+                _viewportPanel.editorCamera().onUpdate(iTimestep);
+                _activeScene->onUpdateSimulate(iTimestep, _viewportPanel.editorCamera());
                 break;
             }
         }
@@ -171,6 +179,70 @@ void EditorLayer::onImGuiRender() {
             ImGui::EndMenuBar();
         }
 
+        // Toolbar
+        auto&& colors        = ImGui::GetStyle().Colors;
+        auto&& buttonHovered = colors[ImGuiCol_ButtonHovered];
+        auto&& buttonActive  = colors[ImGuiCol_ButtonActive];
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+        ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+        {
+            bool toolbarEnabled = (bool)_activeScene;
+
+            ImVec4 tintColor = ImVec4(1, 1, 1, 1);
+            if (!toolbarEnabled) {
+                tintColor.w = 0.5f;
+            }
+
+            float size = ImGui::GetWindowHeight() - 4.0f;
+            {
+                PepperMint::Ref<PepperMint::Texture2D> icon =
+                    (_sceneState == SceneState::EDIT || _sceneState == SceneState::SIMULATE) ? _playIcon : _stopIcon;
+                ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+                if (ImGui::ImageButton((ImTextureID)icon->rendererId(),
+                                       ImVec2(size, size),
+                                       ImVec2(0, 0),
+                                       ImVec2(1, 1),
+                                       0,
+                                       ImVec4(0.0f, 0.0f, 0.0f, 0.0f),
+                                       tintColor) &&
+                    toolbarEnabled) {
+                    if ((_sceneState == SceneState::EDIT) || (_sceneState == SceneState::SIMULATE)) {
+                        onScenePlay();
+                    } else if (_sceneState == SceneState::PLAY) {
+                        onSceneStop();
+                    }
+                }
+            }
+            ImGui::SameLine();
+            {
+                PepperMint::Ref<PepperMint::Texture2D> icon =
+                    (_sceneState == SceneState::EDIT || _sceneState == SceneState::PLAY) ? _simulateIcon : _stopIcon;
+                if (ImGui::ImageButton((ImTextureID)icon->rendererId(),
+                                       ImVec2(size, size),
+                                       ImVec2(0, 0),
+                                       ImVec2(1, 1),
+                                       0,
+                                       ImVec4(0.0f, 0.0f, 0.0f, 0.0f),
+                                       tintColor) &&
+                    toolbarEnabled) {
+                    if ((_sceneState == SceneState::EDIT) || (_sceneState == SceneState::PLAY)) {
+                        onSceneSimulate();
+                    } else if (_sceneState == SceneState::SIMULATE) {
+                        onSceneStop();
+                    }
+                }
+            }
+            ImGui::PopStyleVar(2);
+            ImGui::PopStyleColor(3);
+        }
+        ImGui::End();
+
         // Scene Hierarchy Panel
         _sceneHierarchyPanel.setSelectedEntity(_viewportPanel.selectedEntity());
         _sceneHierarchyPanel.onImGuiRender();
@@ -187,16 +259,6 @@ void EditorLayer::onImGuiRender() {
         _viewportPanel.setSelectedEntity(_sceneHierarchyPanel.selectedEntity());
         _viewportPanel.setEditorMode(_sceneState == SceneState::EDIT);
         _viewportPanel.onImGuiRender();
-
-        // Toolbar
-        _toolbarPanel.setSceneState(_sceneState);
-        _toolbarPanel.onImGuiRender();
-
-        if ((_sceneState == SceneState::EDIT) && _toolbarPanel.playButtonClicked()) {
-            onScenePlay();
-        } else if ((_sceneState == SceneState::PLAY) && _toolbarPanel.playButtonClicked()) {
-            onSceneStop();
-        }
 
         // Content Browser Panel
         _contentBrowserPanel.onImGuiRender();
@@ -215,6 +277,9 @@ void EditorLayer::onImGuiRender() {
 void EditorLayer::onOverlayRender() {
     if (_sceneState == SceneState::PLAY) {
         auto&& camera = _activeScene->primaryCameraEntity();
+        if (!camera)
+            return;
+
         PepperMint::Renderer2D::BeginScene(camera.get<PepperMint::CameraComponent>().camera,
                                            camera.get<PepperMint::TransformComponent>().transform());
     } else {
@@ -310,9 +375,11 @@ bool EditorLayer::onKeyPressed(PepperMint::KeyPressedEvent& iEvent) {
 
         // Switch between Runtime and Editor scene
         case PepperMint::Key::P: {
-            if (_sceneState == SceneState::EDIT) {
+            if (!control && ((_sceneState == SceneState::EDIT) || (_sceneState == SceneState::SIMULATE))) {
                 onScenePlay();
-            } else if (_sceneState == SceneState::PLAY) {
+            } else if (control && ((_sceneState == SceneState::EDIT) || (_sceneState == SceneState::PLAY))) {
+                onSceneSimulate();
+            } else if ((_sceneState == SceneState::PLAY) || (_sceneState == SceneState::SIMULATE)) {
                 onSceneStop();
             }
             break;
@@ -328,6 +395,10 @@ bool EditorLayer::onKeyPressed(PepperMint::KeyPressedEvent& iEvent) {
 }
 
 void EditorLayer::onScenePlay() {
+    if (_sceneState == SceneState::SIMULATE) {
+        onSceneStop();
+    }
+
     _sceneState = SceneState::PLAY;
 
     // Make a copy of the editor scene
@@ -339,7 +410,31 @@ void EditorLayer::onScenePlay() {
     _activeScene->onRuntimeStart();
 }
 
+void EditorLayer::onSceneSimulate() {
+    if (_sceneState == SceneState::PLAY) {
+        onSceneStop();
+    }
+
+    _sceneState = SceneState::SIMULATE;
+
+    // Make a copy of the editor scene
+    _simulateScene = PepperMint::Scene::Copy(_editorScene);
+    _simulateScene->setName("Simulate");
+
+    // Switch active scene
+    _activeScene = _simulateScene;
+    _activeScene->onSimulateStart();
+}
+
 void EditorLayer::onSceneStop() {
+    PM_CORE_ASSERT((_sceneState == SceneState::PLAY) || (_sceneState == SceneState::SIMULATE));
+
+    if (_sceneState == SceneState::PLAY) {
+        _activeScene->onRuntimeStop();
+    } else if (_sceneState == SceneState::SIMULATE) {
+        _activeScene->onSimulateStop();
+    }
+
     _sceneState = SceneState::EDIT;
 
     // Switch active scene

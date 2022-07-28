@@ -111,7 +111,28 @@ Entity Scene::createEntityWithUUID(const UUID& iUUID, const std::string& iName) 
 
 void Scene::destroyEntity(Entity iEntity) { _registry.destroy(iEntity); }
 
-void Scene::onRuntimeStart() {
+void Scene::onRuntimeStart() { onPhysics2DStart(); }
+
+void Scene::onRuntimeStop() { onPhysics2DStop(); }
+
+void Scene::onSimulateStart() { onPhysics2DStart(); }
+
+void Scene::onSimulateStop() { onPhysics2DStop(); }
+
+void Scene::onUpdateRuntime(Timestep iTimestep) {
+    onUpdateScript(iTimestep);
+    onUpdatePhysics2D(iTimestep);
+    renderRuntimeScene();
+}
+
+void Scene::onUpdateSimulate(Timestep iTimestep, const EditorCamera& iCamera) {
+    onUpdatePhysics2D(iTimestep);
+    renderEditorScene(iCamera);
+}
+
+void Scene::onUpdateEditor(Timestep iTimestep, const EditorCamera& iCamera) { renderEditorScene(iCamera); }
+
+void Scene::onPhysics2DStart() {
     _physicsWorld = new b2World({0.0f, -9.8f});
 
     auto&& physicsView = getAllEntitiesWith<RigidBody2DComponent>();
@@ -162,29 +183,12 @@ void Scene::onRuntimeStart() {
     }
 }
 
-void Scene::onRuntimeStop() {
+void Scene::onPhysics2DStop() {
     delete _physicsWorld;
     _physicsWorld = nullptr;
 }
 
-void Scene::onUpdateRuntime(Timestep iTimestep) {
-    // Update scripts
-    auto&& scriptView = getAllEntitiesWith<NativeScriptComponent>();
-    for (auto&& entity : scriptView) {
-        auto&& scriptComponent = scriptView.get<NativeScriptComponent>(entity);
-
-        // TODO: Move to Scene onScenePlay
-        if (!scriptComponent.script) {
-            scriptComponent.script = scriptComponent.instantiateScript();
-            PM_CORE_ASSERT(scriptComponent.script, "Error while instantiating script!");
-            scriptComponent.script->_entity = Entity(entity, this);
-            scriptComponent.script->onCreate();
-        }
-
-        scriptComponent.script->onUpdate(iTimestep);
-    }
-
-    // Physics
+void Scene::onUpdatePhysics2D(Timestep iTimestep) {
     if (_physicsWorld) {
         const int32_t velocityIterations = 6;
         const int32_t positionIterations = 2;
@@ -204,8 +208,26 @@ void Scene::onUpdateRuntime(Timestep iTimestep) {
             transform.rotation.z    = rotation;
         }
     }
+}
 
-    // Render 2D
+void Scene::onUpdateScript(Timestep iTimestep) {
+    auto&& scriptView = getAllEntitiesWith<NativeScriptComponent>();
+    for (auto&& entity : scriptView) {
+        auto&& scriptComponent = scriptView.get<NativeScriptComponent>(entity);
+
+        // TODO: Move to Scene onScenePlay
+        if (!scriptComponent.script) {
+            scriptComponent.script = scriptComponent.instantiateScript();
+            PM_CORE_ASSERT(scriptComponent.script, "Error while instantiating script!");
+            scriptComponent.script->_entity = Entity(entity, this);
+            scriptComponent.script->onCreate();
+        }
+
+        scriptComponent.script->onUpdate(iTimestep);
+    }
+}
+
+void Scene::renderRuntimeScene() {
     Camera*   mainCamera = nullptr;
     glm::mat4 cameraTransform;
 
@@ -245,7 +267,7 @@ void Scene::onUpdateRuntime(Timestep iTimestep) {
     }
 }
 
-void Scene::onUpdateEditor(Timestep iTimestep, EditorCamera& iCamera) {
+void Scene::renderEditorScene(const EditorCamera& iCamera) {
     Renderer2D::BeginScene(iCamera);
     {
         // Draw Sprites
