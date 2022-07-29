@@ -327,7 +327,7 @@ void Scene::duplicateEntity(Entity iEntity) {
 ///////////////////////////////////////
 template <typename Component>
 void Scene::onAddComponent(Entity iEntity, Component& ioComponent) {
-    static_assert(false);
+    static_assert(sizeof(Component) == 0);
 }
 
 template <>

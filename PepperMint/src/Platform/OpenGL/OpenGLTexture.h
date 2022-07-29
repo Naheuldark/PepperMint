@@ -22,7 +22,7 @@ class OpenGLTexture2D : public Texture2D {
 
     bool isLoaded() const override { return _isLoaded; }
 
-    bool operator==(const Texture& iOther) const override { return _rendererId == ((OpenGLTexture2D&)iOther)._rendererId; }
+    bool operator==(const Texture& iOther) const override { return _rendererId == iOther.rendererId(); }
 
   private:
     std::string _path;

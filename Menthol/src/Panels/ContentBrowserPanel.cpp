@@ -35,8 +35,7 @@ void ContentBrowserPanel::onImGuiRender() {
 
         for (auto&& directoryEntry : std::filesystem::directory_iterator(_currentDirectory)) {
             auto&& path           = directoryEntry.path();
-            auto&& relativePath   = std::filesystem::relative(path, xASSET_PATH);
-            auto&& filenameString = relativePath.filename().string();
+            auto&& filenameString = path.filename().string();
 
             ImGui::PushID(filenameString.c_str());
 
@@ -48,7 +47,8 @@ void ContentBrowserPanel::onImGuiRender() {
                                {0, 1},
                                {1, 0});
             if (ImGui::BeginDragDropSource()) {
-                const wchar_t* itemPath = relativePath.c_str();
+                auto&&         relativePath = std::filesystem::relative(path, xASSET_PATH);
+                const wchar_t* itemPath     = relativePath.c_str();
 
                 ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
                 ImGui::EndDragDropSource();
