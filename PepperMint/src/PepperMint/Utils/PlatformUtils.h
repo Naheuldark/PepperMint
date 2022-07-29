@@ -10,4 +10,9 @@ class FileDialogs {
     static std::string OpenFile(const char* iFilter);
     static std::string SaveFile(const char* iFilter);
 };
+
+class Time {
+  public:
+    static float GetTime();
+};
 }

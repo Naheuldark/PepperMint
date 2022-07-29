@@ -1,10 +1,9 @@
 #include "pmpch.h"
 
-#include <GLFW/glfw3.h>
-
 #include "PepperMint/Core/Application.h"
 #include "PepperMint/Core/Input.h"
 #include "PepperMint/Renderer/Renderer.h"
+#include "PepperMint/Utils/PlatformUtils.h"
 
 namespace PepperMint {
 
@@ -37,7 +36,7 @@ void Application::run() {
     while (_running) {
         PM_PROFILE_SCOPE("Run Loop");
 
-        float    time     = (float)glfwGetTime();
+        float    time     = Time::GetTime();
         Timestep timestep = time - _lastFrameTime;
         _lastFrameTime    = time;
 

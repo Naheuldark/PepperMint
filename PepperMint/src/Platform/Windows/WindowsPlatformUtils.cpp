@@ -56,4 +56,6 @@ std::string FileDialogs::SaveFile(const char* iFilter) {
     }
     return std::string();
 }
+
+float Time::GetTime() { return glfwGetTime(); }
 }
