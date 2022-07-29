@@ -88,6 +88,11 @@ void main() {
 		case 30: texColor *= texture(uTextures[30], inVertex.texCoord * inVertex.tilingFactor); break;
 		case 31: texColor *= texture(uTextures[31], inVertex.texCoord * inVertex.tilingFactor); break;
 	}
+
+	if (texColor.a == 0.0) {
+		discard;
+	}
+
 	oColor = texColor;
 	oEntityId = vEntityId;
 }
