@@ -44,6 +44,8 @@ void EditorLayer::onAttach() {
     _viewportPanel.setFrameBuffer(_frameBuffer);
     _viewportPanel.setActiveScene(_activeScene);
     _sceneHierarchyPanel.setContext(_activeScene);
+
+    PepperMint::Renderer2D::SetLineWidth(4.0f);
 }
 
 void EditorLayer::onDetach() { PM_PROFILE_FUNCTION(); }
@@ -320,6 +322,14 @@ void EditorLayer::onOverlayRender() {
         }
     }
 
+    // Selected Entity
+    {
+        if (auto&& selectedEntity = _sceneHierarchyPanel.selectedEntity()) {
+            auto&& transformComponent = selectedEntity.get<PepperMint::TransformComponent>();
+            PepperMint::Renderer2D::DrawRect(transformComponent.transform(), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
+        }
+    }
+
     PepperMint::Renderer2D::EndScene();
 }
 
@@ -408,6 +418,7 @@ void EditorLayer::onScenePlay() {
     // Switch active scene
     _activeScene = _runtimeScene;
     _activeScene->onRuntimeStart();
+    _viewportPanel.setActiveScene(_activeScene);
 }
 
 void EditorLayer::onSceneSimulate() {
@@ -424,6 +435,7 @@ void EditorLayer::onSceneSimulate() {
     // Switch active scene
     _activeScene = _simulateScene;
     _activeScene->onSimulateStart();
+    _viewportPanel.setActiveScene(_activeScene);
 }
 
 void EditorLayer::onSceneStop() {
@@ -438,9 +450,11 @@ void EditorLayer::onSceneStop() {
     _sceneState = SceneState::EDIT;
 
     // Switch active scene
-    _activeScene  = _editorScene;
-    _runtimeScene = nullptr;
-    _activeScene->onRuntimeStop();
+    _activeScene = _editorScene;
+    _viewportPanel.setActiveScene(_activeScene);
+
+    _runtimeScene  = nullptr;
+    _simulateScene = nullptr;
 }
 
 bool EditorLayer::onMouseButtonPressed(PepperMint::MouseButtonPressedEvent& iEvent) {
