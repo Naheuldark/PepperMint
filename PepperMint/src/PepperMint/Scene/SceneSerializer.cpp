@@ -10,6 +10,16 @@
 #include "PepperMint/Scene/Entity.h"
 #include "PepperMint/Scene/SceneSerializer.h"
 
+#define updateComponent(node, element, type) \
+    if (node) {                              \
+        element = node.as<type>();           \
+    }
+
+#define updateComponentEnum(node, element, type, cast) \
+    if (node) {                                        \
+        element = (cast)node.as<type>();               \
+    }
+
 namespace YAML {
 
 template <>
@@ -105,20 +115,15 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& v) {
 void serializeTagComponent(YAML::Emitter& out, const TagComponent& iComponent) {
     out << YAML::Key << "TagComponent";
     out << YAML::BeginMap;
-    out << YAML::Key << "Tag" << YAML::Value << iComponent.tag;
+    { out << YAML::Key << "Tag" << YAML::Value << iComponent.tag; }
     out << YAML::EndMap;
 }
 
 void deserializeTagComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
-    auto&& serializedComponent = iSerializedEntity["TagComponent"];
-    if (serializedComponent) {
-        auto&& tag = serializedComponent["Tag"].as<std::string>();
+    if (auto&& serializedComponent = iSerializedEntity["TagComponent"]) {
+        auto&& tagComponent = ioDeserializedEntity.addOrReplace<TagComponent>();
 
-        if (ioDeserializedEntity.has<TagComponent>()) {
-            ioDeserializedEntity.get<TagComponent>().tag = tag;
-        } else {
-            ioDeserializedEntity.add<TagComponent>(tag);
-        }
+        updateComponent(serializedComponent["Tag"], tagComponent.tag, std::string);
     }
 }
 
@@ -135,19 +140,12 @@ void serializeTransformComponent(YAML::Emitter& out, const TransformComponent& i
 }
 
 void deserializeTransformComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
-    auto&& serializedComponent = iSerializedEntity["TransformComponent"];
-    if (serializedComponent) {
-        auto&& translation = serializedComponent["Translation"].as<glm::vec3>();
-        auto&& rotation    = serializedComponent["Rotation"].as<glm::vec3>();
-        auto&& scale       = serializedComponent["Scale"].as<glm::vec3>();
+    if (auto&& serializedComponent = iSerializedEntity["TransformComponent"]) {
+        auto&& transformComponent = ioDeserializedEntity.addOrReplace<TransformComponent>();
 
-        if (ioDeserializedEntity.has<TransformComponent>()) {
-            ioDeserializedEntity.get<TransformComponent>().translation = translation;
-            ioDeserializedEntity.get<TransformComponent>().rotation    = rotation;
-            ioDeserializedEntity.get<TransformComponent>().scale       = scale;
-        } else {
-            ioDeserializedEntity.add<TransformComponent>(translation, rotation, scale);
-        }
+        updateComponent(serializedComponent["Translation"], transformComponent.translation, glm::vec3);
+        updateComponent(serializedComponent["Rotation"], transformComponent.rotation, glm::vec3);
+        updateComponent(serializedComponent["Scale"], transformComponent.scale, glm::vec3);
     }
 }
 
@@ -155,19 +153,25 @@ void deserializeTransformComponent(const YAML::Node& iSerializedEntity, Entity i
 void serializeSpriteRendererComponent(YAML::Emitter& out, const SpriteRendererComponent& iComponent) {
     out << YAML::Key << "SpriteRendererComponent";
     out << YAML::BeginMap;
-    out << YAML::Key << "Color" << YAML::Value << iComponent.color;
+    {
+        out << YAML::Key << "Color" << YAML::Value << iComponent.color;
+        if (iComponent.texture) {
+            out << YAML::Key << "TexturePath" << YAML::Value << iComponent.texture->path();
+        }
+        out << YAML::Key << "TilingFactor" << YAML::Value << iComponent.tilingFactor;
+    }
     out << YAML::EndMap;
 }
 
 void deserializeSpriteRendererComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
-    auto&& serializedComponent = iSerializedEntity["SpriteRendererComponent"];
-    if (serializedComponent) {
-        auto&& color = serializedComponent["Color"].as<glm::vec4>();
+    if (auto&& serializedComponent = iSerializedEntity["SpriteRendererComponent"]) {
+        auto&& spriteRendererComponent = ioDeserializedEntity.addOrReplace<SpriteRendererComponent>();
 
-        if (ioDeserializedEntity.has<SpriteRendererComponent>()) {
-            ioDeserializedEntity.get<SpriteRendererComponent>().color = color;
-        } else {
-            ioDeserializedEntity.add<SpriteRendererComponent>(color);
+        updateComponent(serializedComponent["Color"], spriteRendererComponent.color, glm::vec4);
+        updateComponent(serializedComponent["TilingFactor"], spriteRendererComponent.tilingFactor, float);
+
+        if (serializedComponent["TexturePath"]) {
+            spriteRendererComponent.texture = Texture2D::Create(serializedComponent["TexturePath"].as<std::string>());
         }
     }
 }
@@ -176,26 +180,21 @@ void deserializeSpriteRendererComponent(const YAML::Node& iSerializedEntity, Ent
 void serializeCircleRendererComponent(YAML::Emitter& out, const CircleRendererComponent& iComponent) {
     out << YAML::Key << "CircleRendererComponent";
     out << YAML::BeginMap;
-    out << YAML::Key << "Color" << YAML::Value << iComponent.color;
-    out << YAML::Key << "Thickness" << YAML::Value << iComponent.thickness;
-    out << YAML::Key << "Fade" << YAML::Value << iComponent.fade;
+    {
+        out << YAML::Key << "Color" << YAML::Value << iComponent.color;
+        out << YAML::Key << "Thickness" << YAML::Value << iComponent.thickness;
+        out << YAML::Key << "Fade" << YAML::Value << iComponent.fade;
+    }
     out << YAML::EndMap;
 }
 
 void deserializeCircleRendererComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
-    auto&& serializedComponent = iSerializedEntity["CircleRendererComponent"];
-    if (serializedComponent) {
-        auto&& color     = serializedComponent["Color"].as<glm::vec4>();
-        auto&& thickness = serializedComponent["Thickness"].as<float>();
-        auto&& fade      = serializedComponent["Fade"].as<float>();
+    if (auto&& serializedComponent = iSerializedEntity["CircleRendererComponent"]) {
+        auto&& circleRendererComponent = ioDeserializedEntity.addOrReplace<CircleRendererComponent>();
 
-        if (ioDeserializedEntity.has<CircleRendererComponent>()) {
-            ioDeserializedEntity.get<CircleRendererComponent>().color     = color;
-            ioDeserializedEntity.get<CircleRendererComponent>().thickness = thickness;
-            ioDeserializedEntity.get<CircleRendererComponent>().fade      = fade;
-        } else {
-            ioDeserializedEntity.add<CircleRendererComponent>(color, thickness, fade);
-        }
+        updateComponent(serializedComponent["Color"], circleRendererComponent.color, glm::vec4);
+        updateComponent(serializedComponent["Thickness"], circleRendererComponent.thickness, float);
+        updateComponent(serializedComponent["Fade"], circleRendererComponent.fade, float);
     }
 }
 
@@ -223,27 +222,13 @@ void serializeCameraComponent(YAML::Emitter& out, const CameraComponent& iCompon
 }
 
 void deserializeCameraComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
-    auto&& serializedComponent = iSerializedEntity["CameraComponent"];
-    if (serializedComponent) {
-        auto&& camera           = serializedComponent["Camera"];
-        auto&& primary          = serializedComponent["Primary"].as<bool>();
-        auto&& fixedAspectRatio = serializedComponent["FixedAspectRatio"].as<bool>();
+    if (auto&& serializedComponent = iSerializedEntity["CameraComponent"]) {
+        auto&& cameraComponent = ioDeserializedEntity.addOrReplace<CameraComponent>();
 
-        if (ioDeserializedEntity.has<CameraComponent>()) {
-            ioDeserializedEntity.get<CameraComponent>().camera.setProjectionType((SceneCamera::ProjectionType)camera["ProjectionType"].as<int>());
+        updateComponent(serializedComponent["Primary"], cameraComponent.primary, bool);
+        updateComponent(serializedComponent["FixedAspectRatio"], cameraComponent.fixedAspectRatio, bool);
 
-            ioDeserializedEntity.get<CameraComponent>().camera.setPerspectiveVerticalFOV(camera["PerspectiveFOV"].as<float>());
-            ioDeserializedEntity.get<CameraComponent>().camera.setPerspectiveNearClip(camera["PerspectiveNear"].as<float>());
-            ioDeserializedEntity.get<CameraComponent>().camera.setPerspectiveFarClip(camera["PerspectiveFar"].as<float>());
-
-            ioDeserializedEntity.get<CameraComponent>().camera.setOrthographicSize(camera["OrthographicSize"].as<float>());
-            ioDeserializedEntity.get<CameraComponent>().camera.setOrthographicNearClip(camera["OrthographicNear"].as<float>());
-            ioDeserializedEntity.get<CameraComponent>().camera.setOrthographicFarClip(camera["OrthographicFar"].as<float>());
-
-            ioDeserializedEntity.get<CameraComponent>().primary          = primary;
-            ioDeserializedEntity.get<CameraComponent>().fixedAspectRatio = fixedAspectRatio;
-        } else {
-            auto&& cameraComponent = ioDeserializedEntity.add<CameraComponent>();
+        if (auto&& camera = serializedComponent["Camera"]) {
             cameraComponent.camera.setProjectionType((SceneCamera::ProjectionType)camera["ProjectionType"].as<int>());
 
             cameraComponent.camera.setPerspectiveVerticalFOV(camera["PerspectiveFOV"].as<float>());
@@ -253,9 +238,6 @@ void deserializeCameraComponent(const YAML::Node& iSerializedEntity, Entity ioDe
             cameraComponent.camera.setOrthographicSize(camera["OrthographicSize"].as<float>());
             cameraComponent.camera.setOrthographicNearClip(camera["OrthographicNear"].as<float>());
             cameraComponent.camera.setOrthographicFarClip(camera["OrthographicFar"].as<float>());
-
-            cameraComponent.primary          = primary;
-            cameraComponent.fixedAspectRatio = fixedAspectRatio;
         }
     }
 }
@@ -264,7 +246,9 @@ void deserializeCameraComponent(const YAML::Node& iSerializedEntity, Entity ioDe
 void serializeNativeScriptComponent(YAML::Emitter& out, const NativeScriptComponent& iComponent) {
     out << YAML::Key << "NativeScriptComponent";
     out << YAML::BeginMap;
-    out << YAML::Key << "Script" << YAML::Value << "Script"; // TODO
+    {
+        out << YAML::Key << "Script" << YAML::Value << "Script"; // TODO
+    }
     out << YAML::EndMap;
 }
 
@@ -274,25 +258,19 @@ void deserializeNativeScriptComponent(const YAML::Node& iSerializedEntity, Entit
 void serializeRigidBody2DComponent(YAML::Emitter& out, const RigidBody2DComponent& iComponent) {
     out << YAML::Key << "RigidBody2DComponent";
     out << YAML::BeginMap;
-    out << YAML::Key << "BodyType" << YAML::Value << (int)iComponent.type;
-    out << YAML::Key << "FixedRotation" << YAML::Value << iComponent.fixedRotation;
+    {
+        out << YAML::Key << "BodyType" << YAML::Value << (int)iComponent.type;
+        out << YAML::Key << "FixedRotation" << YAML::Value << iComponent.fixedRotation;
+    }
     out << YAML::EndMap;
 }
 
 void deserializeRigidBody2DComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
-    auto&& serializedComponent = iSerializedEntity["RigidBody2DComponent"];
-    if (serializedComponent) {
-        auto&& bodyType      = serializedComponent["BodyType"].as<int>();
-        auto&& fixedRotation = serializedComponent["FixedRotation"].as<bool>();
+    if (auto&& serializedComponent = iSerializedEntity["RigidBody2DComponent"]) {
+        auto&& rigidBody2DComponent = ioDeserializedEntity.addOrReplace<RigidBody2DComponent>();
 
-        if (ioDeserializedEntity.has<RigidBody2DComponent>()) {
-            ioDeserializedEntity.get<RigidBody2DComponent>().type          = (RigidBody2DComponent::BodyType)bodyType;
-            ioDeserializedEntity.get<RigidBody2DComponent>().fixedRotation = fixedRotation;
-        } else {
-            auto&& rigidBodyComponent        = ioDeserializedEntity.add<RigidBody2DComponent>();
-            rigidBodyComponent.type          = (RigidBody2DComponent::BodyType)bodyType;
-            rigidBodyComponent.fixedRotation = fixedRotation;
-        }
+        updateComponentEnum(serializedComponent["BodyType"], rigidBody2DComponent.type, int, RigidBody2DComponent::BodyType);
+        updateComponent(serializedComponent["FixedRotation"], rigidBody2DComponent.fixedRotation, bool);
     }
 }
 
@@ -300,41 +278,27 @@ void deserializeRigidBody2DComponent(const YAML::Node& iSerializedEntity, Entity
 void serializeBoxCollider2DComponent(YAML::Emitter& out, const BoxCollider2DComponent& iComponent) {
     out << YAML::Key << "BoxCollider2DComponent";
     out << YAML::BeginMap;
-    out << YAML::Key << "Offset" << YAML::Value << iComponent.offset;
-    out << YAML::Key << "Size" << YAML::Value << iComponent.size;
-    out << YAML::Key << "Density" << YAML::Value << iComponent.density;
-    out << YAML::Key << "Friction" << YAML::Value << iComponent.friction;
-    out << YAML::Key << "Restitution" << YAML::Value << iComponent.restitution;
-    out << YAML::Key << "RestitutionThreshold" << YAML::Value << iComponent.restitutionThreshold;
+    {
+        out << YAML::Key << "Offset" << YAML::Value << iComponent.offset;
+        out << YAML::Key << "Size" << YAML::Value << iComponent.size;
+        out << YAML::Key << "Density" << YAML::Value << iComponent.density;
+        out << YAML::Key << "Friction" << YAML::Value << iComponent.friction;
+        out << YAML::Key << "Restitution" << YAML::Value << iComponent.restitution;
+        out << YAML::Key << "RestitutionThreshold" << YAML::Value << iComponent.restitutionThreshold;
+    }
     out << YAML::EndMap;
 }
 
 void deserializeBoxCollider2DComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
-    auto&& serializedComponent = iSerializedEntity["BoxCollider2DComponent"];
-    if (serializedComponent) {
-        auto&& offset               = serializedComponent["Offset"].as<glm::vec2>();
-        auto&& size                 = serializedComponent["Size"].as<glm::vec2>();
-        auto&& density              = serializedComponent["Density"].as<float>();
-        auto&& friction             = serializedComponent["Friction"].as<float>();
-        auto&& restitution          = serializedComponent["Restitution"].as<float>();
-        auto&& restitutionThreshold = serializedComponent["RestitutionThreshold"].as<float>();
+    if (auto&& serializedComponent = iSerializedEntity["BoxCollider2DComponent"]) {
+        auto&& boxCollider2DComponent = ioDeserializedEntity.addOrReplace<BoxCollider2DComponent>();
 
-        if (ioDeserializedEntity.has<BoxCollider2DComponent>()) {
-            ioDeserializedEntity.get<BoxCollider2DComponent>().offset               = offset;
-            ioDeserializedEntity.get<BoxCollider2DComponent>().size                 = size;
-            ioDeserializedEntity.get<BoxCollider2DComponent>().density              = density;
-            ioDeserializedEntity.get<BoxCollider2DComponent>().friction             = friction;
-            ioDeserializedEntity.get<BoxCollider2DComponent>().restitution          = restitution;
-            ioDeserializedEntity.get<BoxCollider2DComponent>().restitutionThreshold = restitutionThreshold;
-        } else {
-            auto&& boxColliderComponent               = ioDeserializedEntity.add<BoxCollider2DComponent>();
-            boxColliderComponent.offset               = offset;
-            boxColliderComponent.size                 = size;
-            boxColliderComponent.density              = density;
-            boxColliderComponent.friction             = friction;
-            boxColliderComponent.restitution          = restitution;
-            boxColliderComponent.restitutionThreshold = restitutionThreshold;
-        }
+        updateComponent(serializedComponent["Offset"], boxCollider2DComponent.offset, glm::vec2);
+        updateComponent(serializedComponent["Size"], boxCollider2DComponent.size, glm::vec2);
+        updateComponent(serializedComponent["Density"], boxCollider2DComponent.density, float);
+        updateComponent(serializedComponent["Friction"], boxCollider2DComponent.friction, float);
+        updateComponent(serializedComponent["Restitution"], boxCollider2DComponent.restitution, float);
+        updateComponent(serializedComponent["RestitutionThreshold"], boxCollider2DComponent.restitutionThreshold, float);
     }
 }
 
@@ -342,41 +306,27 @@ void deserializeBoxCollider2DComponent(const YAML::Node& iSerializedEntity, Enti
 void serializeCircleCollider2DComponent(YAML::Emitter& out, const CircleCollider2DComponent& iComponent) {
     out << YAML::Key << "CircleCollider2DComponent";
     out << YAML::BeginMap;
-    out << YAML::Key << "Offset" << YAML::Value << iComponent.offset;
-    out << YAML::Key << "Radius" << YAML::Value << iComponent.radius;
-    out << YAML::Key << "Density" << YAML::Value << iComponent.density;
-    out << YAML::Key << "Friction" << YAML::Value << iComponent.friction;
-    out << YAML::Key << "Restitution" << YAML::Value << iComponent.restitution;
-    out << YAML::Key << "RestitutionThreshold" << YAML::Value << iComponent.restitutionThreshold;
+    {
+        out << YAML::Key << "Offset" << YAML::Value << iComponent.offset;
+        out << YAML::Key << "Radius" << YAML::Value << iComponent.radius;
+        out << YAML::Key << "Density" << YAML::Value << iComponent.density;
+        out << YAML::Key << "Friction" << YAML::Value << iComponent.friction;
+        out << YAML::Key << "Restitution" << YAML::Value << iComponent.restitution;
+        out << YAML::Key << "RestitutionThreshold" << YAML::Value << iComponent.restitutionThreshold;
+    }
     out << YAML::EndMap;
 }
 
 void deserializeCircleCollider2DComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
-    auto&& serializedComponent = iSerializedEntity["CircleCollider2DComponent"];
-    if (serializedComponent) {
-        auto&& offset               = serializedComponent["Offset"].as<glm::vec2>();
-        auto&& radius               = serializedComponent["Radius"].as<float>();
-        auto&& density              = serializedComponent["Density"].as<float>();
-        auto&& friction             = serializedComponent["Friction"].as<float>();
-        auto&& restitution          = serializedComponent["Restitution"].as<float>();
-        auto&& restitutionThreshold = serializedComponent["RestitutionThreshold"].as<float>();
+    if (auto&& serializedComponent = iSerializedEntity["CircleCollider2DComponent"]) {
+        auto&& circleCollider2DComponent = ioDeserializedEntity.addOrReplace<CircleCollider2DComponent>();
 
-        if (ioDeserializedEntity.has<CircleCollider2DComponent>()) {
-            ioDeserializedEntity.get<CircleCollider2DComponent>().offset               = offset;
-            ioDeserializedEntity.get<CircleCollider2DComponent>().radius               = radius;
-            ioDeserializedEntity.get<CircleCollider2DComponent>().density              = density;
-            ioDeserializedEntity.get<CircleCollider2DComponent>().friction             = friction;
-            ioDeserializedEntity.get<CircleCollider2DComponent>().restitution          = restitution;
-            ioDeserializedEntity.get<CircleCollider2DComponent>().restitutionThreshold = restitutionThreshold;
-        } else {
-            auto&& boxColliderComponent               = ioDeserializedEntity.add<CircleCollider2DComponent>();
-            boxColliderComponent.offset               = offset;
-            boxColliderComponent.radius               = radius;
-            boxColliderComponent.density              = density;
-            boxColliderComponent.friction             = friction;
-            boxColliderComponent.restitution          = restitution;
-            boxColliderComponent.restitutionThreshold = restitutionThreshold;
-        }
+        updateComponent(serializedComponent["Offset"], circleCollider2DComponent.offset, glm::vec2);
+        updateComponent(serializedComponent["Radius"], circleCollider2DComponent.radius, float);
+        updateComponent(serializedComponent["Density"], circleCollider2DComponent.density, float);
+        updateComponent(serializedComponent["Friction"], circleCollider2DComponent.friction, float);
+        updateComponent(serializedComponent["Restitution"], circleCollider2DComponent.restitution, float);
+        updateComponent(serializedComponent["RestitutionThreshold"], circleCollider2DComponent.restitutionThreshold, float);
     }
 }
 

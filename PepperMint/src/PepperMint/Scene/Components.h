@@ -29,7 +29,6 @@ struct TagComponent {
 
     TagComponent()                    = default;
     TagComponent(const TagComponent&) = default;
-    TagComponent(const std::string& iTag) : tag(iTag) {}
 };
 
 struct TransformComponent {
@@ -39,8 +38,6 @@ struct TransformComponent {
 
     TransformComponent()                          = default;
     TransformComponent(const TransformComponent&) = default;
-    TransformComponent(const glm::vec3& iTranslation, const glm::vec3& iRotation = {0.0f, 0.0f, 0.0f}, const glm::vec3& iScale = {1.0f, 1.0f, 1.0f})
-        : translation(iTranslation), rotation(iRotation), scale(iScale) {}
 
     glm::mat4 transform() const {
         auto&& translate = glm::translate(glm::mat4(1.0f), translation);
@@ -58,7 +55,6 @@ struct SpriteRendererComponent {
 
     SpriteRendererComponent()                               = default;
     SpriteRendererComponent(const SpriteRendererComponent&) = default;
-    SpriteRendererComponent(const glm::vec4& iColor) : color(iColor) {}
 };
 
 struct CircleRendererComponent {

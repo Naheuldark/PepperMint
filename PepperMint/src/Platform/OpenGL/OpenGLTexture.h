@@ -12,9 +12,10 @@ class OpenGLTexture2D : public Texture2D {
     OpenGLTexture2D(const std::string& iPath);
     ~OpenGLTexture2D() override;
 
-    uint32_t width() const override { return _width; }
-    uint32_t height() const override { return _height; }
-    uint32_t rendererId() const override { return _rendererId; }
+    uint32_t           width() const override { return _width; }
+    uint32_t           height() const override { return _height; }
+    uint32_t           rendererId() const override { return _rendererId; }
+    const std::string& path() const override { return _path; }
 
     void setData(void* iData, uint32_t iSize) override;
 

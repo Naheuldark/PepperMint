@@ -9,6 +9,8 @@ Entities:
       Scale: [0.999999762, 0.999999762, 1]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
+      TexturePath: assets\textures\ChernoLogo.png
+      TilingFactor: 1
     RigidBody2DComponent:
       BodyType: 1
       FixedRotation: false
@@ -49,6 +51,7 @@ Entities:
       Scale: [1, 1, 1]
     SpriteRendererComponent:
       Color: [0, 1, 0.0795452595, 1]
+      TilingFactor: 1
     CameraComponent:
       Camera:
         ProjectionType: 0
@@ -69,6 +72,7 @@ Entities:
       Scale: [19.9999905, 1, 1]
     SpriteRendererComponent:
       Color: [0, 0.93249321, 1, 1]
+      TilingFactor: 1
     RigidBody2DComponent:
       BodyType: 0
       FixedRotation: false
@@ -88,6 +92,7 @@ Entities:
       Scale: [20, 1, 1]
     SpriteRendererComponent:
       Color: [1, 0, 6.00814819e-05, 1]
+      TilingFactor: 1
     RigidBody2DComponent:
       BodyType: 0
       FixedRotation: false
