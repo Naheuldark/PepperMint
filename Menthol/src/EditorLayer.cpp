@@ -42,7 +42,7 @@ void EditorLayer::onAttach() {
 
     _viewportPanel.editorCamera() = PepperMint::EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
     _viewportPanel.setFrameBuffer(_frameBuffer);
-    _viewportPanel.setActiveScene(_activeScene);
+    _viewportPanel.setContext(_activeScene);
     _sceneHierarchyPanel.setContext(_activeScene);
 
     PepperMint::Renderer2D::SetLineWidth(4.0f);
@@ -412,13 +412,13 @@ void EditorLayer::onScenePlay() {
     _sceneState = SceneState::PLAY;
 
     // Make a copy of the editor scene
-    _runtimeScene = PepperMint::Scene::Copy(_editorScene);
-    _runtimeScene->setName("Runtime");
+    _activeScene = PepperMint::Scene::Copy(_editorScene);
+    _activeScene->setName("Runtime");
 
-    // Switch active scene
-    _activeScene = _runtimeScene;
+    // Start runtime
     _activeScene->onRuntimeStart();
-    _viewportPanel.setActiveScene(_activeScene);
+    _sceneHierarchyPanel.setContext(_activeScene);
+    _viewportPanel.setContext(_activeScene);
 }
 
 void EditorLayer::onSceneSimulate() {
@@ -429,13 +429,13 @@ void EditorLayer::onSceneSimulate() {
     _sceneState = SceneState::SIMULATE;
 
     // Make a copy of the editor scene
-    _simulateScene = PepperMint::Scene::Copy(_editorScene);
-    _simulateScene->setName("Simulate");
+    _activeScene = PepperMint::Scene::Copy(_editorScene);
+    _activeScene->setName("Simulate");
 
-    // Switch active scene
-    _activeScene = _simulateScene;
+    // Start simulation
     _activeScene->onSimulateStart();
-    _viewportPanel.setActiveScene(_activeScene);
+    _sceneHierarchyPanel.setContext(_activeScene);
+    _viewportPanel.setContext(_activeScene);
 }
 
 void EditorLayer::onSceneStop() {
@@ -449,12 +449,30 @@ void EditorLayer::onSceneStop() {
 
     _sceneState = SceneState::EDIT;
 
+    // Save potential selected entity during play or simulate
+    PepperMint::UUID selectedEntityUUID;
+    if (_viewportPanel.selectedEntity()) {
+        selectedEntityUUID = _viewportPanel.selectedEntity().uuid();
+    } else if (_sceneHierarchyPanel.selectedEntity()) {
+        selectedEntityUUID = _sceneHierarchyPanel.selectedEntity().uuid();
+    }
+
     // Switch active scene
     _activeScene = _editorScene;
-    _viewportPanel.setActiveScene(_activeScene);
+    _sceneHierarchyPanel.setContext(_activeScene);
+    _viewportPanel.setContext(_activeScene);
 
-    _runtimeScene  = nullptr;
-    _simulateScene = nullptr;
+    // Restore selected entity
+    if (_viewportPanel.selectedEntity() || _sceneHierarchyPanel.selectedEntity()) {
+        auto&& view = _activeScene->getAllEntitiesWith<PepperMint::IdComponent>();
+        for (auto&& entity : view) {
+            if (view.get<PepperMint::IdComponent>(entity).uuid == selectedEntityUUID) {
+                _viewportPanel.setSelectedEntity(PepperMint::Entity(entity, _activeScene.get()));
+                _sceneHierarchyPanel.setSelectedEntity(PepperMint::Entity(entity, _activeScene.get()));
+                break;
+            }
+        }
+    }
 }
 
 bool EditorLayer::onMouseButtonPressed(PepperMint::MouseButtonPressedEvent& iEvent) {
@@ -481,7 +499,7 @@ void EditorLayer::newScene() {
     auto&& viewportsize = _viewportPanel.viewportSize();
     _activeScene->onViewportResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
 
-    _viewportPanel.setActiveScene(_activeScene);
+    _viewportPanel.setContext(_activeScene);
     _sceneHierarchyPanel.setContext(_activeScene);
     _statisticsPanel.setCurrentFile("");
 }
@@ -511,7 +529,7 @@ void EditorLayer::openScene(const std::filesystem::path& iPath) {
         auto&& viewportsize = _viewportPanel.viewportSize();
         _activeScene->onViewportResize((uint32_t)viewportsize.x, (uint32_t)viewportsize.y);
 
-        _viewportPanel.setActiveScene(_activeScene);
+        _viewportPanel.setContext(_activeScene);
         _sceneHierarchyPanel.setContext(_activeScene);
         _statisticsPanel.setCurrentFile(iPath.string());
     }

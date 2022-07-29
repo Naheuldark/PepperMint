@@ -25,14 +25,14 @@ class ViewportPanel {
     void setEditorMode(bool iEditorMode) { _editorMode = iEditorMode; }
     void setSelectedEntity(PepperMint::Entity iSelectedEntity) { _selectedEntity = iSelectedEntity; }
     void setFrameBuffer(const PepperMint::Ref<PepperMint::FrameBuffer>& iFrameBuffer) { _frameBuffer = iFrameBuffer; }
-    void setActiveScene(const PepperMint::Ref<PepperMint::Scene>& iActiveScene) { _activeScene = iActiveScene; }
+    void setContext(const PepperMint::Ref<PepperMint::Scene>& iContext) { _context = iContext; }
 
   private:
     PepperMint::Entity       _selectedEntity{};
     PepperMint::EditorCamera _editorCamera;
 
     PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
-    PepperMint::Ref<PepperMint::Scene>       _activeScene;
+    PepperMint::Ref<PepperMint::Scene>       _context;
 
     // Viewport
     glm::vec2 _viewportSize = {0.0f, 0.0f};

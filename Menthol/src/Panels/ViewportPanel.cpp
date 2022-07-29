@@ -25,7 +25,7 @@ void ViewportPanel::onUpdate(PepperMint::Timestep iTimestep) {
 
     if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y) {
         int pixelData  = _frameBuffer->readPixel(1, mouseX, mouseY);
-        _hoveredEntity = (pixelData == -1) ? PepperMint::Entity() : PepperMint::Entity((entt::entity)pixelData, _activeScene.get());
+        _hoveredEntity = (pixelData == -1) ? PepperMint::Entity() : PepperMint::Entity((entt::entity)pixelData, _context.get());
     }
 }
 

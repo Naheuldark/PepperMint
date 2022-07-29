@@ -49,8 +49,7 @@ class EditorLayer : public PepperMint::Layer {
 
   private:
     // Scene
-    PepperMint::Ref<PepperMint::Scene>       _activeScene;
-    PepperMint::Ref<PepperMint::Scene>       _editorScene, _runtimeScene, _simulateScene;
+    PepperMint::Ref<PepperMint::Scene>       _activeScene, _editorScene;
     PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
     SceneState                               _sceneState = SceneState::EDIT;
 
