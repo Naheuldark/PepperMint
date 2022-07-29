@@ -411,10 +411,10 @@ void Renderer2D::DrawRect(const glm::vec3& iPosition, const glm::vec2& iSize, co
     auto&& p2 = glm::vec3(iPosition.x + iSize.x * 0.5f, iPosition.y + iSize.y * 0.5f, iPosition.z);
     auto&& p3 = glm::vec3(iPosition.x - iSize.x * 0.5f, iPosition.y + iSize.y * 0.5f, iPosition.z);
 
-    DrawLine(p0, p1, iColor);
-    DrawLine(p1, p2, iColor);
-    DrawLine(p2, p3, iColor);
-    DrawLine(p3, p0, iColor);
+    DrawLine(p0, p1, iColor, iEntityId);
+    DrawLine(p1, p2, iColor, iEntityId);
+    DrawLine(p2, p3, iColor, iEntityId);
+    DrawLine(p3, p0, iColor, iEntityId);
 }
 
 void Renderer2D::DrawRect(const glm::mat4& iTransform, const glm::vec4& iColor, int iEntityId) {
@@ -423,10 +423,10 @@ void Renderer2D::DrawRect(const glm::mat4& iTransform, const glm::vec4& iColor, 
         lineVertices[i] = iTransform * sData.quadVertexPositions[i];
     }
 
-    DrawLine(lineVertices[0], lineVertices[1], iColor);
-    DrawLine(lineVertices[1], lineVertices[2], iColor);
-    DrawLine(lineVertices[2], lineVertices[3], iColor);
-    DrawLine(lineVertices[3], lineVertices[0], iColor);
+    DrawLine(lineVertices[0], lineVertices[1], iColor, iEntityId);
+    DrawLine(lineVertices[1], lineVertices[2], iColor, iEntityId);
+    DrawLine(lineVertices[2], lineVertices[3], iColor, iEntityId);
+    DrawLine(lineVertices[3], lineVertices[0], iColor, iEntityId);
 }
 
 /////////////////////

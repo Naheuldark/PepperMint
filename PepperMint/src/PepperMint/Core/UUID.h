@@ -1,7 +1,5 @@
 #pragma once
 
-#include <xhash>
-
 namespace PepperMint {
 
 // "UUID" (universally unique identifier) or GUID is (usually) a 128-bit integer used to "uniquely" identify information. In Hazel, even though we use
@@ -25,8 +23,11 @@ class UUID {
 }
 
 namespace std {
+template <typename T>
+struct hash;
+
 template <>
 struct hash<PepperMint::UUID> {
-    size_t operator()(const PepperMint::UUID& iUUID) const { return hash<uint64_t>()((uint64_t)iUUID); }
+    size_t operator()(const PepperMint::UUID& iUUID) const { return (uint64_t)iUUID; }
 };
 }
