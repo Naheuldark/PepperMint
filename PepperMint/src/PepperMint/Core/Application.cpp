@@ -9,13 +9,18 @@ namespace PepperMint {
 
 Application* Application::sInstance = nullptr;
 
-Application::Application(const std::string& iName, ApplicationCommandLineArgs iArgs) : _commandLineArgs(iArgs) {
+Application::Application(const ApplicationSpecification& iSpecification) : _specification(iSpecification) {
     PM_PROFILE_FUNCTION();
 
     PM_CORE_ASSERT(!sInstance, "Application already exists!")
     sInstance = this;
 
-    _window = Window::Create(WindowProperties(iName));
+    // Set working directory
+    if (!_specification.workingDirectory.empty()) {
+        std::filesystem::current_path(_specification.workingDirectory);
+    }
+
+    _window = Window::Create(WindowProperties(_specification.name));
     _window->setEventCallback(PM_BIND_EVENT_FN(Application::onEvent));
 
     Renderer::Init();

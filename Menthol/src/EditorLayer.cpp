@@ -22,7 +22,7 @@ void EditorLayer::onAttach() {
     _editorScene = PepperMint::CreateRef<PepperMint::Scene>("Editor");
     _activeScene = _editorScene;
 
-    auto&& commandLineArgs = PepperMint::Application::Get().commandLineArgs();
+    auto&& commandLineArgs = PepperMint::Application::Get().specification().commandLineArgs;
     if (commandLineArgs.count > 1) {
         auto&&                      sceneFilePath = commandLineArgs[1];
         PepperMint::SceneSerializer serializer(_activeScene);

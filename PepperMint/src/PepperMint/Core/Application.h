@@ -21,9 +21,15 @@ struct ApplicationCommandLineArgs {
     }
 };
 
+struct ApplicationSpecification {
+    std::string                name = "PepperMint App";
+    std::string                workingDirectory;
+    ApplicationCommandLineArgs commandLineArgs;
+};
+
 class Application {
   public:
-    Application(const std::string& iName = "PepperMint App", ApplicationCommandLineArgs iArgs = ApplicationCommandLineArgs());
+    Application(const ApplicationSpecification& iSpecifications);
     virtual ~Application();
 
     void onEvent(Event& iEvent);
@@ -33,10 +39,10 @@ class Application {
 
     void close();
 
-    static Application&        Get() { return *sInstance; }
-    Window&                    window() { return *_window; }
-    Ref<ImGuiLayer>            imguiLayer() { return _imguiLayer; }
-    ApplicationCommandLineArgs commandLineArgs() const { return _commandLineArgs; }
+    static Application&             Get() { return *sInstance; }
+    Window&                         window() { return *_window; }
+    Ref<ImGuiLayer>                 imguiLayer() { return _imguiLayer; }
+    const ApplicationSpecification& specification() const { return _specification; }
 
   private:
     void run();
@@ -45,13 +51,13 @@ class Application {
     bool onWindowResize(WindowResizeEvent& iEvent);
 
   private:
-    Scope<Window>              _window;
-    Ref<ImGuiLayer>            _imguiLayer;
-    ApplicationCommandLineArgs _commandLineArgs;
-    bool                       _running   = true;
-    bool                       _minimized = false;
-    LayerStack                 _layerStack;
-    float                      _lastFrameTime = 0.0f;
+    Scope<Window>            _window;
+    Ref<ImGuiLayer>          _imguiLayer;
+    ApplicationSpecification _specification;
+    bool                     _running   = true;
+    bool                     _minimized = false;
+    LayerStack               _layerStack;
+    float                    _lastFrameTime = 0.0f;
 
   private:
     static Application* sInstance;

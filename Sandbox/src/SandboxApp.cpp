@@ -10,7 +10,7 @@ namespace Sandbox {
 
 class Sandbox : public PepperMint::Application {
   public:
-    Sandbox(PepperMint::ApplicationCommandLineArgs iArgs) {
+    Sandbox(const PepperMint::ApplicationSpecification& iSpecification) : PepperMint::Application(iSpecification) {
         // pushLayer(PepperMint::CreateRef<ExampleLayer>());
         pushLayer(PepperMint::CreateRef<Sandbox2D>());
 
@@ -22,4 +22,11 @@ class Sandbox : public PepperMint::Application {
 };
 }
 
-PepperMint::Application* PepperMint::CreateApplication(PepperMint::ApplicationCommandLineArgs iArgs) { return new Sandbox::Sandbox(iArgs); }
+PepperMint::Application* PepperMint::CreateApplication(PepperMint::ApplicationCommandLineArgs iArgs) {
+    PepperMint::ApplicationSpecification spec;
+    spec.name             = "Sandbox";
+    spec.workingDirectory = "../Menthol";
+    spec.commandLineArgs  = iArgs;
+
+    return new Sandbox::Sandbox(spec);
+}
