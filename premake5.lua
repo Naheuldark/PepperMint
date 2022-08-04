@@ -36,6 +36,15 @@ group "Dependencies"
 	include "PepperMint/vendor/yaml-cpp"
 group ""
 
-include "PepperMint"
-include "Menthol"
-include "Sandbox"
+group "Core"
+	include "PepperMint"
+	include "PepperMint-ScriptCore"
+group ""
+
+group "Tools"
+	include "Menthol"
+group ""
+
+group "Projects"
+	include "Sandbox"
+group ""

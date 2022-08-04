@@ -3,6 +3,7 @@
 #include "PepperMint/Core/Application.h"
 #include "PepperMint/Core/Input.h"
 #include "PepperMint/Renderer/Renderer.h"
+#include "PepperMint/Scripting/ScriptEngine.h"
 #include "PepperMint/Utils/PlatformUtils.h"
 
 namespace PepperMint {
@@ -24,6 +25,7 @@ Application::Application(const ApplicationSpecification& iSpecification) : _spec
     _window->setEventCallback(PM_BIND_EVENT_FN(Application::onEvent));
 
     Renderer::Init();
+    ScriptEngine::Init();
 
     _imguiLayer = CreateRef<ImGuiLayer>();
     pushOverlay(_imguiLayer);
@@ -32,6 +34,7 @@ Application::Application(const ApplicationSpecification& iSpecification) : _spec
 Application::~Application() {
     PM_PROFILE_FUNCTION();
 
+    ScriptEngine::Shutdown();
     Renderer::Shutdown();
 }
 

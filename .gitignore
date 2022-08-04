@@ -11,6 +11,8 @@ bin-int/
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
+**.csproj
+**.csproj.user
 
 # Directories
 PepperMint/vendor/VulkanSDK

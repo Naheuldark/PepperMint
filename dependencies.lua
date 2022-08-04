@@ -16,13 +16,18 @@ IncludeDir["yaml_cpp"] = "%{wks.location}/PepperMint/vendor/yaml-cpp/include"
 IncludeDir["ImGuizmo"] = "%{wks.location}/PepperMint/vendor/ImGuizmo"
 IncludeDir["Box2D"] = "%{wks.location}/PepperMint/vendor/box2d/include"
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
+IncludeDir["mono"] = "%{wks.location}/PepperMint/vendor/mono/include"
 
 -- Library directories relative to root folder (solution directory)
 LibraryDir = {}
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
+LibraryDir["mono"] = "%{wks.location}/PepperMint/vendor/mono/lib/%{cfg.buildcfg}"
+LibraryDir["monoDLL"] = "%{wks.location}/PepperMint/vendor/mono/dll/%{cfg.buildcfg}"
 
 -- Library declarations (.lib)
 Library = {}
+Library["mono"] = "%{LibraryDir.mono}/mono-2.0-sgen.lib"
+
 Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
 Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK}/VkLayer_utils.lib"
 

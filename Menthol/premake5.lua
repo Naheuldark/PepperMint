@@ -29,6 +29,10 @@ project "Menthol"
 		"PepperMint"
 	}
 
+	postbuildcommands {
+		"{COPYDIR} \"%{LibraryDir.monoDLL}\" \"%{cfg.targetdir}\""
+	}
+
 	filter "system:windows"
 		systemversion "latest"
 

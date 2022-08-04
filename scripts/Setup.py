@@ -16,8 +16,8 @@ os.chdir('./../')
 VulkanRequirements.Validate()
 
 # Update submodules
-print("\nUpdating submodules...")
-subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
+# print("\nUpdating submodules...")
+# subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
 
 if (PremakeRequirements.Validate()):
     if platform.system() == "Windows":
