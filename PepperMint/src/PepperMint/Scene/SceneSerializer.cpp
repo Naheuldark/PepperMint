@@ -242,17 +242,21 @@ void deserializeCameraComponent(const YAML::Node& iSerializedEntity, Entity ioDe
     }
 }
 
-// Native Script Component
-void serializeNativeScriptComponent(YAML::Emitter& out, const NativeScriptComponent& iComponent) {
-    out << YAML::Key << "NativeScriptComponent";
+// Script Component
+void serializeScriptComponent(YAML::Emitter& out, const ScriptComponent& iComponent) {
+    out << YAML::Key << "ScriptComponent";
     out << YAML::BeginMap;
-    {
-        out << YAML::Key << "Script" << YAML::Value << "Script"; // TODO
-    }
+    { out << YAML::Key << "ClassName" << YAML::Value << iComponent.className; }
     out << YAML::EndMap;
 }
 
-void deserializeNativeScriptComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {}
+void deserializeScriptComponent(const YAML::Node& iSerializedEntity, Entity ioDeserializedEntity) {
+    if (auto&& serializedComponent = iSerializedEntity["ScriptComponent"]) {
+        auto&& scriptComponent = ioDeserializedEntity.addOrReplace<ScriptComponent>();
+
+        updateComponent(serializedComponent["ClassName"], scriptComponent.className, std::string);
+    }
+}
 
 // Rigid Body 2D Component
 void serializeRigidBody2DComponent(YAML::Emitter& out, const RigidBody2DComponent& iComponent) {
@@ -351,8 +355,8 @@ void serializeEntity(YAML::Emitter& out, Entity iEntityToSerialize) {
         if (iEntityToSerialize.has<CameraComponent>()) {
             serializeCameraComponent(out, iEntityToSerialize.get<CameraComponent>());
         }
-        if (iEntityToSerialize.has<NativeScriptComponent>()) {
-            serializeNativeScriptComponent(out, iEntityToSerialize.get<NativeScriptComponent>());
+        if (iEntityToSerialize.has<ScriptComponent>()) {
+            serializeScriptComponent(out, iEntityToSerialize.get<ScriptComponent>());
         }
         if (iEntityToSerialize.has<RigidBody2DComponent>()) {
             serializeRigidBody2DComponent(out, iEntityToSerialize.get<RigidBody2DComponent>());
@@ -416,7 +420,7 @@ bool SceneSerializer::deserialize(const std::string& iFilepath) {
             deserializeSpriteRendererComponent(entity, deserializedEntity);
             deserializeCircleRendererComponent(entity, deserializedEntity);
             deserializeCameraComponent(entity, deserializedEntity);
-            deserializeNativeScriptComponent(entity, deserializedEntity);
+            deserializeScriptComponent(entity, deserializedEntity);
             deserializeRigidBody2DComponent(entity, deserializedEntity);
             deserializeBoxCollider2DComponent(entity, deserializedEntity);
             deserializeCircleCollider2DComponent(entity, deserializedEntity);

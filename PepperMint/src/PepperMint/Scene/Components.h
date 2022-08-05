@@ -75,24 +75,11 @@ struct CameraComponent {
     CameraComponent(const CameraComponent&) = default;
 };
 
-class ScriptableEntity; // TODO
-struct NativeScriptComponent {
-    ScriptableEntity* script = nullptr;
+struct ScriptComponent {
+    std::string className;
 
-    ScriptableEntity* (*instantiateScript)();
-    void (*destroyScript)(NativeScriptComponent*);
-
-    template <typename Script>
-    void bind() {
-        instantiateScript = []() { return static_cast<ScriptableEntity*>(new Script()); };
-        destroyScript     = [](NativeScriptComponent* component) {
-            delete component->script;
-            component->script = nullptr;
-        };
-    }
-
-    NativeScriptComponent()                             = default;
-    NativeScriptComponent(const NativeScriptComponent&) = default;
+    ScriptComponent()                       = default;
+    ScriptComponent(const ScriptComponent&) = default;
 };
 
 struct RigidBody2DComponent {
@@ -149,7 +136,7 @@ using AllComponents = ComponentGroup<TransformComponent,
                                      SpriteRendererComponent,
                                      CircleRendererComponent,
                                      CameraComponent,
-                                     NativeScriptComponent,
+                                     ScriptComponent,
                                      RigidBody2DComponent,
                                      BoxCollider2DComponent,
                                      CircleCollider2DComponent>;

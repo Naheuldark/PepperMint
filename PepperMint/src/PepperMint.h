@@ -22,7 +22,6 @@
 #include "PepperMint/Scene/Entity.h"
 #include "PepperMint/Scene/Scene.h"
 #include "PepperMint/Scene/SceneSerializer.h"
-#include "PepperMint/Scene/ScriptableEntity.h"
 
 #include "PepperMint/Renderer/RenderCommand.h"
 #include "PepperMint/Renderer/Renderer.h"

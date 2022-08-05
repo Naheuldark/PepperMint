@@ -4,12 +4,15 @@
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/object.h>
 
-#include "ScriptAPI.h"
-#include "ScriptEngine.h"
+#include "PepperMint/Scripting/ScriptAPI.h"
+#include "PepperMint/Scripting/ScriptEngine.h"
 
 namespace PepperMint {
 
 namespace {
+
+const std::string kNAMESPACE        = "PepperMint";
+const std::string kENTITY_CLASSNAME = "Entity";
 
 char* readBytes(const std::filesystem::path& iFilePath, uint32_t* oSize) {
     std::ifstream stream(iFilePath, std::ios::binary | std::ios::ate);
@@ -80,46 +83,64 @@ struct ScriptEngineData {
     MonoImage*    coreAssemblyImage = nullptr;
 
     ScriptClass entityClass;
+
+    std::unordered_map<std::string, Ref<ScriptClass>> entityClasses;
+    std::unordered_map<UUID, Ref<ScriptInstance>>     entityInstances;
+
+    // Runtime
+    Scene* sceneContext;
 };
 
 static ScriptEngineData sData;
 
+///////////////////
+// Script Engine //
+///////////////////
+
 void ScriptEngine::Init() {
     InitMono();
     LoadAssembly("resources/scripts/PepperMint-ScriptCore.dll");
+    LoadAssemblyClasses(sData.coreAssembly);
 
     // Print some types
     printAssemblyTypes(sData.coreAssemblyImage);
 
+    ScriptAPI::RegisterComponents();
     ScriptAPI::RegisterFunctions();
 
-    // Retrieve and instantiate class (with constructor)
-    sData.entityClass = ScriptClass("PepperMint", "Entity");
-    auto&& instance   = sData.entityClass.instantiate();
-
-    // Call a function
-    sData.entityClass.invoke(instance, sData.entityClass.get("PrintHello", 0));
-
-    // Call a function with parameters
-    int   value = 5;
-    void* param = &value;
-    sData.entityClass.invoke(instance, sData.entityClass.get("PrintInt", 1), &param);
-
-    int   value1    = 42;
-    int   value2    = 826;
-    void* params[2] = {&value1, &value2};
-    sData.entityClass.invoke(instance, sData.entityClass.get("PrintInts", 2), params);
-
-    auto&& monoString = mono_string_new(sData.appDomain, "Hello World from C++!");
-    void*  strParam   = monoString;
-    sData.entityClass.invoke(instance, sData.entityClass.get("PrintMessage", 1), &strParam);
+    // Retrieve and instantiate class
+    sData.entityClass = ScriptClass(kNAMESPACE, kENTITY_CLASSNAME);
 }
 
 void ScriptEngine::Shutdown() { ShutdownMono(); }
 
-//////////////////
-// Mono Library //
-//////////////////
+void ScriptEngine::OnRuntimeStart(Scene* iScene) { sData.sceneContext = iScene; }
+
+void ScriptEngine::OnRuntimeStop() {
+    sData.sceneContext = nullptr;
+    sData.entityInstances.clear();
+}
+
+void ScriptEngine::OnCreateEntity(Entity iEntity) {
+    auto&& scriptComponent = iEntity.get<ScriptComponent>();
+    if (ScriptEngine::EntityClassExists(scriptComponent.className)) {
+        auto&& scriptInstance                 = CreateRef<ScriptInstance>(sData.entityClasses.at(scriptComponent.className), iEntity);
+        sData.entityInstances[iEntity.uuid()] = scriptInstance;
+        scriptInstance->invokeOnCreate();
+    }
+}
+
+void ScriptEngine::OnUpdateEntity(Entity iEntity, Timestep iTimestep) {
+    auto&& uuid = iEntity.uuid();
+    PM_CORE_ASSERT(sData.entityInstances.find(uuid) != sData.entityInstances.end());
+
+    auto&& scriptInstance = sData.entityInstances.at(uuid);
+    scriptInstance->invokeOnUpdate(iTimestep);
+}
+
+Scene* ScriptEngine::GetSceneContext() { return sData.sceneContext; }
+
+MonoImage* ScriptEngine::GetCoreAssemblyImage() { return sData.coreAssemblyImage; }
 
 void ScriptEngine::InitMono() {
     mono_set_assemblies_path("mono/lib");
@@ -154,11 +175,47 @@ void ScriptEngine::LoadAssembly(const std::filesystem::path& iFilePath) {
     sData.coreAssemblyImage = coreAssemblyImage;
 }
 
+void ScriptEngine::LoadAssemblyClasses(MonoAssembly* iAssembly) {
+    sData.entityClasses.clear();
+
+    auto&& image                = mono_assembly_get_image(iAssembly);
+    auto&& typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+    auto&& numTypes             = mono_table_info_get_rows(typeDefinitionsTable);
+    auto&& entityClass          = mono_class_from_name(image, kNAMESPACE.c_str(), kENTITY_CLASSNAME.c_str());
+
+    for (size_t i = 0; i < numTypes; i++) {
+        uint32_t cols[MONO_TYPEDEF_SIZE];
+        mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
+
+        auto&& scope = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
+        auto&& name  = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+
+        std::string fullname;
+        if (strlen(scope) != 0) {
+            fullname = fmt::format("{}.{}", scope, name);
+        } else {
+            fullname = name;
+        }
+
+        auto&& monoClass = mono_class_from_name(image, scope, name);
+        if (monoClass == entityClass) {
+            continue;
+        }
+
+        bool isEntity = mono_class_is_subclass_of(monoClass, entityClass, false);
+        if (isEntity) {
+            sData.entityClasses[fullname] = CreateRef<ScriptClass>(scope, name);
+        }
+    }
+}
+
 MonoObject* ScriptEngine::InstantiateClass(MonoClass* iMonoClass) {
     auto&& instance = mono_object_new(sData.appDomain, iMonoClass);
     mono_runtime_object_init(instance);
     return instance;
 }
+
+bool ScriptEngine::EntityClassExists(const std::string& iClassName) { return sData.entityClasses.find(iClassName) != sData.entityClasses.end(); }
 
 //////////////////
 // Script Class //
@@ -177,6 +234,37 @@ MonoMethod* ScriptClass::get(const std::string& iMethodName, int iMethodParamete
 
 MonoObject* ScriptClass::invoke(MonoObject* iInstance, MonoMethod* iMethod, void** iMethodParameters) {
     return mono_runtime_invoke(iMethod, iInstance, iMethodParameters, nullptr);
+}
+
+/////////////////////
+// Script Instance //
+/////////////////////
+
+ScriptInstance::ScriptInstance(Ref<ScriptClass> iScriptClass, Entity iEntity) : _scriptClass(iScriptClass) {
+    _instance = iScriptClass->instantiate();
+
+    _onCreateMethod = iScriptClass->get("OnCreate", 0);
+    _onUpdateMethod = iScriptClass->get("OnUpdate", 1);
+
+    // Call Entity constructor
+    {
+        UUID  entityID = iEntity.uuid();
+        void* param    = &entityID;
+        iScriptClass->invoke(_instance, sData.entityClass.get(".ctor", 1), &param);
+    }
+}
+
+void ScriptInstance::invokeOnCreate() {
+    if (_onCreateMethod) {
+        _scriptClass->invoke(_instance, _onCreateMethod);
+    }
+}
+
+void ScriptInstance::invokeOnUpdate(Timestep iTimestep) {
+    if (_onUpdateMethod) {
+        void* param = &iTimestep;
+        _scriptClass->invoke(_instance, _onUpdateMethod, &param);
+    }
 }
 
 }

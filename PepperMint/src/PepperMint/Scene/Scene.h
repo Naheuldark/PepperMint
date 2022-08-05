@@ -29,6 +29,8 @@ class Scene {
     void   destroyEntity(Entity iEntity);
     void   duplicateEntity(Entity iEntity);
 
+    Entity getEntityByUUID(UUID iEntityUUID);
+
     template <typename... Components>
     auto getAllEntitiesWith() {
         return _registry.view<Components...>();
@@ -77,5 +79,7 @@ class Scene {
 
     uint32_t _viewportWidth  = 0;
     uint32_t _viewportHeight = 0;
+
+    std::unordered_map<UUID, entt::entity> _entityMap;
 };
 }

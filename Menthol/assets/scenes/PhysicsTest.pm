@@ -1,46 +1,44 @@
 Scene: Editor
 Entities:
-  - Entity: 12837192831212
+  - Entity: 12341723088197825861
     TagComponent:
-      Tag: Blob
+      Tag: Floor
     TransformComponent:
-      Translation: [4.32460594, 13.7430401, -7.35715275e-06]
-      Rotation: [0, 0, 1.20966089]
-      Scale: [0.999999762, 0.999999762, 1]
+      Translation: [-1.99718428, -0.632386684, -3.52312941e-06]
+      Rotation: [0, 0, 0]
+      Scale: [20, 1, 1]
     SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-      TexturePath: assets\textures\ChernoLogo.png
+      Color: [1, 0, 6.00814819e-05, 1]
       TilingFactor: 1
     RigidBody2DComponent:
-      BodyType: 1
+      BodyType: 0
       FixedRotation: false
     BoxCollider2DComponent:
       Offset: [0, 0]
       Size: [0.5, 0.5]
       Density: 1
       Friction: 0.5
-      Restitution: 0
+      Restitution: 0.200000003
       RestitutionThreshold: 0.5
-  - Entity: 5902434999490041011
+  - Entity: 3057539796088689264
     TagComponent:
-      Tag: Circle
+      Tag: Slope
     TransformComponent:
-      Translation: [3.669806, 5.58152533, -3.81535801e-06]
-      Rotation: [0, 0, 0]
-      Scale: [2, 2, 2]
-    CircleRendererComponent:
-      Color: [1, 0, 0.966696739, 1]
-      Thickness: 1
-      Fade: 0.00499999989
+      Translation: [9.68614769, 6.33339262, -3.54984331e-06]
+      Rotation: [0, 0, 0.538798332]
+      Scale: [19.9999905, 1, 1]
+    SpriteRendererComponent:
+      Color: [0, 0.93249321, 1, 1]
+      TilingFactor: 1
     RigidBody2DComponent:
       BodyType: 0
       FixedRotation: false
-    CircleCollider2DComponent:
-      Offset: [0.400000006, 0]
-      Radius: 0.5
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
       Density: 1
       Friction: 0.5
-      Restitution: 0
+      Restitution: 0.200000003
       RestitutionThreshold: 0.5
   - Entity: 12837192831210
     TagComponent:
@@ -63,43 +61,49 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
-  - Entity: 3057539796088689264
+    ScriptComponent:
+      ClassName: Sandbox.Camera
+  - Entity: 5902434999490041011
     TagComponent:
-      Tag: Slope
+      Tag: Circle
     TransformComponent:
-      Translation: [9.68614769, 6.33339262, -3.54984331e-06]
-      Rotation: [0, 0, 0.538798332]
-      Scale: [19.9999905, 1, 1]
-    SpriteRendererComponent:
-      Color: [0, 0.93249321, 1, 1]
-      TilingFactor: 1
-    RigidBody2DComponent:
-      BodyType: 0
-      FixedRotation: false
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
-      Density: 1
-      Friction: 0.5
-      Restitution: 0.200000003
-      RestitutionThreshold: 0.5
-  - Entity: 12341723088197825861
-    TagComponent:
-      Tag: Floor
-    TransformComponent:
-      Translation: [-1.99718428, -0.632386684, -3.52312941e-06]
+      Translation: [3.669806, 5.58152533, -3.81535801e-06]
       Rotation: [0, 0, 0]
-      Scale: [20, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 0, 6.00814819e-05, 1]
-      TilingFactor: 1
+      Scale: [2, 2, 2]
+    CircleRendererComponent:
+      Color: [1, 0, 0.966696739, 1]
+      Thickness: 1
+      Fade: 0.00499999989
     RigidBody2DComponent:
       BodyType: 0
+      FixedRotation: false
+    CircleCollider2DComponent:
+      Offset: [0.400000006, 0]
+      Radius: 0.5
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 12837192831212
+    TagComponent:
+      Tag: Blob
+    TransformComponent:
+      Translation: [4.32460594, 13.7430401, -7.35715275e-06]
+      Rotation: [0, 0, 1.20966089]
+      Scale: [0.999999762, 0.999999762, 1]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      TexturePath: assets\textures\ChernoLogo.png
+      TilingFactor: 1
+    ScriptComponent:
+      ClassName: Sandbox.Player
+    RigidBody2DComponent:
+      BodyType: 1
       FixedRotation: false
     BoxCollider2DComponent:
       Offset: [0, 0]
       Size: [0.5, 0.5]
       Density: 1
       Friction: 0.5
-      Restitution: 0.200000003
+      Restitution: 0
       RestitutionThreshold: 0.5

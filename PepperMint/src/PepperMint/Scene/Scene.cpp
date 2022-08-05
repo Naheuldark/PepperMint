@@ -11,7 +11,7 @@
 #include "PepperMint/Scene/Components.h"
 #include "PepperMint/Scene/Entity.h"
 #include "PepperMint/Scene/Scene.h"
-#include "PepperMint/Scene/ScriptableEntity.h"
+#include "PepperMint/Scripting/ScriptEngine.h"
 
 namespace PepperMint {
 
@@ -106,14 +106,36 @@ Entity Scene::createEntityWithUUID(const UUID& iUUID, const std::string& iName) 
     entity.add<IdComponent>(iUUID);
     entity.add<TagComponent>(iName);
     entity.add<TransformComponent>();
+
+    _entityMap[iUUID] = entity;
+
     return entity;
 }
 
-void Scene::destroyEntity(Entity iEntity) { _registry.destroy(iEntity); }
+void Scene::destroyEntity(Entity iEntity) {
+    _registry.destroy(iEntity);
+    _entityMap.erase(iEntity.uuid());
+}
 
-void Scene::onRuntimeStart() { onPhysics2DStart(); }
+void Scene::onRuntimeStart() {
+    onPhysics2DStart();
 
-void Scene::onRuntimeStop() { onPhysics2DStop(); }
+    // Scripting
+    {
+        ScriptEngine::OnRuntimeStart(this);
+
+        // Instantiate all script entitites
+        auto&& scriptView = getAllEntitiesWith<ScriptComponent>();
+        for (auto&& entity : scriptView) {
+            ScriptEngine::OnCreateEntity({entity, this});
+        }
+    }
+}
+
+void Scene::onRuntimeStop() {
+    onPhysics2DStop();
+    ScriptEngine::OnRuntimeStop();
+}
 
 void Scene::onSimulateStart() { onPhysics2DStart(); }
 
@@ -211,19 +233,9 @@ void Scene::onUpdatePhysics2D(Timestep iTimestep) {
 }
 
 void Scene::onUpdateScript(Timestep iTimestep) {
-    auto&& scriptView = getAllEntitiesWith<NativeScriptComponent>();
+    auto&& scriptView = getAllEntitiesWith<ScriptComponent>();
     for (auto&& entity : scriptView) {
-        auto&& scriptComponent = scriptView.get<NativeScriptComponent>(entity);
-
-        // TODO: Move to Scene onScenePlay
-        if (!scriptComponent.script) {
-            scriptComponent.script = scriptComponent.instantiateScript();
-            PM_CORE_ASSERT(scriptComponent.script, "Error while instantiating script!");
-            scriptComponent.script->_entity = Entity(entity, this);
-            scriptComponent.script->onCreate();
-        }
-
-        scriptComponent.script->onUpdate(iTimestep);
+        ScriptEngine::OnUpdateEntity({entity, this}, iTimestep);
     }
 }
 
@@ -322,6 +334,11 @@ void Scene::duplicateEntity(Entity iEntity) {
     copyComponentIfExists(AllComponents{}, newEntity, iEntity);
 }
 
+Entity Scene::getEntityByUUID(UUID iEntityUUID) {
+    PM_CORE_ASSERT(_entityMap.find(iEntityUUID) != _entityMap.end());
+    return {_entityMap.at(iEntityUUID), this};
+}
+
 ///////////////////////////////////////
 // Behavior for each added component //
 ///////////////////////////////////////
@@ -353,7 +370,7 @@ void Scene::onAddComponent<CameraComponent>(Entity iEntity, CameraComponent& ioC
 }
 
 template <>
-void Scene::onAddComponent<NativeScriptComponent>(Entity iEntity, NativeScriptComponent& ioComponent) {}
+void Scene::onAddComponent<ScriptComponent>(Entity iEntity, ScriptComponent& ioComponent) {}
 
 template <>
 void Scene::onAddComponent<RigidBody2DComponent>(Entity iEntity, RigidBody2DComponent& ioComponent) {}

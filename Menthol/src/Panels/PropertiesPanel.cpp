@@ -1,3 +1,4 @@
+#include <PepperMint/Scripting/ScriptEngine.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -137,6 +138,7 @@ void drawComponents(PepperMint::Entity ioSelectedEntity) {
 
     if (ImGui::BeginPopup("##AddComponent")) {
         displayAddComponentEntry<PepperMint::CameraComponent>(ioSelectedEntity, "Camera");
+        displayAddComponentEntry<PepperMint::ScriptComponent>(ioSelectedEntity, "Script");
         displayAddComponentEntry<PepperMint::SpriteRendererComponent>(ioSelectedEntity, "Sprite Renderer");
         displayAddComponentEntry<PepperMint::CircleRendererComponent>(ioSelectedEntity, "Circle Renderer");
         displayAddComponentEntry<PepperMint::RigidBody2DComponent>(ioSelectedEntity, "Rigid Body");
@@ -241,6 +243,25 @@ void drawComponents(PepperMint::Entity ioSelectedEntity) {
 
         } else {
             PM_CORE_ERROR("Unknown Camera ProjectionType!")
+        }
+    });
+
+    drawComponent<PepperMint::ScriptComponent>("Script", ioSelectedEntity, flags, true, [](auto&& scriptComponent) {
+        bool scriptClassExists = PepperMint::ScriptEngine::EntityClassExists(scriptComponent.className);
+
+        static char buffer[64];
+        strcpy(buffer, scriptComponent.className.c_str());
+
+        if (!scriptClassExists) {
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
+        }
+
+        if (ImGui::InputText("Class", buffer, sizeof(buffer))) {
+            scriptComponent.className = buffer;
+        }
+
+        if (!scriptClassExists) {
+            ImGui::PopStyleColor();
         }
     });
 

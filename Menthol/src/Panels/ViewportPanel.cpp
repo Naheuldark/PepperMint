@@ -41,6 +41,10 @@ void ViewportPanel::onImGuiRender() {
         _viewportBounds[1]     = {viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y};
 
         // Focus
+        if (!_editorMode) {
+            ImGui::SetWindowFocus();
+        }
+
         _viewportFocused = ImGui::IsWindowFocused();
         _viewportHovered = ImGui::IsWindowHovered();
         PepperMint::Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused && !_viewportHovered);

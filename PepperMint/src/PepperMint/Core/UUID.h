@@ -10,7 +10,7 @@ class UUID {
   public:
     UUID();
     UUID(uint64_t iUUID);
-    UUID(const UUID& iOther);
+    UUID(const UUID&) = default;
 
     ~UUID() = default;
 

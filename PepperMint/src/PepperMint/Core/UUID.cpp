@@ -12,5 +12,4 @@ static std::uniform_int_distribution<uint64_t> sUniformDistribution;
 
 UUID::UUID() : _uuid(sUniformDistribution(sEngine)) {}
 UUID::UUID(uint64_t iUUID) : _uuid(iUUID) {}
-UUID::UUID(const UUID& iOther) : _uuid(iOther._uuid) {}
 }
