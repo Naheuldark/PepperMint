@@ -35,7 +35,7 @@ char* readBytes(const std::filesystem::path& iFilePath, uint32_t* oSize) {
     stream.read((char*)buffer, size);
     stream.close();
 
-    *oSize = size;
+    *oSize = (uint32_t)size;
     return buffer;
 }
 

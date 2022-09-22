@@ -87,8 +87,6 @@ Ref<Scene> Scene::Copy(const Ref<Scene>& iOther) {
         auto&& uuid = sourceSceneRegistry.get<IdComponent>(entity).uuid;
         auto&& tag  = sourceSceneRegistry.get<TagComponent>(entity).tag;
 
-        // PM_CORE_TRACE("Entity copied {0} (id {1})", tag, uuid);
-
         Entity newEntity = newScene->createEntityWithUUID(uuid, tag);
         enttMap.emplace(uuid, newEntity);
     }

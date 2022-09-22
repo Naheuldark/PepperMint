@@ -10,11 +10,6 @@
 #include "PepperMint/Renderer/Texture.h"
 #include "PepperMint/Scene/SceneCamera.h"
 
-namespace YAML {
-class Emitter;
-class Node;
-}
-
 namespace PepperMint {
 
 struct IdComponent {

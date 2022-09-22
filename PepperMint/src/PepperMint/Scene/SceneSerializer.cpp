@@ -110,6 +110,9 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& v) {
     out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
     return out;
 }
+}
+
+namespace {
 
 // Tag Component
 void serializeTagComponent(YAML::Emitter& out, const TagComponent& iComponent) {
@@ -373,17 +376,21 @@ void serializeEntity(YAML::Emitter& out, Entity iEntityToSerialize) {
 }
 
 void SceneSerializer::serialize(const std::string& iFilepath) {
+    PM_CORE_TRACE("Serializing scene '{0}'", _scene->name());
+
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Scene" << YAML::Value << _scene->name();
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
-    _scene->_registry.each([&](auto&& entity) {
+    _scene->forEachEntity([&](auto&& entity) {
         Entity entityToSerialize = {entity, _scene.get()};
         if (!entityToSerialize) {
             return;
         }
 
         serializeEntity(out, entityToSerialize);
+
+        PM_CORE_TRACE("\tSerialized Entity '{0}' (id: {1})", entityToSerialize.tag(), entityToSerialize.uuid());
     });
     out << YAML::EndSeq;
     out << YAML::EndMap;

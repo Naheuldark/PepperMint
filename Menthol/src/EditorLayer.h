@@ -2,13 +2,6 @@
 
 #include <PepperMint.h>
 
-#include "Panels/ContentBrowserPanel.h"
-#include "Panels/PropertiesPanel.h"
-#include "Panels/SceneHierarchyPanel.h"
-#include "Panels/SettingsPanel.h"
-#include "Panels/StatisticsPanel.h"
-#include "Panels/ViewportPanel.h"
-
 namespace Menthol {
 
 class EditorLayer : public PepperMint::Layer {
@@ -26,19 +19,27 @@ class EditorLayer : public PepperMint::Layer {
     void onSceneSimulate();
     void onSceneStop();
 
-    void duplicateSelectedEntity();
-
   private:
     void onOverlayRender();
 
     bool onKeyPressed(PepperMint::KeyPressedEvent& iEvent);
     bool onMouseButtonPressed(PepperMint::MouseButtonPressedEvent& iEvent);
 
+    void duplicateSelectedEntity();
+
     void newScene();
     void openScene();
     void openScene(const std::filesystem::path& iPath);
     void saveScene();
     void saveSceneAs();
+
+  private:
+    void UI_Toolbar();
+    void UI_Statistics();
+    void UI_Settings();
+    void UI_Properties();
+    void UI_SceneHierarchy();
+    void UI_ContentBrowser();
 
   private:
     enum class SceneState : int {
@@ -51,17 +52,31 @@ class EditorLayer : public PepperMint::Layer {
     // Scene
     PepperMint::Ref<PepperMint::Scene>       _activeScene, _editorScene;
     PepperMint::Ref<PepperMint::FrameBuffer> _frameBuffer;
-    SceneState                               _sceneState = SceneState::EDIT;
+
+    SceneState            _sceneState = SceneState::EDIT;
+    std::filesystem::path _scenePath;
+
+    PepperMint::EditorCamera _editorCamera;
+    PepperMint::Entity       _hoveredEntity{};
+    PepperMint::Entity       _selectedEntity{};
+
+    bool _showPhysicsCollider = false;
+
+    // Viewport
+    glm::vec2 _viewportSize = {0.0f, 0.0f};
+    glm::vec2 _viewportBounds[2]{};
+
+    bool _viewportFocused = false;
+    bool _viewportHovered = false;
+
+    bool _editorMode = true;
+    int  _gizmoType  = -1;
+
+    // Content Browser
+    std::filesystem::path _currentDirectory;
 
     // Icons
     PepperMint::Ref<PepperMint::Texture2D> _playIcon, _stopIcon, _simulateIcon;
-
-    // Panels
-    SceneHierarchyPanel _sceneHierarchyPanel;
-    PropertiesPanel     _propertiesPanel;
-    StatisticsPanel     _statisticsPanel;
-    ViewportPanel       _viewportPanel;
-    ContentBrowserPanel _contentBrowserPanel;
-    SettingsPanel       _settingsPanel;
+    PepperMint::Ref<PepperMint::Texture2D> _directoryIcon, _fileIcon;
 };
 }

@@ -6,7 +6,7 @@ namespace PepperMint {
 
 class Timer {
   public:
-    Timer()  = default;
+    Timer() { reset(); }
     ~Timer() = default;
 
     void  reset() { _start = std::chrono::high_resolution_clock::now(); }

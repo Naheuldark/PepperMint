@@ -5,7 +5,11 @@ namespace Sandbox {
 public class Player : PepperMint.Entity {
     private PepperMint.RigidBody2DComponent _rigidbody;
 
-    void OnCreate() { _rigidbody = Get<PepperMint.RigidBody2DComponent>(); }
+    void OnCreate() {
+        Console.WriteLine($"Player.OnCreate - {UUID}");
+
+        _rigidbody = Get<PepperMint.RigidBody2DComponent>();
+    }
 
     void OnUpdate(float timestep) {
         float              speed    = 0.1f;

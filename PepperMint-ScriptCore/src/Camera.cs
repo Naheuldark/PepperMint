@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sandbox {
+﻿namespace Sandbox {
 
 public class Camera : PepperMint.Entity {
     void OnUpdate(float timestep) {
