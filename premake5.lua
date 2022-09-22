@@ -1,5 +1,5 @@
 ---
---- PepperMint Project
+--- PepperMint Workspace
 ---
 
 include "./vendor/premake/premake_custom/solution_items.lua"
@@ -43,8 +43,4 @@ group ""
 
 group "Tools"
 	include "Menthol"
-group ""
-
-group "Projects"
-	include "Sandbox"
 group ""

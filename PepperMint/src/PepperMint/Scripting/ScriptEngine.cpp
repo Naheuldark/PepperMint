@@ -81,6 +81,8 @@ struct ScriptEngineData {
 
     MonoAssembly* coreAssembly      = nullptr;
     MonoImage*    coreAssemblyImage = nullptr;
+    MonoAssembly* appAssembly       = nullptr;
+    MonoImage*    appAssemblyImage  = nullptr;
 
     ScriptClass entityClass;
 
@@ -100,7 +102,8 @@ static ScriptEngineData sData;
 void ScriptEngine::Init() {
     InitMono();
     LoadAssembly("resources/scripts/PepperMint-ScriptCore.dll");
-    LoadAssemblyClasses(sData.coreAssembly);
+    LoadAppAssembly("../Sandbox/bin/Sandbox.dll");
+    LoadAssemblyClasses();
 
     // Print some types
     printAssemblyTypes(sData.coreAssemblyImage);
@@ -109,7 +112,7 @@ void ScriptEngine::Init() {
     ScriptAPI::RegisterFunctions();
 
     // Retrieve and instantiate class
-    sData.entityClass = ScriptClass(kNAMESPACE, kENTITY_CLASSNAME);
+    sData.entityClass = ScriptClass(kNAMESPACE, kENTITY_CLASSNAME, true);
 }
 
 void ScriptEngine::Shutdown() { ShutdownMono(); }
@@ -175,20 +178,30 @@ void ScriptEngine::LoadAssembly(const std::filesystem::path& iFilePath) {
     sData.coreAssemblyImage = coreAssemblyImage;
 }
 
-void ScriptEngine::LoadAssemblyClasses(MonoAssembly* iAssembly) {
+void ScriptEngine::LoadAppAssembly(const std::filesystem::path& iFilePath) {
+    // Create and store the assembly and its image
+    auto&& appAssembly = loadMonoAssembly(iFilePath);
+    PM_CORE_ASSERT(appAssembly);
+    sData.appAssembly = appAssembly;
+
+    auto&& appAssemblyImage = mono_assembly_get_image(sData.appAssembly);
+    PM_CORE_ASSERT(appAssemblyImage);
+    sData.appAssemblyImage = appAssemblyImage;
+}
+
+void ScriptEngine::LoadAssemblyClasses() {
     sData.entityClasses.clear();
 
-    auto&& image                = mono_assembly_get_image(iAssembly);
-    auto&& typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+    auto&& typeDefinitionsTable = mono_image_get_table_info(sData.appAssemblyImage, MONO_TABLE_TYPEDEF);
     auto&& numTypes             = mono_table_info_get_rows(typeDefinitionsTable);
-    auto&& entityClass          = mono_class_from_name(image, kNAMESPACE.c_str(), kENTITY_CLASSNAME.c_str());
+    auto&& entityClass          = mono_class_from_name(sData.coreAssemblyImage, kNAMESPACE.c_str(), kENTITY_CLASSNAME.c_str());
 
     for (size_t i = 0; i < numTypes; i++) {
         uint32_t cols[MONO_TYPEDEF_SIZE];
         mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 
-        auto&& scope = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
-        auto&& name  = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+        auto&& scope = mono_metadata_string_heap(sData.appAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
+        auto&& name  = mono_metadata_string_heap(sData.appAssemblyImage, cols[MONO_TYPEDEF_NAME]);
 
         std::string fullname;
         if (strlen(scope) != 0) {
@@ -197,7 +210,7 @@ void ScriptEngine::LoadAssemblyClasses(MonoAssembly* iAssembly) {
             fullname = name;
         }
 
-        auto&& monoClass = mono_class_from_name(image, scope, name);
+        auto&& monoClass = mono_class_from_name(sData.appAssemblyImage, scope, name);
         if (monoClass == entityClass) {
             continue;
         }
@@ -221,9 +234,9 @@ bool ScriptEngine::EntityClassExists(const std::string& iClassName) { return sDa
 // Script Class //
 //////////////////
 
-ScriptClass::ScriptClass(const std::string& iClassNamespace, const std::string& iClassName)
+ScriptClass::ScriptClass(const std::string& iClassNamespace, const std::string& iClassName, bool iIsCore)
     : _classNamespace(iClassNamespace), _className(iClassName) {
-    _monoClass = mono_class_from_name(sData.coreAssemblyImage, iClassNamespace.c_str(), iClassName.c_str());
+    _monoClass = mono_class_from_name(iIsCore ? sData.coreAssemblyImage : sData.appAssemblyImage, iClassNamespace.c_str(), iClassName.c_str());
 }
 
 MonoObject* ScriptClass::instantiate() { return ScriptEngine::InstantiateClass(_monoClass); }

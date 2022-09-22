@@ -7,8 +7,8 @@ project "PepperMint-ScriptCore"
 	language "C#"
 	dotnetframework "4.8"
 
-	targetdir ("%{wks.location}/Menthol/resources/scripts")	
-	objdir ("%{wks.location}/Menthol/resources/scripts/bin")
+	targetdir ("../Menthol/resources/scripts")	
+	objdir ("../Menthol/resources/scripts/bin")
 
 	files {
 		"src/**.cs"

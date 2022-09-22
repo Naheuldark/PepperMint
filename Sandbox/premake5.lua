@@ -1,47 +1,53 @@
 ---
---- Sandbox
+--- Sandbox Workspace
 ---
 
-project "Sandbox"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "off"
+include "../vendor/premake/premake_custom/solution_items.lua"
 
-	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")	
-	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
+workspace "Sandbox"
+	architecture "x86_64"
+	startproject "Sandbox"
 
-	files {
-		"src/**.h",
-		"src/**.cpp"
+	configurations {
+		"Debug",
+		"Release",
+		"Dist"
 	}
 
-	includedirs {
-		"%{wks.location}/PepperMint/vendor/spdlog/include",
-		"%{wks.location}/PepperMint/src",
-		"%{wks.location}/PepperMint/vendor",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+	flags {
+		"MultiProcessorCompile"
+	}
+
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+project "Sandbox"
+	kind "SharedLib"
+	language "C#"
+	dotnetframework "4.8"
+
+	targetdir ("bin")	
+	objdir ("bin-int")
+
+	files {
+		"src/**.cs",
 	}
 
 	links {
-		"PepperMint"
+		"PepperMint-ScriptCore"
 	}
-
-	filter "system:windows"
-		systemversion "latest"
-
+	
 	filter "configurations:Debug"
-		defines "PM_DEBUG"
-		runtime "Debug"
-		symbols "on"
+		optimize "Off"
+		symbols "Default"
 
 	filter "configurations:Release"
-		defines "PM_RELEASE"
-		runtime "Release"
-		optimize "on"
+		optimize "On"
+		symbols "Default"
 
 	filter "configurations:Dist"
-		defines "PM_DIST"
-		runtime "Release"
-		optimize "on"
+		optimize "Full"
+		symbols "Off"
+
+group "PepperMint-ScriptCore"
+	include "../PepperMint-ScriptCore"
+group ""

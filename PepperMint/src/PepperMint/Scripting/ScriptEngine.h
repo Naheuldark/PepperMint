@@ -39,7 +39,8 @@ class ScriptEngine {
     static void ShutdownMono();
 
     static void LoadAssembly(const std::filesystem::path& iFilePath);
-    static void LoadAssemblyClasses(MonoAssembly* iAssembly);
+    static void LoadAppAssembly(const std::filesystem::path& iFilePath);
+    static void LoadAssemblyClasses();
 
     static MonoObject* InstantiateClass(MonoClass* iMonoClass);
 };
@@ -47,7 +48,7 @@ class ScriptEngine {
 class ScriptClass {
   public:
     ScriptClass() = default;
-    ScriptClass(const std::string& iClassNamespace, const std::string& iClassName);
+    ScriptClass(const std::string& iClassNamespace, const std::string& iClassName, bool iIsCore = false);
 
     MonoObject* instantiate();
     MonoMethod* get(const std::string& iMethodName, int iMethodParameterCount);
