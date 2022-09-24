@@ -46,10 +46,7 @@ void EditorLayer::onAttach() {
 
     auto&& commandLineArgs = PepperMint::Application::Get().specification().commandLineArgs;
     if (commandLineArgs.count > 1) {
-        auto&&                      sceneFilePath = commandLineArgs[1];
-        PepperMint::SceneSerializer serializer(_activeScene);
-        serializer.deserialize(sceneFilePath);
-        _scenePath = sceneFilePath;
+        openScene(commandLineArgs[1]);
     }
 
     _editorCamera = PepperMint::EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
@@ -223,7 +220,7 @@ void EditorLayer::onImGuiRender() {
 
             _viewportFocused = ImGui::IsWindowFocused();
             _viewportHovered = ImGui::IsWindowHovered();
-            PepperMint::Application::Get().imguiLayer()->setBlockEvents(!_viewportFocused && !_viewportHovered);
+            PepperMint::Application::Get().imguiLayer()->setBlockEvents(!_viewportHovered);
 
             // Size
             ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
@@ -243,7 +240,7 @@ void EditorLayer::onImGuiRender() {
             }
 
             // Gizmos
-            if (_editorMode && _selectedEntity && _gizmoType != -1) {
+            if ((_sceneState == SceneState::EDIT) && _selectedEntity && _gizmoType != -1) {
                 ImGuizmo::SetOrthographic(false);
                 ImGuizmo::SetDrawlist();
 

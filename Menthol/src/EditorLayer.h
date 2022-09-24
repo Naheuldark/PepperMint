@@ -69,8 +69,7 @@ class EditorLayer : public PepperMint::Layer {
     bool _viewportFocused = false;
     bool _viewportHovered = false;
 
-    bool _editorMode = true;
-    int  _gizmoType  = -1;
+    int _gizmoType = -1;
 
     // Content Browser
     std::filesystem::path _currentDirectory;

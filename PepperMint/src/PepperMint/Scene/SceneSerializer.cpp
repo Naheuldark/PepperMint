@@ -9,15 +9,28 @@
 #include "PepperMint/Scene/Components.h"
 #include "PepperMint/Scene/Entity.h"
 #include "PepperMint/Scene/SceneSerializer.h"
+#include "PepperMint/Scripting/ScriptEngine.h"
 
-#define updateComponent(node, element, type) \
-    if (node) {                              \
-        element = node.as<type>();           \
+#define READ_COMPONENT(node, element, type) \
+    if (node) {                             \
+        element = node.as<type>();          \
     }
 
-#define updateComponentEnum(node, element, type, cast) \
+#define READ_COMPONENT_ENUM(node, element, type, cast) \
     if (node) {                                        \
         element = (cast)node.as<type>();               \
+    }
+
+#define READ_SCRIPT_FIELD(fieldType, type)                      \
+    case ScriptFieldType::fieldType: {                          \
+        fieldInstance.setValue(scriptField["Data"].as<type>()); \
+        break;                                                  \
+    }
+
+#define WRITE_SCRIPT_FIELD(fieldType, type) \
+    case ScriptFieldType::fieldType: {      \
+        out << scriptField.value<type>();   \
+        break;                              \
     }
 
 namespace YAML {
@@ -87,6 +100,20 @@ struct convert<glm::vec4> {
         return true;
     }
 };
+
+template <>
+struct convert<PepperMint::UUID> {
+    static Node encode(const PepperMint::UUID& rhs) {
+        Node node;
+        node.push_back((uint64_t)rhs);
+        return node;
+    }
+
+    static bool decode(const Node& node, PepperMint::UUID& rhs) {
+        rhs = node.as<uint64_t>();
+        return true;
+    }
+};
 }
 
 namespace PepperMint {
@@ -126,7 +153,7 @@ void deserializeTagComponent(const YAML::Node& iSerializedEntity, Entity ioDeser
     if (auto&& serializedComponent = iSerializedEntity["TagComponent"]) {
         auto&& tagComponent = ioDeserializedEntity.addOrReplace<TagComponent>();
 
-        updateComponent(serializedComponent["Tag"], tagComponent.tag, std::string);
+        READ_COMPONENT(serializedComponent["Tag"], tagComponent.tag, std::string);
     }
 }
 
@@ -146,9 +173,9 @@ void deserializeTransformComponent(const YAML::Node& iSerializedEntity, Entity i
     if (auto&& serializedComponent = iSerializedEntity["TransformComponent"]) {
         auto&& transformComponent = ioDeserializedEntity.addOrReplace<TransformComponent>();
 
-        updateComponent(serializedComponent["Translation"], transformComponent.translation, glm::vec3);
-        updateComponent(serializedComponent["Rotation"], transformComponent.rotation, glm::vec3);
-        updateComponent(serializedComponent["Scale"], transformComponent.scale, glm::vec3);
+        READ_COMPONENT(serializedComponent["Translation"], transformComponent.translation, glm::vec3);
+        READ_COMPONENT(serializedComponent["Rotation"], transformComponent.rotation, glm::vec3);
+        READ_COMPONENT(serializedComponent["Scale"], transformComponent.scale, glm::vec3);
     }
 }
 
@@ -170,8 +197,8 @@ void deserializeSpriteRendererComponent(const YAML::Node& iSerializedEntity, Ent
     if (auto&& serializedComponent = iSerializedEntity["SpriteRendererComponent"]) {
         auto&& spriteRendererComponent = ioDeserializedEntity.addOrReplace<SpriteRendererComponent>();
 
-        updateComponent(serializedComponent["Color"], spriteRendererComponent.color, glm::vec4);
-        updateComponent(serializedComponent["TilingFactor"], spriteRendererComponent.tilingFactor, float);
+        READ_COMPONENT(serializedComponent["Color"], spriteRendererComponent.color, glm::vec4);
+        READ_COMPONENT(serializedComponent["TilingFactor"], spriteRendererComponent.tilingFactor, float);
 
         if (serializedComponent["TexturePath"]) {
             spriteRendererComponent.texture = Texture2D::Create(serializedComponent["TexturePath"].as<std::string>());
@@ -195,9 +222,9 @@ void deserializeCircleRendererComponent(const YAML::Node& iSerializedEntity, Ent
     if (auto&& serializedComponent = iSerializedEntity["CircleRendererComponent"]) {
         auto&& circleRendererComponent = ioDeserializedEntity.addOrReplace<CircleRendererComponent>();
 
-        updateComponent(serializedComponent["Color"], circleRendererComponent.color, glm::vec4);
-        updateComponent(serializedComponent["Thickness"], circleRendererComponent.thickness, float);
-        updateComponent(serializedComponent["Fade"], circleRendererComponent.fade, float);
+        READ_COMPONENT(serializedComponent["Color"], circleRendererComponent.color, glm::vec4);
+        READ_COMPONENT(serializedComponent["Thickness"], circleRendererComponent.thickness, float);
+        READ_COMPONENT(serializedComponent["Fade"], circleRendererComponent.fade, float);
     }
 }
 
@@ -228,8 +255,8 @@ void deserializeCameraComponent(const YAML::Node& iSerializedEntity, Entity ioDe
     if (auto&& serializedComponent = iSerializedEntity["CameraComponent"]) {
         auto&& cameraComponent = ioDeserializedEntity.addOrReplace<CameraComponent>();
 
-        updateComponent(serializedComponent["Primary"], cameraComponent.primary, bool);
-        updateComponent(serializedComponent["FixedAspectRatio"], cameraComponent.fixedAspectRatio, bool);
+        READ_COMPONENT(serializedComponent["Primary"], cameraComponent.primary, bool);
+        READ_COMPONENT(serializedComponent["FixedAspectRatio"], cameraComponent.fixedAspectRatio, bool);
 
         if (auto&& camera = serializedComponent["Camera"]) {
             cameraComponent.camera.setProjectionType((SceneCamera::ProjectionType)camera["ProjectionType"].as<int>());
@@ -246,10 +273,57 @@ void deserializeCameraComponent(const YAML::Node& iSerializedEntity, Entity ioDe
 }
 
 // Script Component
-void serializeScriptComponent(YAML::Emitter& out, const ScriptComponent& iComponent) {
+void serializeScriptComponent(YAML::Emitter& out, const ScriptComponent& iComponent, const Entity& iEntity) {
     out << YAML::Key << "ScriptComponent";
     out << YAML::BeginMap;
-    { out << YAML::Key << "ClassName" << YAML::Value << iComponent.className; }
+    {
+        out << YAML::Key << "ClassName" << YAML::Value << iComponent.className;
+
+        // Fields
+        auto&& entityClass = ScriptEngine::GetEntityClass(iComponent.className);
+        auto&& fields      = entityClass->fields();
+        if (!fields.empty()) {
+            out << YAML::Key << "ScriptFields" << YAML::Value;
+
+            auto&& entityFields = ScriptEngine::GetScriptFieldMap(iEntity);
+            out << YAML::BeginSeq;
+            {
+                for (auto&& [name, field] : fields) {
+                    if (entityFields.find(name) == entityFields.end()) {
+                        continue;
+                    }
+
+                    auto&& scriptField = entityFields.at(name);
+
+                    out << YAML::BeginMap;
+                    {
+                        out << YAML::Key << "Name" << YAML::Value << name;
+                        out << YAML::Key << "Type" << YAML::Value << Utils::scriptFieldTypeToString(field.type);
+                        out << YAML::Key << "Data" << YAML::Value;
+                        switch (field.type) {
+                            WRITE_SCRIPT_FIELD(FLOAT, float);
+                            WRITE_SCRIPT_FIELD(DOUBLE, double);
+                            WRITE_SCRIPT_FIELD(BOOL, bool);
+                            WRITE_SCRIPT_FIELD(CHAR, char);
+                            WRITE_SCRIPT_FIELD(BYTE, int8_t);
+                            WRITE_SCRIPT_FIELD(SHORT, int16_t);
+                            WRITE_SCRIPT_FIELD(INT, int32_t);
+                            WRITE_SCRIPT_FIELD(LONG, int64_t);
+                            WRITE_SCRIPT_FIELD(USHORT, uint16_t);
+                            WRITE_SCRIPT_FIELD(UINT, uint32_t);
+                            WRITE_SCRIPT_FIELD(ULONG, uint64_t);
+                            WRITE_SCRIPT_FIELD(VECTOR2, glm::vec2);
+                            WRITE_SCRIPT_FIELD(VECTOR3, glm::vec3);
+                            WRITE_SCRIPT_FIELD(VECTOR4, glm::vec4);
+                            WRITE_SCRIPT_FIELD(ENTITY, UUID);
+                        }
+                    }
+                    out << YAML::EndMap;
+                }
+            }
+            out << YAML::EndSeq;
+        }
+    }
     out << YAML::EndMap;
 }
 
@@ -257,7 +331,49 @@ void deserializeScriptComponent(const YAML::Node& iSerializedEntity, Entity ioDe
     if (auto&& serializedComponent = iSerializedEntity["ScriptComponent"]) {
         auto&& scriptComponent = ioDeserializedEntity.addOrReplace<ScriptComponent>();
 
-        updateComponent(serializedComponent["ClassName"], scriptComponent.className, std::string);
+        READ_COMPONENT(serializedComponent["ClassName"], scriptComponent.className, std::string);
+
+        auto&& scriptFields = serializedComponent["ScriptFields"];
+        if (scriptFields) {
+            auto&& entityClass = ScriptEngine::GetEntityClass(scriptComponent.className);
+            PM_CORE_ASSERT(entityClass);
+            auto&& fields       = entityClass->fields();
+            auto&& entityFields = ScriptEngine::GetScriptFieldMap(ioDeserializedEntity);
+
+            for (auto&& scriptField : scriptFields) {
+                std::string     name;
+                ScriptFieldType type;
+
+                if (scriptField["Name"]) {
+                    name = scriptField["Name"].as<std::string>();
+                }
+                if (scriptField["Type"]) {
+                    type = Utils::scriptFieldTypeFromString(scriptField["Type"].as<std::string>());
+                }
+
+                auto&& fieldInstance = entityFields[name];
+                PM_CORE_ASSERT(fields.find(name) != fields.end());
+                fieldInstance.field = fields.at(name);
+
+                switch (type) {
+                    READ_SCRIPT_FIELD(FLOAT, float);
+                    READ_SCRIPT_FIELD(DOUBLE, double);
+                    READ_SCRIPT_FIELD(BOOL, bool);
+                    READ_SCRIPT_FIELD(CHAR, char);
+                    READ_SCRIPT_FIELD(BYTE, int8_t);
+                    READ_SCRIPT_FIELD(SHORT, int16_t);
+                    READ_SCRIPT_FIELD(INT, int32_t);
+                    READ_SCRIPT_FIELD(LONG, int64_t);
+                    READ_SCRIPT_FIELD(USHORT, uint16_t);
+                    READ_SCRIPT_FIELD(UINT, uint32_t);
+                    READ_SCRIPT_FIELD(ULONG, uint64_t);
+                    READ_SCRIPT_FIELD(VECTOR2, glm::vec2);
+                    READ_SCRIPT_FIELD(VECTOR3, glm::vec3);
+                    READ_SCRIPT_FIELD(VECTOR4, glm::vec4);
+                    READ_SCRIPT_FIELD(ENTITY, UUID);
+                }
+            }
+        }
     }
 }
 
@@ -276,8 +392,8 @@ void deserializeRigidBody2DComponent(const YAML::Node& iSerializedEntity, Entity
     if (auto&& serializedComponent = iSerializedEntity["RigidBody2DComponent"]) {
         auto&& rigidBody2DComponent = ioDeserializedEntity.addOrReplace<RigidBody2DComponent>();
 
-        updateComponentEnum(serializedComponent["BodyType"], rigidBody2DComponent.type, int, RigidBody2DComponent::BodyType);
-        updateComponent(serializedComponent["FixedRotation"], rigidBody2DComponent.fixedRotation, bool);
+        READ_COMPONENT_ENUM(serializedComponent["BodyType"], rigidBody2DComponent.type, int, RigidBody2DComponent::BodyType);
+        READ_COMPONENT(serializedComponent["FixedRotation"], rigidBody2DComponent.fixedRotation, bool);
     }
 }
 
@@ -300,12 +416,12 @@ void deserializeBoxCollider2DComponent(const YAML::Node& iSerializedEntity, Enti
     if (auto&& serializedComponent = iSerializedEntity["BoxCollider2DComponent"]) {
         auto&& boxCollider2DComponent = ioDeserializedEntity.addOrReplace<BoxCollider2DComponent>();
 
-        updateComponent(serializedComponent["Offset"], boxCollider2DComponent.offset, glm::vec2);
-        updateComponent(serializedComponent["Size"], boxCollider2DComponent.size, glm::vec2);
-        updateComponent(serializedComponent["Density"], boxCollider2DComponent.density, float);
-        updateComponent(serializedComponent["Friction"], boxCollider2DComponent.friction, float);
-        updateComponent(serializedComponent["Restitution"], boxCollider2DComponent.restitution, float);
-        updateComponent(serializedComponent["RestitutionThreshold"], boxCollider2DComponent.restitutionThreshold, float);
+        READ_COMPONENT(serializedComponent["Offset"], boxCollider2DComponent.offset, glm::vec2);
+        READ_COMPONENT(serializedComponent["Size"], boxCollider2DComponent.size, glm::vec2);
+        READ_COMPONENT(serializedComponent["Density"], boxCollider2DComponent.density, float);
+        READ_COMPONENT(serializedComponent["Friction"], boxCollider2DComponent.friction, float);
+        READ_COMPONENT(serializedComponent["Restitution"], boxCollider2DComponent.restitution, float);
+        READ_COMPONENT(serializedComponent["RestitutionThreshold"], boxCollider2DComponent.restitutionThreshold, float);
     }
 }
 
@@ -328,12 +444,12 @@ void deserializeCircleCollider2DComponent(const YAML::Node& iSerializedEntity, E
     if (auto&& serializedComponent = iSerializedEntity["CircleCollider2DComponent"]) {
         auto&& circleCollider2DComponent = ioDeserializedEntity.addOrReplace<CircleCollider2DComponent>();
 
-        updateComponent(serializedComponent["Offset"], circleCollider2DComponent.offset, glm::vec2);
-        updateComponent(serializedComponent["Radius"], circleCollider2DComponent.radius, float);
-        updateComponent(serializedComponent["Density"], circleCollider2DComponent.density, float);
-        updateComponent(serializedComponent["Friction"], circleCollider2DComponent.friction, float);
-        updateComponent(serializedComponent["Restitution"], circleCollider2DComponent.restitution, float);
-        updateComponent(serializedComponent["RestitutionThreshold"], circleCollider2DComponent.restitutionThreshold, float);
+        READ_COMPONENT(serializedComponent["Offset"], circleCollider2DComponent.offset, glm::vec2);
+        READ_COMPONENT(serializedComponent["Radius"], circleCollider2DComponent.radius, float);
+        READ_COMPONENT(serializedComponent["Density"], circleCollider2DComponent.density, float);
+        READ_COMPONENT(serializedComponent["Friction"], circleCollider2DComponent.friction, float);
+        READ_COMPONENT(serializedComponent["Restitution"], circleCollider2DComponent.restitution, float);
+        READ_COMPONENT(serializedComponent["RestitutionThreshold"], circleCollider2DComponent.restitutionThreshold, float);
     }
 }
 
@@ -359,7 +475,7 @@ void serializeEntity(YAML::Emitter& out, Entity iEntityToSerialize) {
             serializeCameraComponent(out, iEntityToSerialize.get<CameraComponent>());
         }
         if (iEntityToSerialize.has<ScriptComponent>()) {
-            serializeScriptComponent(out, iEntityToSerialize.get<ScriptComponent>());
+            serializeScriptComponent(out, iEntityToSerialize.get<ScriptComponent>(), iEntityToSerialize);
         }
         if (iEntityToSerialize.has<RigidBody2DComponent>()) {
             serializeRigidBody2DComponent(out, iEntityToSerialize.get<RigidBody2DComponent>());

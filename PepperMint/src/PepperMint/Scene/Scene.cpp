@@ -111,8 +111,8 @@ Entity Scene::createEntityWithUUID(const UUID& iUUID, const std::string& iName) 
 }
 
 void Scene::destroyEntity(Entity iEntity) {
-    _registry.destroy(iEntity);
     _entityMap.erase(iEntity.uuid());
+    _registry.destroy(iEntity);
 }
 
 void Scene::onRuntimeStart() {

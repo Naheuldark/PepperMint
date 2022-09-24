@@ -104,42 +104,85 @@ ScriptFieldType monoTypeToScriptFieldType(MonoType* iMonoType) {
     }
     return kSCRIPT_FIELD_TYPE_MAP.at(typeName);
 }
+}
+
+namespace Utils {
 
 const char* scriptFieldTypeToString(ScriptFieldType iType) {
     switch (iType) {
-        case PepperMint::ScriptFieldType::FLOAT:
+        case ScriptFieldType::FLOAT:
             return "Float";
-        case PepperMint::ScriptFieldType::DOUBLE:
+        case ScriptFieldType::DOUBLE:
             return "Double";
-        case PepperMint::ScriptFieldType::BOOL:
+        case ScriptFieldType::BOOL:
             return "Bool";
-        case PepperMint::ScriptFieldType::CHAR:
+        case ScriptFieldType::CHAR:
             return "Char";
-        case PepperMint::ScriptFieldType::BYTE:
+        case ScriptFieldType::BYTE:
             return "Byte";
-        case PepperMint::ScriptFieldType::SHORT:
+        case ScriptFieldType::SHORT:
             return "Short";
-        case PepperMint::ScriptFieldType::INT:
+        case ScriptFieldType::INT:
             return "Int";
-        case PepperMint::ScriptFieldType::LONG:
+        case ScriptFieldType::LONG:
             return "Long";
-        case PepperMint::ScriptFieldType::USHORT:
+        case ScriptFieldType::USHORT:
             return "UShort";
-        case PepperMint::ScriptFieldType::UINT:
+        case ScriptFieldType::UINT:
             return "UInt";
-        case PepperMint::ScriptFieldType::ULONG:
+        case ScriptFieldType::ULONG:
             return "ULong";
-        case PepperMint::ScriptFieldType::VECTOR2:
+        case ScriptFieldType::VECTOR2:
             return "Vector2";
-        case PepperMint::ScriptFieldType::VECTOR3:
+        case ScriptFieldType::VECTOR3:
             return "Vector3";
-        case PepperMint::ScriptFieldType::VECTOR4:
+        case ScriptFieldType::VECTOR4:
             return "Vector4";
-        case PepperMint::ScriptFieldType::ENTITY:
+        case ScriptFieldType::ENTITY:
             return "Entity";
         default:
-            return "<invalid>";
+            PM_CORE_ASSERT(false, "Unknown ScriptFieldType");
+            return "None";
     }
+}
+
+ScriptFieldType scriptFieldTypeFromString(std::string_view iType) {
+    if (iType == "None") {
+        return ScriptFieldType::NONE;
+    } else if (iType == "Float") {
+        return ScriptFieldType::FLOAT;
+    } else if (iType == "Double") {
+        return ScriptFieldType::DOUBLE;
+    } else if (iType == "Bool") {
+        return ScriptFieldType::BOOL;
+    } else if (iType == "Char") {
+        return ScriptFieldType::CHAR;
+    } else if (iType == "Byte") {
+        return ScriptFieldType::BYTE;
+    } else if (iType == "Short") {
+        return ScriptFieldType::SHORT;
+    } else if (iType == "Int") {
+        return ScriptFieldType::INT;
+    } else if (iType == "Long") {
+        return ScriptFieldType::LONG;
+    } else if (iType == "UShort") {
+        return ScriptFieldType::USHORT;
+    } else if (iType == "UInt") {
+        return ScriptFieldType::UINT;
+    } else if (iType == "ULong") {
+        return ScriptFieldType::ULONG;
+    } else if (iType == "Vector2") {
+        return ScriptFieldType::VECTOR2;
+    } else if (iType == "Vector3") {
+        return ScriptFieldType::VECTOR3;
+    } else if (iType == "Vector4") {
+        return ScriptFieldType::VECTOR4;
+    } else if (iType == "Entity") {
+        return ScriptFieldType::ENTITY;
+    }
+
+    PM_CORE_ASSERT(false, "Unknown ScriptFieldType");
+    return ScriptFieldType::NONE;
 }
 }
 
@@ -395,7 +438,7 @@ void ScriptEngine::LoadAssemblyClasses() {
             if (flags & FIELD_ATTRIBUTE_PUBLIC) {
                 MonoType*       type      = mono_field_get_type(field);
                 ScriptFieldType fieldType = monoTypeToScriptFieldType(type);
-                PM_CORE_WARN("\t{} ({})", fieldName, scriptFieldTypeToString(fieldType));
+                PM_CORE_WARN("\t{} ({})", fieldName, Utils::scriptFieldTypeToString(fieldType));
 
                 scriptClass->fields()[fieldName] = {fieldType, fieldName, field};
             }

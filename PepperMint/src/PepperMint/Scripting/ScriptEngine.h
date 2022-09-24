@@ -37,6 +37,12 @@ enum class ScriptFieldType {
     ENTITY,
 };
 
+namespace Utils {
+
+const char*     scriptFieldTypeToString(ScriptFieldType iType);
+ScriptFieldType scriptFieldTypeFromString(std::string_view iType);
+}
+
 struct ScriptField {
     ScriptFieldType type = ScriptFieldType::NONE;
     std::string     name;
@@ -53,13 +59,13 @@ class ScriptFieldInstance {
 
     template <typename Type>
     Type value() {
-        static_assert(sizeof(Type) <= 8, "Type is too large!");
+        static_assert(sizeof(Type) <= 16, "Type is too large!");
         return *(Type*)_buffer;
     }
 
     template <typename Type>
     void setValue(Type iValue) {
-        static_assert(sizeof(Type) <= 8, "Type is too large!");
+        static_assert(sizeof(Type) <= 16, "Type is too large!");
         memcpy(_buffer, &iValue, sizeof(Type));
     }
 
@@ -68,7 +74,7 @@ class ScriptFieldInstance {
 
   private:
     ;
-    uint8_t _buffer[8];
+    uint8_t _buffer[16];
 };
 
 class ScriptClass {
@@ -106,7 +112,7 @@ class ScriptInstance {
 
     template <typename Type>
     Type fieldValue(const std::string& iName) {
-        static_assert(sizeof(Type) <= 8, "Type is too large!");
+        static_assert(sizeof(Type) <= 16, "Type is too large!");
         if (fieldValueInternal(iName, sFieldValueBuffer)) {
             return *(Type*)sFieldValueBuffer;
         }
@@ -115,7 +121,7 @@ class ScriptInstance {
 
     template <typename Type>
     void setFieldValue(const std::string& iName, Type iValue) {
-        static_assert(sizeof(Type) <= 8, "Type is too large!");
+        static_assert(sizeof(Type) <= 16, "Type is too large!");
         setFieldValueInternal(iName, &iValue);
     }
 
@@ -130,7 +136,7 @@ class ScriptInstance {
     MonoMethod* _onCreateMethod = nullptr;
     MonoMethod* _onUpdateMethod = nullptr;
 
-    inline static char sFieldValueBuffer[8];
+    inline static char sFieldValueBuffer[16];
 };
 
 using ScriptFieldMap    = std::unordered_map<std::string, ScriptFieldInstance>;

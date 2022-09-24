@@ -63,6 +63,8 @@ Entities:
       FixedAspectRatio: false
     ScriptComponent:
       ClassName: Sandbox.Camera
+      ScriptFields:
+        []
   - Entity: 5902434999490041011
     TagComponent:
       Tag: Circle 2
@@ -86,7 +88,7 @@ Entities:
       RestitutionThreshold: 0.5
   - Entity: 12837192831212
     TagComponent:
-      Tag: Blob
+      Tag: Player
     TransformComponent:
       Translation: [4.32460594, 13.7430401, -7.35715275e-06]
       Rotation: [0, 0, 1.20966089]
@@ -97,6 +99,10 @@ Entities:
       TilingFactor: 1
     ScriptComponent:
       ClassName: Sandbox.Player
+      ScriptFields:
+        - Name: Speed
+          Type: Float
+          Data: 15
     RigidBody2DComponent:
       BodyType: 1
       FixedRotation: false
