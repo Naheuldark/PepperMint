@@ -55,6 +55,8 @@ class Scene {
 
     Entity primaryCameraEntity();
 
+    bool isRunning() const { return _isRunning; }
+
     static Ref<Scene> Copy(const Ref<Scene>& iOther);
 
   private:
@@ -72,6 +74,7 @@ class Scene {
 
   private:
     std::string _name;
+    bool        _isRunning = false;
 
     entt::registry _registry;
 

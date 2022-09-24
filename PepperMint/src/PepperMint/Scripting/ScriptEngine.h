@@ -38,41 +38,37 @@ enum class ScriptFieldType {
 };
 
 struct ScriptField {
-    ScriptFieldType type;
+    ScriptFieldType type = ScriptFieldType::NONE;
     std::string     name;
 
-    MonoClassField* classField;
+    MonoClassField* classField = nullptr;
 };
 
-class ScriptEngine {
-    friend class ScriptClass;
+class ScriptFieldInstance {
+    friend class ScriptEngine;
     friend class ScriptInstance;
 
   public:
-    static void Init();
-    static void Shutdown();
+    ScriptFieldInstance() { memset(_buffer, 0, sizeof(_buffer)); }
 
-    static void OnRuntimeStart(Scene* iScene);
-    static void OnRuntimeStop();
+    template <typename Type>
+    Type value() {
+        static_assert(sizeof(Type) <= 8, "Type is too large!");
+        return *(Type*)_buffer;
+    }
 
-    static void OnCreateEntity(Entity iEntity);
-    static void OnUpdateEntity(Entity iEntity, Timestep iTimestep);
+    template <typename Type>
+    void setValue(Type iValue) {
+        static_assert(sizeof(Type) <= 8, "Type is too large!");
+        memcpy(_buffer, &iValue, sizeof(Type));
+    }
 
-    static bool EntityClassExists(const std::string& iClassName);
-
-    static Scene*              GetSceneContext();
-    static MonoImage*          GetCoreAssemblyImage();
-    static Ref<ScriptInstance> GetEntityScriptInstance(UUID iEntityId);
+  public:
+    ScriptField field;
 
   private:
-    static void InitMono();
-    static void ShutdownMono();
-
-    static void LoadAssembly(const std::filesystem::path& iFilePath);
-    static void LoadAppAssembly(const std::filesystem::path& iFilePath);
-    static void LoadAssemblyClasses();
-
-    static MonoObject* InstantiateClass(MonoClass* iMonoClass);
+    ;
+    uint8_t _buffer[8];
 };
 
 class ScriptClass {
@@ -97,6 +93,9 @@ class ScriptClass {
 };
 
 class ScriptInstance {
+    friend class ScriptEngine;
+    friend class ScriptFieldInstance;
+
   public:
     ScriptInstance(Ref<ScriptClass> iScriptClass, Entity iEntity);
 
@@ -107,6 +106,7 @@ class ScriptInstance {
 
     template <typename Type>
     Type fieldValue(const std::string& iName) {
+        static_assert(sizeof(Type) <= 8, "Type is too large!");
         if (fieldValueInternal(iName, sFieldValueBuffer)) {
             return *(Type*)sFieldValueBuffer;
         }
@@ -114,7 +114,8 @@ class ScriptInstance {
     }
 
     template <typename Type>
-    void setFieldValue(const std::string& iName, const Type& iValue) {
+    void setFieldValue(const std::string& iName, Type iValue) {
+        static_assert(sizeof(Type) <= 8, "Type is too large!");
         setFieldValueInternal(iName, &iValue);
     }
 
@@ -131,4 +132,46 @@ class ScriptInstance {
 
     inline static char sFieldValueBuffer[8];
 };
+
+using ScriptFieldMap    = std::unordered_map<std::string, ScriptFieldInstance>;
+using ScriptFieldsMap   = std::unordered_map<UUID, ScriptFieldMap>;
+using ScriptClassMap    = std::unordered_map<std::string, Ref<ScriptClass>>;
+using ScriptInstanceMap = std::unordered_map<UUID, Ref<ScriptInstance>>;
+
+class ScriptEngine {
+    friend class ScriptClass;
+    friend class ScriptInstance;
+
+  public:
+    static void Init();
+    static void Shutdown();
+
+    static void OnRuntimeStart(Scene* iScene);
+    static void OnRuntimeStop();
+
+    static void OnCreateEntity(Entity iEntity);
+    static void OnUpdateEntity(Entity iEntity, Timestep iTimestep);
+
+    static Scene*              GetSceneContext();
+    static Ref<ScriptInstance> GetEntityScriptInstance(UUID iEntityId);
+
+    static bool             EntityClassExists(const std::string& iClassName);
+    static Ref<ScriptClass> GetEntityClass(const std::string& iName);
+    static ScriptClassMap   GetEntityClasses();
+
+    static ScriptFieldMap& GetScriptFieldMap(Entity iEntity);
+
+    static MonoImage* GetCoreAssemblyImage();
+
+  private:
+    static void InitMono();
+    static void ShutdownMono();
+
+    static void LoadAssembly(const std::filesystem::path& iFilePath);
+    static void LoadAppAssembly(const std::filesystem::path& iFilePath);
+    static void LoadAssemblyClasses();
+
+    static MonoObject* InstantiateClass(MonoClass* iMonoClass);
+};
+
 }

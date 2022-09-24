@@ -116,6 +116,8 @@ void Scene::destroyEntity(Entity iEntity) {
 }
 
 void Scene::onRuntimeStart() {
+    _isRunning = true;
+
     onPhysics2DStart();
 
     // Scripting
@@ -131,7 +133,10 @@ void Scene::onRuntimeStart() {
 }
 
 void Scene::onRuntimeStop() {
+    _isRunning = false;
+
     onPhysics2DStop();
+
     ScriptEngine::OnRuntimeStop();
 }
 

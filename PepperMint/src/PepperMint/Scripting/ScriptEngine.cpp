@@ -154,14 +154,87 @@ struct ScriptEngineData {
 
     ScriptClass entityClass;
 
-    std::unordered_map<std::string, Ref<ScriptClass>> entityClasses;
-    std::unordered_map<UUID, Ref<ScriptInstance>>     entityInstances;
+    ScriptClassMap    entityClasses;
+    ScriptInstanceMap entityInstances;
+    ScriptFieldsMap   entityScriptFields;
 
     // Runtime
     Scene* sceneContext;
 };
 
 static ScriptEngineData sData;
+
+//////////////////
+// Script Class //
+//////////////////
+
+ScriptClass::ScriptClass(const std::string& iClassNamespace, const std::string& iClassName, bool iIsCore)
+    : _classNamespace(iClassNamespace), _className(iClassName) {
+    _monoClass = mono_class_from_name(iIsCore ? sData.coreAssemblyImage : sData.appAssemblyImage, iClassNamespace.c_str(), iClassName.c_str());
+}
+
+MonoObject* ScriptClass::instantiate() { return ScriptEngine::InstantiateClass(_monoClass); }
+
+MonoMethod* ScriptClass::get(const std::string& iMethodName, int iMethodParameterCount) {
+    return mono_class_get_method_from_name(_monoClass, iMethodName.c_str(), iMethodParameterCount);
+}
+
+MonoObject* ScriptClass::invoke(MonoObject* iInstance, MonoMethod* iMethod, void** iMethodParameters) {
+    return mono_runtime_invoke(iMethod, iInstance, iMethodParameters, nullptr);
+}
+
+/////////////////////
+// Script Instance //
+/////////////////////
+
+ScriptInstance::ScriptInstance(Ref<ScriptClass> iScriptClass, Entity iEntity) : _scriptClass(iScriptClass) {
+    _instance = iScriptClass->instantiate();
+
+    _onCreateMethod = iScriptClass->get("OnCreate", 0);
+    _onUpdateMethod = iScriptClass->get("OnUpdate", 1);
+
+    // Call Entity constructor
+    {
+        UUID  entityID = iEntity.uuid();
+        void* param    = &entityID;
+        iScriptClass->invoke(_instance, sData.entityClass.get(".ctor", 1), &param);
+    }
+}
+
+void ScriptInstance::invokeOnCreate() {
+    if (_onCreateMethod) {
+        _scriptClass->invoke(_instance, _onCreateMethod);
+    }
+}
+
+void ScriptInstance::invokeOnUpdate(Timestep iTimestep) {
+    if (_onUpdateMethod) {
+        void* param = &iTimestep;
+        _scriptClass->invoke(_instance, _onUpdateMethod, &param);
+    }
+}
+
+bool ScriptInstance::fieldValueInternal(const std::string& iName, void* oBuffer) {
+    auto&& fields = _scriptClass->fields();
+    if (fields.find(iName) == fields.end()) {
+        return false;
+    }
+
+    auto&& field = _scriptClass->fields().at(iName);
+    mono_field_get_value(_instance, field.classField, oBuffer);
+    return true;
+}
+
+bool ScriptInstance::setFieldValueInternal(const std::string& iName, const void* iValue) {
+    auto&& fields = _scriptClass->fields();
+    if (fields.find(iName) == fields.end()) {
+        return false;
+    }
+
+    auto&& field = _scriptClass->fields().at(iName);
+    mono_field_set_value(_instance, field.classField, (void*)iValue);
+    return true;
+}
 
 ///////////////////
 // Script Engine //
@@ -197,6 +270,15 @@ void ScriptEngine::OnCreateEntity(Entity iEntity) {
     if (ScriptEngine::EntityClassExists(scriptComponent.className)) {
         auto&& scriptInstance                 = CreateRef<ScriptInstance>(sData.entityClasses.at(scriptComponent.className), iEntity);
         sData.entityInstances[iEntity.uuid()] = scriptInstance;
+
+        // Copy field values
+        if (sData.entityScriptFields.find(iEntity.uuid()) != sData.entityScriptFields.end()) {
+            auto&& fields = sData.entityScriptFields.at(iEntity.uuid());
+            for (auto&& [name, fieldInstance] : fields) {
+                scriptInstance->setFieldValueInternal(name, fieldInstance._buffer);
+            }
+        }
+
         scriptInstance->invokeOnCreate();
     }
 }
@@ -329,76 +411,17 @@ MonoObject* ScriptEngine::InstantiateClass(MonoClass* iMonoClass) {
 
 bool ScriptEngine::EntityClassExists(const std::string& iClassName) { return sData.entityClasses.find(iClassName) != sData.entityClasses.end(); }
 
-//////////////////
-// Script Class //
-//////////////////
-
-ScriptClass::ScriptClass(const std::string& iClassNamespace, const std::string& iClassName, bool iIsCore)
-    : _classNamespace(iClassNamespace), _className(iClassName) {
-    _monoClass = mono_class_from_name(iIsCore ? sData.coreAssemblyImage : sData.appAssemblyImage, iClassNamespace.c_str(), iClassName.c_str());
-}
-
-MonoObject* ScriptClass::instantiate() { return ScriptEngine::InstantiateClass(_monoClass); }
-
-MonoMethod* ScriptClass::get(const std::string& iMethodName, int iMethodParameterCount) {
-    return mono_class_get_method_from_name(_monoClass, iMethodName.c_str(), iMethodParameterCount);
-}
-
-MonoObject* ScriptClass::invoke(MonoObject* iInstance, MonoMethod* iMethod, void** iMethodParameters) {
-    return mono_runtime_invoke(iMethod, iInstance, iMethodParameters, nullptr);
-}
-
-/////////////////////
-// Script Instance //
-/////////////////////
-
-ScriptInstance::ScriptInstance(Ref<ScriptClass> iScriptClass, Entity iEntity) : _scriptClass(iScriptClass) {
-    _instance = iScriptClass->instantiate();
-
-    _onCreateMethod = iScriptClass->get("OnCreate", 0);
-    _onUpdateMethod = iScriptClass->get("OnUpdate", 1);
-
-    // Call Entity constructor
-    {
-        UUID  entityID = iEntity.uuid();
-        void* param    = &entityID;
-        iScriptClass->invoke(_instance, sData.entityClass.get(".ctor", 1), &param);
+Ref<ScriptClass> ScriptEngine::GetEntityClass(const std::string& iName) {
+    if (sData.entityClasses.find(iName) == sData.entityClasses.end()) {
+        return nullptr;
     }
+    return sData.entityClasses.at(iName);
 }
 
-void ScriptInstance::invokeOnCreate() {
-    if (_onCreateMethod) {
-        _scriptClass->invoke(_instance, _onCreateMethod);
-    }
+ScriptClassMap ScriptEngine::GetEntityClasses() { return sData.entityClasses; }
+
+ScriptFieldMap& ScriptEngine::GetScriptFieldMap(Entity iEntity) {
+    PM_CORE_ASSERT(iEntity);
+    return sData.entityScriptFields[iEntity.uuid()];
 }
-
-void ScriptInstance::invokeOnUpdate(Timestep iTimestep) {
-    if (_onUpdateMethod) {
-        void* param = &iTimestep;
-        _scriptClass->invoke(_instance, _onUpdateMethod, &param);
-    }
-}
-
-bool ScriptInstance::fieldValueInternal(const std::string& iName, void* oBuffer) {
-    auto&& fields = _scriptClass->fields();
-    if (fields.find(iName) == fields.end()) {
-        return false;
-    }
-
-    auto&& field = _scriptClass->fields().at(iName);
-    mono_field_get_value(_instance, field.classField, oBuffer);
-    return true;
-}
-
-bool ScriptInstance::setFieldValueInternal(const std::string& iName, const void* iValue) {
-    auto&& fields = _scriptClass->fields();
-    if (fields.find(iName) == fields.end()) {
-        return false;
-    }
-
-    auto&& field = _scriptClass->fields().at(iName);
-    mono_field_set_value(_instance, field.classField, (void*)iValue);
-    return true;
-}
-
 }

@@ -109,7 +109,7 @@ void displayAddComponentEntry(PepperMint::Entity ioSelectedEntity, const std::st
     }
 }
 
-void drawComponents(PepperMint::Entity ioSelectedEntity) {
+void drawComponents(PepperMint::Entity ioSelectedEntity, PepperMint::Ref<PepperMint::Scene> iContext) {
     // Display Component Tag
     if (ioSelectedEntity.has<PepperMint::TagComponent>()) {
         auto&& tag = ioSelectedEntity.get<PepperMint::TagComponent>().tag;
@@ -245,7 +245,7 @@ void drawComponents(PepperMint::Entity ioSelectedEntity) {
         bool scriptClassExists = PepperMint::ScriptEngine::EntityClassExists(scriptComponent.className);
 
         static char buffer[64];
-        strcpy(buffer, scriptComponent.className.c_str());
+        strcpy_s(buffer, sizeof(buffer), scriptComponent.className.c_str());
 
         if (!scriptClassExists) {
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
@@ -257,19 +257,63 @@ void drawComponents(PepperMint::Entity ioSelectedEntity) {
         }
 
         // Fields
-        if (auto&& scriptInstance = PepperMint::ScriptEngine::GetEntityScriptInstance(ioSelectedEntity.uuid())) {
-            auto&& fields = scriptInstance->scriptClass()->fields();
-            for (auto&& [name, field] : fields) {
-                switch (field.type) {
-                    case PepperMint::ScriptFieldType::FLOAT: {
-                        float data = scriptInstance->fieldValue<float>(name);
-                        if (ImGui::DragFloat(name.c_str(), &data)) {
-                            scriptInstance->setFieldValue(name, data);
+        if (iContext->isRunning()) {
+            if (auto&& scriptInstance = PepperMint::ScriptEngine::GetEntityScriptInstance(ioSelectedEntity.uuid())) {
+                auto&& fields = scriptInstance->scriptClass()->fields();
+                for (auto&& [name, field] : fields) {
+                    switch (field.type) {
+                        case PepperMint::ScriptFieldType::FLOAT: {
+                            float data = scriptInstance->fieldValue<float>(name);
+                            if (ImGui::DragFloat(name.c_str(), &data)) {
+                                scriptInstance->setFieldValue(name, data);
+                            }
+                            break;
                         }
-                        break;
+                        default:
+                            break;
                     }
-                    default:
-                        break;
+                }
+            }
+        } else {
+            if (scriptClassExists) {
+                auto&& entityClass  = PepperMint::ScriptEngine::GetEntityClass(scriptComponent.className);
+                auto&& fields       = entityClass->fields();
+                auto&& entityFields = PepperMint::ScriptEngine::GetScriptFieldMap(ioSelectedEntity);
+
+                for (auto&& [name, field] : fields) {
+                    // Field has been set in the editor
+                    if (entityFields.find(name) != entityFields.end()) {
+                        auto&& scriptField = entityFields.at(name);
+
+                        // Display controls to set it
+                        switch (field.type) {
+                            case PepperMint::ScriptFieldType::FLOAT: {
+                                float data = scriptField.value<float>();
+                                if (ImGui::DragFloat(name.c_str(), &data)) {
+                                    scriptField.setValue(data);
+                                }
+                                break;
+                            }
+                            default:
+                                break;
+                        }
+                    }
+                    // Display control to set it in the runtime
+                    else {
+                        switch (field.type) {
+                            case PepperMint::ScriptFieldType::FLOAT: {
+                                float data = 0.0f;
+                                if (ImGui::DragFloat(name.c_str(), &data)) {
+                                    auto&& fieldInstance = entityFields[name];
+                                    fieldInstance.field  = field;
+                                    fieldInstance.setValue(data);
+                                }
+                                break;
+                            }
+                            default:
+                                break;
+                        }
+                    }
                 }
             }
         }

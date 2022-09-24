@@ -33,7 +33,7 @@ public class Player : PepperMint.Entity {
             velocity.X = 1.0f;
         }
 
-        velocity *= speed;
+        velocity *= speed * timestep;
         _rigidbody.ApplyLinearImpulse(velocity.XY, true);
     }
 }
