@@ -333,7 +333,9 @@ void Scene::duplicateEntity(Entity iEntity) {
 }
 
 Entity Scene::getEntityByUUID(UUID iEntityUUID) {
-    PM_CORE_ASSERT(_entityMap.find(iEntityUUID) != _entityMap.end());
+    if (_entityMap.find(iEntityUUID) == _entityMap.end()) {
+        return {};
+    }
     return {_entityMap.at(iEntityUUID), this};
 }
 

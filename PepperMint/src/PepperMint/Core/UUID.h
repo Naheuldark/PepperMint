@@ -14,7 +14,7 @@ class UUID {
     operator const uint64_t() const { return _uuid; }
 
   private:
-    uint64_t _uuid;
+    uint64_t _uuid = 0;
 };
 }
 
