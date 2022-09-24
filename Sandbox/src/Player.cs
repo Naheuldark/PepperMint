@@ -3,6 +3,10 @@
 namespace Sandbox {
 
 public class Player : PepperMint.Entity {
+
+    public float Speed;
+    public float Time = 0.0f;
+
     private PepperMint.RigidBody2DComponent _rigidbody;
 
     void OnCreate() {
@@ -12,7 +16,9 @@ public class Player : PepperMint.Entity {
     }
 
     void OnUpdate(float timestep) {
-        float              speed    = 0.1f;
+        Time += timestep;
+
+        float              speed    = Speed;
         PepperMint.Vector3 velocity = PepperMint.Vector3.Zero;
 
         if (PepperMint.Input.IsKeyDown(PepperMint.KeyCode.W)) {

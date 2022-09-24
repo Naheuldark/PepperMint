@@ -1,6 +1,9 @@
 ﻿namespace Sandbox {
 
 public class Camera : PepperMint.Entity {
+
+    public PepperMint.Entity OtherEntity;
+
     void OnUpdate(float timestep) {
         float              speed    = 1.0f;
         PepperMint.Vector3 velocity = PepperMint.Vector3.Zero;

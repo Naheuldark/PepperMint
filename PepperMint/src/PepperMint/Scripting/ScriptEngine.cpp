@@ -3,6 +3,7 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/object.h>
+#include <mono/metadata/tabledefs.h>
 
 #include "PepperMint/Scripting/ScriptAPI.h"
 #include "PepperMint/Scripting/ScriptEngine.h"
@@ -13,6 +14,26 @@ namespace {
 
 const std::string kNAMESPACE        = "PepperMint";
 const std::string kENTITY_CLASSNAME = "Entity";
+
+const std::unordered_map<std::string, ScriptFieldType> kSCRIPT_FIELD_TYPE_MAP = {
+    {"System.Single", ScriptFieldType::FLOAT},
+    {"System.Double", ScriptFieldType::DOUBLE},
+    {"System.Boolean", ScriptFieldType::BOOL},
+    {"System.Char", ScriptFieldType::CHAR},
+    {"System.Byte", ScriptFieldType::BYTE},
+    {"System.Int16", ScriptFieldType::SHORT},
+    {"System.Int32", ScriptFieldType::INT},
+    {"System.Int64", ScriptFieldType::LONG},
+    {"System.UInt16", ScriptFieldType::USHORT},
+    {"System.UInt32", ScriptFieldType::UINT},
+    {"System.UInt64", ScriptFieldType::ULONG},
+
+    {"PepperMint.Vector2", ScriptFieldType::VECTOR2},
+    {"PepperMint.Vector3", ScriptFieldType::VECTOR3},
+    {"PepperMint.Vector4", ScriptFieldType::VECTOR4},
+
+    {"PepperMint.Entity", ScriptFieldType::ENTITY},
+};
 
 char* readBytes(const std::filesystem::path& iFilePath, uint32_t* oSize) {
     std::ifstream stream(iFilePath, std::ios::binary | std::ios::ate);
@@ -71,6 +92,53 @@ void printAssemblyTypes(MonoImage* iAssemblyImage) {
         auto&& name  = mono_metadata_string_heap(iAssemblyImage, columns[MONO_TYPEDEF_NAME]);
 
         PM_CORE_TRACE("{}.{}", scope, name);
+    }
+}
+
+ScriptFieldType monoTypeToScriptFieldType(MonoType* iMonoType) {
+    auto&& typeName = mono_type_get_name(iMonoType);
+
+    if (kSCRIPT_FIELD_TYPE_MAP.find(typeName) == kSCRIPT_FIELD_TYPE_MAP.end()) {
+        PM_CORE_ERROR("Unknown type: {}", typeName);
+        return ScriptFieldType::NONE;
+    }
+    return kSCRIPT_FIELD_TYPE_MAP.at(typeName);
+}
+
+const char* scriptFieldTypeToString(ScriptFieldType iType) {
+    switch (iType) {
+        case PepperMint::ScriptFieldType::FLOAT:
+            return "Float";
+        case PepperMint::ScriptFieldType::DOUBLE:
+            return "Double";
+        case PepperMint::ScriptFieldType::BOOL:
+            return "Bool";
+        case PepperMint::ScriptFieldType::CHAR:
+            return "Char";
+        case PepperMint::ScriptFieldType::BYTE:
+            return "Byte";
+        case PepperMint::ScriptFieldType::SHORT:
+            return "Short";
+        case PepperMint::ScriptFieldType::INT:
+            return "Int";
+        case PepperMint::ScriptFieldType::LONG:
+            return "Long";
+        case PepperMint::ScriptFieldType::USHORT:
+            return "UShort";
+        case PepperMint::ScriptFieldType::UINT:
+            return "UInt";
+        case PepperMint::ScriptFieldType::ULONG:
+            return "ULong";
+        case PepperMint::ScriptFieldType::VECTOR2:
+            return "Vector2";
+        case PepperMint::ScriptFieldType::VECTOR3:
+            return "Vector3";
+        case PepperMint::ScriptFieldType::VECTOR4:
+            return "Vector4";
+        case PepperMint::ScriptFieldType::ENTITY:
+            return "Entity";
+        default:
+            return "<invalid>";
     }
 }
 }
@@ -145,6 +213,13 @@ Scene* ScriptEngine::GetSceneContext() { return sData.sceneContext; }
 
 MonoImage* ScriptEngine::GetCoreAssemblyImage() { return sData.coreAssemblyImage; }
 
+Ref<ScriptInstance> ScriptEngine::GetEntityScriptInstance(UUID iEntityId) {
+    if (sData.entityInstances.find(iEntityId) == sData.entityInstances.end()) {
+        return nullptr;
+    }
+    return sData.entityInstances.at(iEntityId);
+}
+
 void ScriptEngine::InitMono() {
     mono_set_assemblies_path("mono/lib");
 
@@ -200,24 +275,48 @@ void ScriptEngine::LoadAssemblyClasses() {
         uint32_t cols[MONO_TYPEDEF_SIZE];
         mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 
-        auto&& scope = mono_metadata_string_heap(sData.appAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
-        auto&& name  = mono_metadata_string_heap(sData.appAssemblyImage, cols[MONO_TYPEDEF_NAME]);
+        auto&& scope     = mono_metadata_string_heap(sData.appAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
+        auto&& classname = mono_metadata_string_heap(sData.appAssemblyImage, cols[MONO_TYPEDEF_NAME]);
 
         std::string fullname;
         if (strlen(scope) != 0) {
-            fullname = fmt::format("{}.{}", scope, name);
+            fullname = fmt::format("{}.{}", scope, classname);
         } else {
-            fullname = name;
+            fullname = classname;
         }
 
-        auto&& monoClass = mono_class_from_name(sData.appAssemblyImage, scope, name);
+        auto&& monoClass = mono_class_from_name(sData.appAssemblyImage, scope, classname);
         if (monoClass == entityClass) {
             continue;
         }
 
         bool isEntity = mono_class_is_subclass_of(monoClass, entityClass, false);
-        if (isEntity) {
-            sData.entityClasses[fullname] = CreateRef<ScriptClass>(scope, name);
+        if (!isEntity) {
+            continue;
+        }
+
+        auto&& scriptClass            = CreateRef<ScriptClass>(scope, classname);
+        sData.entityClasses[fullname] = scriptClass;
+
+        // This routine is an iterator routine for retrieving the fields in a class.
+        // You must pass a gpointer that points to zero and is treated as an opaque handle
+        // to iterate over all of the elements. When no more values are available, the return value is NULL.
+
+        int fieldCount = mono_class_num_fields(monoClass);
+        PM_CORE_WARN("{} has {} fields: ", classname, fieldCount);
+
+        void* it = nullptr;
+        while (auto&& field = mono_class_get_fields(monoClass, &it)) {
+            auto&&   fieldName = mono_field_get_name(field);
+            uint32_t flags     = mono_field_get_flags(field);
+
+            if (flags & FIELD_ATTRIBUTE_PUBLIC) {
+                MonoType*       type      = mono_field_get_type(field);
+                ScriptFieldType fieldType = monoTypeToScriptFieldType(type);
+                PM_CORE_WARN("\t{} ({})", fieldName, scriptFieldTypeToString(fieldType));
+
+                scriptClass->fields()[fieldName] = {fieldType, fieldName, field};
+            }
         }
     }
 }
@@ -278,6 +377,28 @@ void ScriptInstance::invokeOnUpdate(Timestep iTimestep) {
         void* param = &iTimestep;
         _scriptClass->invoke(_instance, _onUpdateMethod, &param);
     }
+}
+
+bool ScriptInstance::fieldValueInternal(const std::string& iName, void* oBuffer) {
+    auto&& fields = _scriptClass->fields();
+    if (fields.find(iName) == fields.end()) {
+        return false;
+    }
+
+    auto&& field = _scriptClass->fields().at(iName);
+    mono_field_get_value(_instance, field.classField, oBuffer);
+    return true;
+}
+
+bool ScriptInstance::setFieldValueInternal(const std::string& iName, const void* iValue) {
+    auto&& fields = _scriptClass->fields();
+    if (fields.find(iName) == fields.end()) {
+        return false;
+    }
+
+    auto&& field = _scriptClass->fields().at(iName);
+    mono_field_set_value(_instance, field.classField, (void*)iValue);
+    return true;
 }
 
 }
